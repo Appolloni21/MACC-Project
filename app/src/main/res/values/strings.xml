@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">MACC</string>
+    <string name="add_travel">Add Travel</string>
+    <string name="travel_name">Travel Name</string>
+    <string name="destination">Destination</string>
+    <string name="start_date">Start Date</string>
+    <string name="end_date">End Date</string>
+    <string name="add_participants">Add Participants</string>
+    <string name="user_email">User Email</string>
+    <string name="add_user_plus_icon">Add User Plus Icon</string>
 </resources>
