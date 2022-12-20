@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="black_primary_material">#212121</color>
     <color name="black_light_material">#484848</color>
+    <color name="grey_description">#B5B5B5</color>
 </resources>

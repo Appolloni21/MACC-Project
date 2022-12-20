@@ -3,8 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/alexe/AndroidStudioProjects/MACC/app/src/main/res/drawable/avatar1.xml" value="0.231" />
         <entry key="..\:/Users/alexe/AndroidStudioProjects/MACC/app/src/main/res/layout/activity_main.xml" value="0.25815217391304346" />
         <entry key="..\:/Users/alexe/AndroidStudioProjects/MACC/app/src/main/res/layout/add_travel_page.xml" value="0.33" />
+        <entry key="..\:/Users/alexe/AndroidStudioProjects/MACC/app/src/main/res/layout/user1_personal_page.xml" value="0.33" />
         <entry key="..\:/Users/alexe/AndroidStudioProjects/MACC/app/src/main/res/layout/user_profile_page.xml" value="0.25815217391304346" />
       </map>
     </option>
