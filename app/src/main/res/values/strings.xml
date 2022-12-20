@@ -11,5 +11,7 @@
     <string name="nome_cognome">Nome Cognome</string>
     <string name="nickname">Nickname</string>
     <string name="user_avatar">User Avatar</string>
+    <string name="altro">Altro</string>
+    <string name="search_travel">Search Travel</string>
     <string name="description_profile">Descrizione utente test prova ciao lorem ipsum lorem ipsum bla bla bla tic kskdlklkdfd klsdlkldlfd dkdkdòldfkldòfd kldfòdkflòd </string>
 </resources>
