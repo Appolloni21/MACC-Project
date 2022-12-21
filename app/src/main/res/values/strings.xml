@@ -13,5 +13,15 @@
     <string name="user_avatar">User Avatar</string>
     <string name="altro">Altro</string>
     <string name="search_travel">Search Travel</string>
-    <string name="description_profile">Descrizione utente test prova ciao lorem ipsum lorem ipsum bla bla bla tic kskdlklkdfd klsdlkldlfd dkdkdòldfkldòfd kldfòdkflòd </string>
+    <string name="description_profile">Description</string>
+
+    <!--TO DELETE-->
+
+    <string name="travel1">Travel 1</string>
+    <string name="travel2">Travel 2</string>
+    <string name="travel3">Travel 3</string>
+    <string name="travel4">Travel 4</string>
+    <string name="travel5">Travel 5</string>
+
+
 </resources>
