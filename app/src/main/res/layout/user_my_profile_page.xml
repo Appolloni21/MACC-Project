@@ -78,7 +78,7 @@
         android:layout_height="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
-        android:text="Modify email"
+        android:text="Edit Personal Data"
         android:textColor="#0000FF"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
