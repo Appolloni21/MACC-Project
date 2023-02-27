@@ -29,6 +29,12 @@
     <string name="expense_list">Expense List</string>
     <string name="day_1">Day 1</string>
     <string name="expense_name">Expense Name</string>
+    <string name="mer">mer</string>
+    <string name="_7">7</string>
+    <string name="via_ostiense_125">Via Ostiense 125</string>
+    <string name="group">Group</string>
+    <string name="tot_15">Tot: $15</string>
+    <string name="add_expense">add expense</string>
 
 
 </resources>

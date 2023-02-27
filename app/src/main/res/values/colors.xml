@@ -10,4 +10,7 @@
     <color name="black_primary_material">#212121</color>
     <color name="black_light_material">#484848</color>
     <color name="grey_description">#B5B5B5</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="sky_blue">#64b5f6</color>
+    <color name="sky_blue_add">#1976d2</color>
 </resources>
