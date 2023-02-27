@@ -22,6 +22,13 @@
     <string name="travel3">Travel 3</string>
     <string name="travel4">Travel 4</string>
     <string name="travel5">Travel 5</string>
+    <string name="group_number_icon">group number icon</string>
+    <string name="_4">4</string>
+    <string name="delete_icon">delete icon</string>
+    <string name="in_progress">In progress</string>
+    <string name="expense_list">Expense List</string>
+    <string name="day_1">Day 1</string>
+    <string name="expense_name">Expense Name</string>
 
 
 </resources>
