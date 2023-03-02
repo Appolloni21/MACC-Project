@@ -9,7 +9,7 @@ import com.example.macc.data.Datasource
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.homepage)
+        setContentView(R.layout.user1_personal_page)
 
         //TEST PER LA HOMEPAGE
         // Initialize data.
