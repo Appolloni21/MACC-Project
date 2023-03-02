@@ -8,8 +8,10 @@ import com.example.macc.data.Datasource
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        //*supportActionBar?.hide();
+
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.user1_personal_page)
+        setContentView(R.layout.homepage)
 
         //TEST PER LA HOMEPAGE
         // Initialize data.
