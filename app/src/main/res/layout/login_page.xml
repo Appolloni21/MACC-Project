@@ -8,7 +8,7 @@
     android:textAlignment="center">
 
     <TextView
-        android:id="@+id/signintitle"
+        android:id="@+id/sign_in_title"
         android:layout_width="370dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -24,10 +24,10 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/usernamesignin"
+        android:id="@+id/email_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/signintitle"
+        android:layout_below="@id/sign_in_title"
         android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="16dp"
@@ -41,14 +41,14 @@
         android:textColorHint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signintitle"
+        app:layout_constraintTop_toBottomOf="@+id/sign_in_title"
         android:autofillHints="" />
 
     <EditText
-        android:id="@+id/passwordsignin"
+        android:id="@+id/password_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/usernamesignin"
+        android:layout_below="@id/email_text"
         android:layout_marginTop="16dp"
         android:background="#30ffffff"
         android:drawableStart="@drawable/ic_baseline_lock_24"
@@ -58,31 +58,31 @@
         android:padding="20dp"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        app:layout_constraintEnd_toEndOf="@+id/usernamesignin"
+        app:layout_constraintEnd_toEndOf="@+id/email_text"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/usernamesignin"
-        app:layout_constraintTop_toBottomOf="@+id/usernamesignin"
+        app:layout_constraintStart_toStartOf="@+id/email_text"
+        app:layout_constraintTop_toBottomOf="@+id/email_text"
         android:autofillHints="" />
 
     <TextView
-    android:id="@+id/forgotpasssignin"
+    android:id="@+id/forgot_password"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_below="@+id/passwordsignin"
+    android:layout_below="@+id/password_text"
     android:layout_marginTop="8dp"
     android:text="Forgot password?"
     android:textColor="@color/white"
     android:textStyle="bold"
-    app:layout_constraintEnd_toEndOf="@+id/passwordsignin"
+    app:layout_constraintEnd_toEndOf="@+id/password_text"
     app:layout_constraintHorizontal_bias="0.0"
-    app:layout_constraintStart_toStartOf="@+id/passwordsignin"
-    app:layout_constraintTop_toBottomOf="@+id/passwordsignin" />
+    app:layout_constraintStart_toStartOf="@+id/password_text"
+    app:layout_constraintTop_toBottomOf="@+id/password_text" />
 
     <Button
-        android:id="@+id/loginbtn"
+        android:id="@+id/login_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/forgotpasssignin"
+        android:layout_below="@id/forgot_password"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="44dp"
         android:backgroundTint="@color/black"
@@ -91,21 +91,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordsignin" />
+        app:layout_constraintTop_toBottomOf="@+id/password_text" />
 
     <Button
-        android:id="@+id/signupbtnsignin"
+        android:id="@+id/sign_up_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/loginbtn"
+        android:layout_below="@id/login_btn"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:backgroundTint="@color/black"
         android:text="sign up"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="@+id/loginbtn"
-        app:layout_constraintStart_toStartOf="@+id/loginbtn"
-        app:layout_constraintTop_toBottomOf="@+id/loginbtn" />
+        app:layout_constraintEnd_toEndOf="@+id/login_btn"
+        app:layout_constraintStart_toStartOf="@+id/login_btn"
+        app:layout_constraintTop_toBottomOf="@+id/login_btn" />
 
     //TODO: possibly add google, facebook and twitter login button
 
