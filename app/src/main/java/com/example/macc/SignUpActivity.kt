@@ -18,6 +18,8 @@ class SignUpActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.signup_page)
 
+        //TODO: back navigation
+
         val tag = "SignUpActivity"
 
         val signupButton: Button = findViewById(R.id.signup_btn)

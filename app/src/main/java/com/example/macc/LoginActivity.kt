@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -89,6 +90,12 @@ class LoginActivity : AppCompatActivity(){
         val signupButton:Button = findViewById(R.id.sign_up_btn)
         signupButton.setOnClickListener {
             val intent = Intent(this@LoginActivity, SignUpActivity::class.java)
+            startActivity(intent)
+        }
+
+        val forgotPswTv: TextView = findViewById(R.id.forgot_password)
+        forgotPswTv.setOnClickListener {
+            val intent = Intent(this@LoginActivity, ForgotPasswordActivity::class.java)
             startActivity(intent)
         }
 
