@@ -35,6 +35,13 @@
     <string name="group">Group</string>
     <string name="tot_15">Tot: $15</string>
     <string name="add_expense">add expense</string>
+    <string name="sign_up">Sign up</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="repeat_the_password">Repeat the password</string>
+    <string name="back">back</string>
 
 
 </resources>

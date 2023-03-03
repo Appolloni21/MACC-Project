@@ -15,13 +15,13 @@
         android:background="@color/black_light_material">
 
         <TextView
-            android:id="@+id/signuptitle"
+            android:id="@+id/signup_title"
             android:layout_width="370dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:gravity="center"
             android:padding="20dp"
-            android:text="Sign up"
+            android:text="@string/sign_up"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             android:textSize="30sp"
@@ -41,14 +41,14 @@
             android:background="#30ffffff"
             android:drawableStart="@drawable/ic_baseline_person_24"
             android:drawablePadding="20dp"
-            android:hint="Name"
+            android:hint="@string/name"
             android:inputType="text"
             android:padding="20dp"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/signuptitle" />
+            app:layout_constraintTop_toBottomOf="@id/signup_title" />
 
         <EditText
             android:id="@+id/surname"
@@ -61,7 +61,7 @@
             android:background="#30ffffff"
             android:drawableStart="@drawable/ic_baseline_person_24"
             android:drawablePadding="20dp"
-            android:hint="Surname"
+            android:hint="@string/surname"
             android:padding="20dp"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
@@ -71,7 +71,7 @@
             android:inputType="text" />
 
         <EditText
-            android:id="@+id/nicknamesignup"
+            android:id="@+id/nickname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -81,7 +81,7 @@
             android:background="#30ffffff"
             android:drawableStart="@drawable/ic_baseline_person_outline_24"
             android:drawablePadding="20dp"
-            android:hint="Nickname"
+            android:hint="@string/nickname"
             android:inputType="textEmailAddress"
             android:padding="20dp"
             android:textColor="@color/white"
@@ -91,7 +91,7 @@
             android:autofillHints="" />
 
         <EditText
-            android:id="@+id/emailsignup"
+            android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -101,17 +101,17 @@
             android:background="#30ffffff"
             android:drawableStart="@drawable/ic_baseline_email_24"
             android:drawablePadding="20dp"
-            android:hint="Email"
+            android:hint="@string/email"
             android:inputType="textEmailAddress"
             android:padding="20dp"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/nicknamesignup"
+            app:layout_constraintTop_toBottomOf="@id/nickname"
             android:autofillHints="" />
 
         <EditText
-            android:id="@+id/passwordsignup"
+            android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -121,17 +121,17 @@
             android:background="#30ffffff"
             android:drawableStart="@drawable/ic_baseline_lock_24"
             android:drawablePadding="20dp"
-            android:hint="Password"
+            android:hint="@string/password"
             android:inputType="textPassword"
             android:padding="20dp"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/emailsignup"
+            app:layout_constraintTop_toBottomOf="@id/email"
             android:autofillHints="" />
 
         <EditText
-            android:id="@+id/repeatpasswordsignup"
+            android:id="@+id/repeat_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -141,43 +141,43 @@
             android:background="#30ffffff"
             android:drawableStart="@drawable/ic_baseline_lock_24"
             android:drawablePadding="20dp"
-            android:hint="Repeat the password"
+            android:hint="@string/repeat_the_password"
             android:inputType="textPassword"
             android:padding="20dp"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/passwordsignup"
+            app:layout_constraintTop_toBottomOf="@id/password"
             android:autofillHints="" />
         <Button
-            android:id="@+id/signupbtnsignup"
+            android:id="@+id/signup_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/repeatpasswordsignup"
+            android:layout_below="@id/repeat_password"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="44dp"
             android:backgroundTint="@color/black"
-            android:text="sign up"
+            android:text="@string/sign_up"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/repeatpasswordsignup" />
+            app:layout_constraintTop_toBottomOf="@+id/repeat_password" />
 
         <Button
-            android:id="@+id/backbtnsignup"
+            android:id="@+id/back_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/signupbtnsignup"
+            android:layout_below="@id/signup_btn"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"
             android:backgroundTint="@color/black"
-            android:text="back"
+            android:text="@string/back"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/signupbtnsignup" />
+            app:layout_constraintTop_toBottomOf="@+id/signup_btn" />
 
 
 
