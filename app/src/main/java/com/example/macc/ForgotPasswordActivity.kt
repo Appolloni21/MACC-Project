@@ -12,6 +12,7 @@ import com.google.firebase.ktx.Firebase
 class ForgotPasswordActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.hide();
         setContentView(R.layout.forgot_password)
 
         //TODO: back navigation
@@ -19,7 +20,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
         val submitButton: Button = findViewById(R.id.submit_btn)
         submitButton.setOnClickListener {
 
-            val email = findViewById<EditText>(R.id.emailForgotPassword).text.toString().trim { it <= ' ' }
+            val email = findViewById<EditText>(R.id.email_fp).text.toString().trim { it <= ' ' }
             if (email.isEmpty()) {
                 Toast.makeText(
                     this@ForgotPasswordActivity,

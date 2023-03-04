@@ -42,6 +42,8 @@
     <string name="password">Password</string>
     <string name="repeat_the_password">Repeat the password</string>
     <string name="back">back</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="submit">Submit</string>
 
 
 </resources>
