@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.ktx.auth
@@ -15,7 +16,11 @@ class ForgotPasswordActivity : AppCompatActivity() {
         supportActionBar?.hide();
         setContentView(R.layout.forgot_password)
 
-        //TODO: back navigation
+        //back navigation
+        val backIcon : ImageView = findViewById(R.id.back_icon2)
+        backIcon.setOnClickListener {
+            this@ForgotPasswordActivity.onBackPressed()
+        }
 
         val submitButton: Button = findViewById(R.id.submit_btn)
         submitButton.setOnClickListener {

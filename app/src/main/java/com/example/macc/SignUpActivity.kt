@@ -6,6 +6,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -17,10 +18,13 @@ class SignUpActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.signup_page)
-
-        //TODO: back navigation
-
         val tag = "SignUpActivity"
+
+        //back navigation
+        val backIcon : ImageView = findViewById(R.id.back_icon)
+        backIcon.setOnClickListener {
+            this@SignUpActivity.onBackPressed()
+        }
 
         val signupButton: Button = findViewById(R.id.signup_btn)
         signupButton.setOnClickListener {
