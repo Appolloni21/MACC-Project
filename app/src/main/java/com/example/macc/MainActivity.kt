@@ -36,51 +36,5 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setupWithNavController(navController)
 
 
-        /*if (savedInstanceState == null) {
-
-            supportFragmentManager.beginTransaction().add(R.id.nav_host_fragment, Homepage.newInstance(), "Homepage").commit()
-        }*/
-
-        /*bottomNavigationView.setOnItemSelectedListener{
-            when (it.itemId) {
-                R.id.profile -> {
-                    supportFragmentManager.beginTransaction().add(R.id.container, User_personal_page.newInstance(), "Homepage").commit()                }
-                R.id.home -> {
-                    supportFragmentManager.beginTransaction().add(R.id.container, Homepage.newInstance(), "Homepage").commit()
-                }
-                R.id.notifications -> {
-                    Toast.makeText(applicationContext,"notification not implemented yet", Toast.LENGTH_SHORT).show()
-                }
-            }
-            false
-        }*/
-
-        //TEST PER LA HOMEPAGE
-        // Initialize data.
-        //val myDataset = Datasource().loadTravels()
-
-        //val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
-        //recyclerView.adapter = ItemAdapter(this, myDataset)
-
-        // Use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        //recyclerView.setHasFixedSize(true)
-
-
-        //Da spostare poi nel fragment della user_my_profile_page
-        //Handle logout
-        /*val logoutButton: Button = findViewById(R.id.logout_btn)
-        logoutButton.setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
-            Toast.makeText(
-                this@MainActivity,
-                "You are now logged out",
-                Toast.LENGTH_SHORT
-            ).show()
-            startActivity(Intent(this@MainActivity, LoginActivity::class.java))
-            this@MainActivity.finish()
-            //true
-        }*/
-
     }
 }

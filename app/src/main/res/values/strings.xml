@@ -44,6 +44,8 @@
     <string name="back">back</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="submit">Submit</string>
+    <string name="logout">Logout</string>
+    <string name="edit_personal_data">Edit Personal Data</string>
 
 
 </resources>

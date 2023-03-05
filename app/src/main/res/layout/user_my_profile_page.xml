@@ -6,40 +6,32 @@
     android:layout_height="wrap_content"
     android:background="@color/black_light_material">
 
-    <include layout="@layout/toolbar1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/toolbar"
-        />
-
 
     <ImageView
         android:id="@+id/imageView6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/user_avatar"
-        app:layout_constraintStart_toEndOf="@id/toolbar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        android:scaleType="fitXY"
         android:adjustViewBounds="true"
+        android:contentDescription="@string/user_avatar"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/average_guy"
         tools:ignore="ImageContrastCheck" />
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="0dp"
+        android:layout_width="395dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="430dp"
         android:text="@string/nome_cognome"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.107"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
 
     <TextView
         android:id="@+id/textView3"
@@ -70,27 +62,26 @@
         android:id="@+id/modify_pass"
         android:layout_width="0dp"
         android:layout_height="20dp"
-        android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
-        android:text="Edit Personal Data"
+        android:layout_marginTop="20dp"
+        android:text="@string/edit_personal_data"
         android:textColor="#0000FF"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7"/>
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/logout_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Logout"
+        android:backgroundTint="@color/cardview_dark_background"
         android:drawableLeft="@drawable/ic_baseline_logout_24"
+        android:text="@string/logout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/modify_pass"
-        android:backgroundTint="@color/cardview_dark_background">
-    </com.google.android.material.button.MaterialButton>
+        app:layout_constraintTop_toBottomOf="@+id/modify_pass"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

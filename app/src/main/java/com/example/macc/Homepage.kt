@@ -10,16 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.macc.adapter.ItemAdapter
 import com.example.macc.data.Datasource
 
-import com.google.android.material.bottomnavigation.BottomNavigationView
+
 
 
 class Homepage : Fragment() {
-    companion object {
 
-        fun newInstance(): Homepage {
-            return Homepage()
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,6 +23,7 @@ class Homepage : Fragment() {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.homepage, container,
             false)
+
         //TEST PER LA HOMEPAGE
         // Initialize data.
         val myDataset = Datasource().loadTravels()
