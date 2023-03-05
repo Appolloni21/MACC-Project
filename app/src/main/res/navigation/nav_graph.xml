@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homepage">
+
+
+    <fragment
+        android:id="@+id/homepage"
+        android:name="com.example.macc.Homepage"
+        android:label="Homepage"
+        tools:layout="@layout/homepage"/>
+    <fragment
+        android:id="@+id/user_personal_page"
+        android:name="com.example.macc.User_personal_page"
+        android:label="User_personal_page"
+        tools:layout="@layout/user_my_profile_page"/>
+</navigation>

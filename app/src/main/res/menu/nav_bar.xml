@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/home"
+        android:id="@+id/homepage"
         android:title="Home"
         android:icon="@drawable/baseline_home_24"/>
     <item
@@ -10,7 +10,7 @@
         android:icon="@drawable/baseline_notifications_24"/>
 
     <item
-        android:id="@+id/profile"
+        android:id="@+id/user_personal_page"
         android:title="Profile"
         android:icon="@drawable/baseline_person_24"/>
 </menu>

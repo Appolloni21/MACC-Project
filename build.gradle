@@ -6,10 +6,14 @@ buildscript {
         google()  // Google's Maven repository
         mavenCentral()  // Maven Central repository
     }
+    ext{
+        nav_version = "2.5.2"
+    }
 
     dependencies {
         // Add the dependency for the Google services Gradle plugin
         classpath 'com.google.gms:google-services:4.3.14'
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
     }
 
 }

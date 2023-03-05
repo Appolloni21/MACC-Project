@@ -26,7 +26,7 @@ class User_personal_page : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view: View = inflater.inflate(R.layout.user1_personal_page, container,
+        val view: View = inflater.inflate(R.layout.user_my_profile_page, container,
             false)
         return view
     }

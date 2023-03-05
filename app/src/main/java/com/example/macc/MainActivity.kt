@@ -6,6 +6,11 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.macc.adapter.ItemAdapter
 import com.example.macc.data.Datasource
@@ -13,19 +18,30 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var navController: NavController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         supportActionBar?.hide();
 
         super.onCreate(savedInstanceState)
-        //setContentView(R.layout.user_my_profile_page)
         setContentView(R.layout.activity_main)
-        if (savedInstanceState == null) {
 
-            supportFragmentManager.beginTransaction().add(R.id.container, Homepage.newInstance(), "Homepage").commit()
-        }
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        // Instantiate the navController using the NavHostFragment
+        navController = navHostFragment.navController
 
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation);
-        bottomNavigationView.setOnItemSelectedListener{
+        //Bottom bar setup
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomNavigationView.setupWithNavController(navController)
+
+
+        /*if (savedInstanceState == null) {
+
+            supportFragmentManager.beginTransaction().add(R.id.nav_host_fragment, Homepage.newInstance(), "Homepage").commit()
+        }*/
+
+        /*bottomNavigationView.setOnItemSelectedListener{
             when (it.itemId) {
                 R.id.profile -> {
                     supportFragmentManager.beginTransaction().add(R.id.container, User_personal_page.newInstance(), "Homepage").commit()                }
@@ -37,7 +53,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             false
-        }
+        }*/
+
         //TEST PER LA HOMEPAGE
         // Initialize data.
         //val myDataset = Datasource().loadTravels()
