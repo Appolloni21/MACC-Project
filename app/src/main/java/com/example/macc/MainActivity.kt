@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.macc.adapter.ItemAdapter
 import com.example.macc.data.Datasource
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
@@ -16,8 +17,27 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide();
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.user_my_profile_page)
+        //setContentView(R.layout.user_my_profile_page)
+        setContentView(R.layout.activity_main)
+        if (savedInstanceState == null) {
 
+            supportFragmentManager.beginTransaction().add(R.id.container, Homepage.newInstance(), "Homepage").commit()
+        }
+
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation);
+        bottomNavigationView.setOnItemSelectedListener{
+            when (it.itemId) {
+                R.id.profile -> {
+                    supportFragmentManager.beginTransaction().add(R.id.container, User_personal_page.newInstance(), "Homepage").commit()                }
+                R.id.home -> {
+                    supportFragmentManager.beginTransaction().add(R.id.container, Homepage.newInstance(), "Homepage").commit()
+                }
+                R.id.notifications -> {
+                    Toast.makeText(applicationContext,"notification not implemented yet", Toast.LENGTH_SHORT).show()
+                }
+            }
+            false
+        }
         //TEST PER LA HOMEPAGE
         // Initialize data.
         //val myDataset = Datasource().loadTravels()
@@ -32,7 +52,7 @@ class MainActivity : AppCompatActivity() {
 
         //Da spostare poi nel fragment della user_my_profile_page
         //Handle logout
-        val logoutButton: Button = findViewById(R.id.logout_btn)
+        /*val logoutButton: Button = findViewById(R.id.logout_btn)
         logoutButton.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             Toast.makeText(
@@ -43,7 +63,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this@MainActivity, LoginActivity::class.java))
             this@MainActivity.finish()
             //true
-        }
+        }*/
 
     }
 }
