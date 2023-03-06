@@ -10,10 +10,19 @@
         android:id="@+id/homepage"
         android:name="com.example.macc.Homepage"
         android:label="Homepage"
-        tools:layout="@layout/homepage"/>
+        tools:layout="@layout/homepage">
+        <action
+            android:id="@+id/action_homepage_to_expenseList"
+            app:destination="@id/expenseList" />
+    </fragment>
     <fragment
         android:id="@+id/user_my_profile_page"
         android:name="com.example.macc.UserMyProfile"
-        android:label="User_personal_page"
+        android:label="Profile"
         tools:layout="@layout/user_my_profile_page"/>
+    <fragment
+        android:id="@+id/expenseList"
+        android:name="com.example.macc.ExpenseList"
+        android:label="ExpenseList"
+        tools:layout="@layout/expense_list_page"/>
 </navigation>

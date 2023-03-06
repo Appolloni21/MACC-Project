@@ -7,7 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.macc.adapter.ItemAdapter
 import com.example.macc.data.Datasource
@@ -24,10 +28,6 @@ class Homepage : Fragment() {
         val view: View = inflater.inflate(R.layout.homepage, container,
             false)
 
-        /*val activity1 = activity as AppCompatActivity?
-        val toolbar : Toolbar = view.findViewById(R.id.toolbar)
-        activity1?.setSupportActionBar(toolbar)*/
-
 
         //TEST PER LA HOMEPAGE
         // Initialize data.
@@ -42,6 +42,17 @@ class Homepage : Fragment() {
         recyclerView.setHasFixedSize(true)
         return view
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        //Toolbar with nav component
+        val navController = findNavController()
+        val appBarConfiguration = AppBarConfiguration(navController.graph)
+        view.findViewById<Toolbar>(R.id.toolbar)
+            .setupWithNavController(navController, appBarConfiguration)
+
+    }
+
 
 
 }
