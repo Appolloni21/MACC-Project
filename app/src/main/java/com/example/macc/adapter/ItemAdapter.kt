@@ -6,13 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.macc.HomepageDirections
 import com.example.macc.R
 import com.example.macc.model.Travel
 
 
 class ItemAdapter (private val context: Context, private val dataset: List<Travel>) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>(){
-    class ItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+    class ItemViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.travel_title)
         val imageView: ImageView = view.findViewById(R.id.travel_image)
     }
@@ -30,6 +32,12 @@ class ItemAdapter (private val context: Context, private val dataset: List<Trave
         val item = dataset[position]
         holder.textView.text =  context.resources.getString(item.stringResourceId)
         holder.imageView.setImageResource(item.imageResourceId)
+        holder.imageView.setOnClickListener{
+
+            //Action from homepage to expense list page
+            val action = HomepageDirections.actionHomepageToExpenseList()
+            holder.view.findNavController().navigate(action)
+        }
 
     }
 

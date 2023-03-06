@@ -24,5 +24,14 @@
         android:id="@+id/expenseList"
         android:name="com.example.macc.ExpenseList"
         android:label="ExpenseList"
-        tools:layout="@layout/expense_list_page"/>
+        tools:layout="@layout/expense_list_page">
+        <action
+            android:id="@+id/action_expenseList_to_insertExpense"
+            app:destination="@id/insertExpense" />
+    </fragment>
+    <fragment
+        android:id="@+id/insertExpense"
+        android:name="com.example.macc.InsertExpense"
+        android:label="InsertExpense"
+        tools:layout="@layout/insert_expense"/>
 </navigation>
