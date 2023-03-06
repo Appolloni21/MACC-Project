@@ -12,8 +12,8 @@
         android:label="Homepage"
         tools:layout="@layout/homepage"/>
     <fragment
-        android:id="@+id/user_personal_page"
-        android:name="com.example.macc.User_personal_page"
+        android:id="@+id/user_my_profile_page"
+        android:name="com.example.macc.UserMyProfile"
         android:label="User_personal_page"
         tools:layout="@layout/user_my_profile_page"/>
 </navigation>

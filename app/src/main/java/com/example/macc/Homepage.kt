@@ -2,15 +2,15 @@ package com.example.macc
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.macc.adapter.ItemAdapter
 import com.example.macc.data.Datasource
-
-
 
 
 class Homepage : Fragment() {
@@ -23,6 +23,11 @@ class Homepage : Fragment() {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.homepage, container,
             false)
+
+        /*val activity1 = activity as AppCompatActivity?
+        val toolbar : Toolbar = view.findViewById(R.id.toolbar)
+        activity1?.setSupportActionBar(toolbar)*/
+
 
         //TEST PER LA HOMEPAGE
         // Initialize data.
