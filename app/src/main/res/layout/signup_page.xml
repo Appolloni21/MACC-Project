@@ -149,7 +149,6 @@
         android:layout_below="@id/repeat_password"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="44dp"
-        android:backgroundTint="@color/black"
         android:text="@string/sign_up"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"

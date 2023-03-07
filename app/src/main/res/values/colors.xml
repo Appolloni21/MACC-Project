@@ -13,4 +13,5 @@
     <color name="transparent">#00FFFFFF</color>
     <color name="sky_blue">#64b5f6</color>
     <color name="sky_blue_add">#1976d2</color>
+    <color name="dark_grey">#121212</color>
 </resources>

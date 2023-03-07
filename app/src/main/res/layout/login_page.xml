@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black_light_material"
@@ -14,7 +13,7 @@
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:padding="20dp"
-        android:text="Sign in"
+        android:text="@string/sign_in"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         android:textSize="30sp"
@@ -33,7 +32,7 @@
         android:layout_marginEnd="16dp"
         android:background="#30ffffff"
         android:drawablePadding="20dp"
-        android:hint="Username or email address"
+        android:hint="@string/username_or_email_address"
         android:drawableStart="@drawable/ic_baseline_person_24"
         android:inputType="textEmailAddress"
         android:padding="20dp"
@@ -53,7 +52,7 @@
         android:background="#30ffffff"
         android:drawableStart="@drawable/ic_baseline_lock_24"
         android:drawablePadding="20dp"
-        android:hint="Password"
+        android:hint="@string/password"
         android:inputType="textPassword"
         android:padding="20dp"
         android:textColor="@color/white"
@@ -70,7 +69,7 @@
     android:layout_height="wrap_content"
     android:layout_below="@+id/password_text"
     android:layout_marginTop="8dp"
-    android:text="Forgot password?"
+    android:text="@string/forgot_password"
     android:textColor="@color/white"
     android:textStyle="bold"
     app:layout_constraintEnd_toEndOf="@+id/password_text"
@@ -85,8 +84,7 @@
         android:layout_below="@id/forgot_password"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="44dp"
-        android:backgroundTint="@color/black"
-        android:text="login"
+        android:text="@string/login"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -100,14 +98,13 @@
         android:layout_below="@id/login_btn"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:backgroundTint="@color/black"
-        android:text="sign up"
+        android:text="@string/sign_up"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/login_btn"
         app:layout_constraintStart_toStartOf="@+id/login_btn"
         app:layout_constraintTop_toBottomOf="@+id/login_btn" />
 
-    //TODO: possibly add google, facebook and twitter login button
+    <!--TODO: possibly add google, facebook and twitter login button-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

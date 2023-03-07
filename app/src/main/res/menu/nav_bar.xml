@@ -2,15 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/homepage"
-        android:title="Home"
+        android:title="@string/home"
         android:icon="@drawable/baseline_home_24"/>
     <item
         android:id="@+id/notifications"
-        android:title="Notifications"
+        android:title="@string/notifications"
         android:icon="@drawable/baseline_notifications_24"/>
 
     <item
         android:id="@+id/user_my_profile_page"
-        android:title="Profile"
-        android:icon="@drawable/baseline_person_24"/>
+        android:title="@string/profile"
+        android:icon="@drawable/ic_baseline_person_24"/>
 </menu>

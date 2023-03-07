@@ -85,7 +85,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:backgroundTint="@color/cardview_dark_background"
         android:drawableLeft="@drawable/ic_baseline_logout_24"
         android:text="@string/logout"
         app:layout_constraintEnd_toEndOf="parent"
