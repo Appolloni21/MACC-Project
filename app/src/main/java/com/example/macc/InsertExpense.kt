@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -15,7 +16,7 @@ class InsertExpense : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.insert_expense, container,
             false)
@@ -30,6 +31,10 @@ class InsertExpense : Fragment() {
         view.findViewById<Toolbar>(R.id.toolbar)
             .setupWithNavController(navController, appBarConfiguration)
 
+        val addExpenseButton = view.findViewById<Button>(R.id.addExpenseButton)
+        addExpenseButton.setOnClickListener{
+            navController.navigateUp()
+        }
 
     }
 }

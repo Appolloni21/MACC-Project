@@ -6,22 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-
-class ExpenseList : Fragment() {
-
+class UsersList : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        val view: View = inflater.inflate(R.layout.expense_list_page, container,
+        val view: View = inflater.inflate(R.layout.users_list, container,
             false)
         return view
     }
@@ -34,20 +29,6 @@ class ExpenseList : Fragment() {
         view.findViewById<Toolbar>(R.id.toolbar)
             .setupWithNavController(navController, appBarConfiguration)
 
-        val usersListButton = view.findViewById<ExtendedFloatingActionButton>(R.id.extended_fab)
-        usersListButton.setOnClickListener{
-            val action = ExpenseListDirections.actionExpenseListToUsersList()
-            view.findNavController().navigate(action)
-        }
-
-        val addExpenseButton = view.findViewById<FloatingActionButton>(R.id.fab)
-        addExpenseButton.setOnClickListener{
-            //Action from ExpenseList to InsertExpense
-            val action = ExpenseListDirections.actionExpenseListToInsertExpense()
-            view.findNavController().navigate(action)
-        }
 
     }
-
-
 }

@@ -28,10 +28,18 @@
         <action
             android:id="@+id/action_expenseList_to_insertExpense"
             app:destination="@id/insertExpense" />
+        <action
+            android:id="@+id/action_expenseList_to_usersList"
+            app:destination="@id/usersList" />
     </fragment>
     <fragment
         android:id="@+id/insertExpense"
         android:name="com.example.macc.InsertExpense"
         android:label="InsertExpense"
         tools:layout="@layout/insert_expense"/>
+    <fragment
+        android:id="@+id/usersList"
+        android:name="com.example.macc.UsersList"
+        android:label="UsersList"
+        tools:layout="@layout/users_list"/>
 </navigation>

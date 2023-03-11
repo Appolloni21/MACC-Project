@@ -54,6 +54,20 @@
     <string name="home">Home</string>
     <string name="notifications">Notifications</string>
     <string name="profile">Profile</string>
+    <string name="dropdown_arrow">dropdown arrow</string>
+    <string name="expense_box">Expense box</string>
+    <string name="day_circle">day circle</string>
+    <string name="expense_menu_icon">expense menu icon</string>
+    <string name="expense_location_icon">expense location icon</string>
+    <string name="users">Users</string>
+    <string name="name_surname">Name Surname</string>
+    <string name="field1">Field 1</string>
+    <string name="add_field_icon">Add field icon</string>
+    <string name="notes">Notes</string>
+    <string name="take_a_photo_of_the_receipt">Take a photo of the receipt</string>
+    <string name="date">Date</string>
+    <string name="place">Place</string>
+    <string name="this_is_a_personal_expense">This is a personal Expense</string>
 
 
 </resources>

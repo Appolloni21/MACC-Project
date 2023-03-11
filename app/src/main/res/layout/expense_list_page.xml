@@ -32,42 +32,54 @@
             android:importantForAccessibility="no"
             android:scaleType="centerCrop"
             app:srcCompat="@drawable/rome1"
-            tools:ignore="ImageContrastCheck" />
+            tools:ignore="ImageContrastCheck"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="157dp">
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="412dp"
+                android:layout_height="wrap_content"
+                android:background="#80D9D9D9"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:text="@string/travel_name"
+                android:textColor="#000000"
+                android:textSize="20sp" />
+
+        </FrameLayout>
+
+
+
+
+
 
     </com.google.android.material.card.MaterialCardView>
-
-    <TextView
-        android:id="@+id/Expense_List_Text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="@string/expense_list"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.045"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
 
     <TextView
         android:id="@+id/day_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:text="@string/day_1"
         android:textColor="@color/white"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.403"
-        app:layout_constraintStart_toEndOf="@+id/Expense_List_Text"
+        app:layout_constraintHorizontal_bias="0.219"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
 
     <ImageView
         android:id="@+id/dropdown_arrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
+        android:contentDescription="@string/dropdown_arrow"
         app:layout_constraintStart_toEndOf="@+id/day_number"
         app:layout_constraintTop_toBottomOf="@+id/materialCardView"
         app:srcCompat="@drawable/ic_baseline_arrow_drop_down_24" />
@@ -96,7 +108,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/expense_name"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/box" />
+        app:srcCompat="@drawable/box"
+        android:contentDescription="@string/expense_box" />
 
     <TextView
         android:id="@+id/day_text"
@@ -116,7 +129,8 @@
         android:layout_marginStart="13dp"
         app:layout_constraintStart_toStartOf="@+id/box"
         app:layout_constraintTop_toBottomOf="@+id/day_text"
-        app:srcCompat="@drawable/circle" />
+        app:srcCompat="@drawable/circle"
+        android:contentDescription="@string/day_circle" />
 
     <TextView
         android:id="@+id/day_number_black"
@@ -138,7 +152,8 @@
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="@+id/box"
         app:layout_constraintTop_toTopOf="@+id/box"
-        app:srcCompat="@drawable/ic_baseline_more_vert_24" />
+        app:srcCompat="@drawable/ic_baseline_more_vert_24"
+        android:contentDescription="@string/expense_menu_icon" />
 
     <ImageView
         android:id="@+id/imageView5"
@@ -148,7 +163,8 @@
         android:layout_marginTop="64dp"
         app:layout_constraintStart_toEndOf="@+id/circle"
         app:layout_constraintTop_toTopOf="@+id/box"
-        app:srcCompat="@drawable/ic_baseline_location_on_24" />
+        app:srcCompat="@drawable/ic_baseline_location_on_24"
+        android:contentDescription="@string/expense_location_icon" />
 
     <TextView
         android:id="@+id/place"
@@ -195,6 +211,21 @@
         android:src="@drawable/ic_baseline_add_24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/box" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/extended_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:layout_marginTop="4dp"
+        android:contentDescription="@string/users"
+        android:text="@string/users"
+        app:icon="@drawable/ic_baseline_group_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.969"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
