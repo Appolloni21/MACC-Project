@@ -10,7 +10,7 @@
         android:icon="@drawable/baseline_notifications_24"/>
 
     <item
-        android:id="@+id/user_my_profile_page"
+        android:id="@+id/userMyProfile"
         android:title="@string/profile"
         android:icon="@drawable/ic_baseline_person_24"/>
 </menu>

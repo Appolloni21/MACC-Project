@@ -14,9 +14,13 @@
         <action
             android:id="@+id/action_homepage_to_expenseList"
             app:destination="@id/expenseList" />
+        <action
+            android:id="@+id/action_homepage_to_addTravel"
+            app:destination="@id/addTravel" />
+
     </fragment>
     <fragment
-        android:id="@+id/user_my_profile_page"
+        android:id="@+id/userMyProfile"
         android:name="com.example.macc.UserMyProfile"
         android:label="Profile"
         tools:layout="@layout/user_my_profile_page"/>
@@ -42,4 +46,9 @@
         android:name="com.example.macc.UsersList"
         android:label="UsersList"
         tools:layout="@layout/users_list"/>
+    <fragment
+        android:id="@+id/addTravel"
+        android:name="com.example.macc.AddTravel"
+        android:label="AddTravel"
+        tools:layout="@layout/add_travel_page"/>
 </navigation>
