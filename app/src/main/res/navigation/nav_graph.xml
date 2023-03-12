@@ -45,10 +45,19 @@
         android:id="@+id/usersList"
         android:name="com.example.macc.UsersList"
         android:label="UsersList"
-        tools:layout="@layout/users_list"/>
+        tools:layout="@layout/users_list">
+        <action
+            android:id="@+id/action_usersList_to_userProfile"
+            app:destination="@id/userProfile" />
+    </fragment>
     <fragment
         android:id="@+id/addTravel"
         android:name="com.example.macc.AddTravel"
         android:label="AddTravel"
         tools:layout="@layout/add_travel_page"/>
+    <fragment
+        android:id="@+id/userProfile"
+        android:name="com.example.macc.UserProfile"
+        android:label="UserProfile"
+        tools:layout="@layout/user_profile_page"/>
 </navigation>

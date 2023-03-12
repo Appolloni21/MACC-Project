@@ -1,37 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/black_light_material">
-
-    <!-- TODO: Visualizzazione delle card non perfetta-->
-
-    <TextView
-        android:id="@+id/group_number"
-        android:layout_width="18dp"
-        android:layout_height="29dp"
-        android:layout_marginStart="96dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/_4"
-        android:textAppearance="?attr/textAppearanceHeadline6"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.38"
-        app:layout_constraintStart_toEndOf="@+id/travel_title"
-        app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
-
     <com.google.android.material.card.MaterialCardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/materialCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        app:cardBackgroundColor="@color/black_light_material"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="@color/black_primary_material"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/travel_image"
@@ -39,6 +24,9 @@
             android:layout_height="194dp"
             android:importantForAccessibility="no"
             android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="ImageContrastCheck" />
 
         <TextView
@@ -50,47 +38,65 @@
             android:text="@string/in_progress"
             android:textColor="@color/white"
             android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/travel_image"
             tools:ignore="TextContrastCheck" />
 
-    </com.google.android.material.card.MaterialCardView>
+        <TextView
+            android:id="@+id/travel_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/travel_name"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/travel_image" />
 
-    <TextView
-        android:id="@+id/travel_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="212dp"
-        android:text="@string/travel_name"
-        android:textAppearance="?attr/textAppearanceHeadline6"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.029"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/group_number"
+            android:layout_width="18dp"
+            android:layout_height="29dp"
+            android:layout_marginStart="96dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/_4"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintStart_toEndOf="@+id/travel_title"
+            app:layout_constraintTop_toBottomOf="@+id/travel_image" />
 
-    <ImageView
-        android:id="@+id/group_number_icon"
-        android:layout_width="30dp"
-        android:layout_height="27dp"
-        android:layout_marginTop="16dp"
-        android:contentDescription="@string/group_number_icon"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/group_number"
-        app:layout_constraintTop_toBottomOf="@+id/materialCardView"
-        app:srcCompat="@drawable/ic_baseline_group_24" />
+        <ImageView
+            android:id="@+id/group_number_icon"
+            android:layout_width="30dp"
+            android:layout_height="27dp"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/group_number_icon"
+            app:layout_constraintStart_toEndOf="@+id/group_number"
+            app:layout_constraintTop_toBottomOf="@+id/travel_image"
+            app:srcCompat="@drawable/ic_baseline_group_24" />
 
-    <ImageView
-        android:id="@+id/delete_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
-        android:contentDescription="@string/delete_icon"
-        app:layout_constraintStart_toEndOf="@+id/group_number_icon"
-        app:layout_constraintTop_toBottomOf="@+id/materialCardView"
-        app:srcCompat="@drawable/ic_baseline_delete_24" />
+        <ImageView
+            android:id="@+id/delete_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="64dp"
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_marginTop="10dp"
+            android:contentDescription="@string/delete_icon"
+            app:layout_constraintStart_toEndOf="@+id/group_number_icon"
+            app:layout_constraintTop_toBottomOf="@+id/travel_image"
+            app:srcCompat="@drawable/ic_baseline_delete_24" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
 
 
