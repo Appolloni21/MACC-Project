@@ -7,11 +7,15 @@
     android:background="@color/black_light_material"
     android:backgroundTint="@color/black_light_material">
 
-    <include layout="@layout/toolbar1"
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/toolbar"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <com.google.android.material.textfield.TextInputLayout

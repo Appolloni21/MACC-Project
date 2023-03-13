@@ -120,7 +120,8 @@
         android:text="@string/mer"
         android:textColor="@color/sky_blue"
         app:layout_constraintStart_toStartOf="@+id/box"
-        app:layout_constraintTop_toTopOf="@+id/box" />
+        app:layout_constraintTop_toTopOf="@+id/box"
+        tools:ignore="TextContrastCheck" />
 
     <ImageView
         android:id="@+id/circle"
