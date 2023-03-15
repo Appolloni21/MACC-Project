@@ -1,8 +1,13 @@
 package com.example.macc.model
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 
-data class Travel(@StringRes val stringResourceId: Int, @DrawableRes val imageResourceId: Int) {
-
+data class Travel(
+    var tid: String? = null,
+    var name: String? = null,
+    var destination: String? = null,
+    var start_date: String? = null,
+    var end_date: String? = null,
+    var img_url: String? = null,
+    var members: Map<String,Boolean> ?= null
+) {
 }

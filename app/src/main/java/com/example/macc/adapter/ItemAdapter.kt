@@ -12,11 +12,15 @@ import com.example.macc.HomepageDirections
 import com.example.macc.R
 import com.example.macc.model.Travel
 
-
+/*
+* ATTUALMENTE NON USATA, NON CANCELLARE
+*
+*
+* */
 class ItemAdapter (private val context: Context, private val dataset: List<Travel>) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>(){
     class ItemViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val textView: TextView = view.findViewById(R.id.travel_title)
-        val imageView: ImageView = view.findViewById(R.id.travel_image)
+        //val textView: TextView = view.findViewById(R.id.travel_name)
+        //val imageView: ImageView = view.findViewById(R.id.travel_image)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -29,15 +33,15 @@ class ItemAdapter (private val context: Context, private val dataset: List<Trave
 
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val item = dataset[position]
-        holder.textView.text =  context.resources.getString(item.stringResourceId)
-        holder.imageView.setImageResource(item.imageResourceId)
-        holder.imageView.setOnClickListener{
+        //val item = dataset[position]
+        //holder.textView.text =  context.resources.getString("ciao")
+        //holder.imageView.setImageResource(item.imageResourceId)
+        /*holder.imageView.setOnClickListener{
 
             //Action from homepage to expense list page
             val action = HomepageDirections.actionHomepageToExpenseList()
             holder.view.findNavController().navigate(action)
-        }
+        }*/
 
     }
 
