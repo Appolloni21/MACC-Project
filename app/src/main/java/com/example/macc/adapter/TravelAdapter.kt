@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.macc.HomepageDirections
 import com.example.macc.R
 import com.example.macc.model.Travel
@@ -33,6 +34,11 @@ class TravelAdapter(private val travelList : ArrayList<Travel>) : RecyclerView.A
         val item = travelList[position]
         holder.travelName.text = item.name
         holder.travelMembers.text = item.members?.size.toString()
+
+        //Loads the image from the url with Glide
+        Glide.with(holder.view)
+            .load(item.img_url)
+            .into(holder.travelImage)
 
         holder.travelImage.setOnClickListener{
 
