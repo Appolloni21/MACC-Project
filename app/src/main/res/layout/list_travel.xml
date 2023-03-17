@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <com.google.android.material.card.MaterialCardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/materialCardView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:cardElevation="4dp"
-        app:cardBackgroundColor="@color/black_primary_material"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/materialCardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardBackgroundColor="@color/black_primary_material"
+    app:cardElevation="4dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,76 +26,77 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@color/teal_200"
             tools:ignore="ImageContrastCheck" />
 
         <TextView
             android:id="@+id/tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#4CAF50"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/rounded_corner"
             android:backgroundTint="#4CAF50"
+            android:paddingStart="7dp"
+            android:paddingEnd="7dp"
             android:text="@string/in_progress"
             android:textColor="@color/white"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/travel_image"
             tools:ignore="TextContrastCheck" />
 
         <TextView
             android:id="@+id/travel_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="162dp"
+            android:background="#80D9D9D9"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
             android:text="@string/travel_name"
             android:textAppearance="?attr/textAppearanceHeadline6"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/travel_image" />
+            app:layout_constraintTop_toTopOf="@+id/travel_image" />
 
         <TextView
             android:id="@+id/group_number"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="96dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="280dp"
+            android:layout_marginTop="5dp"
             android:text="@string/_4"
             android:textAppearance="?attr/textAppearanceHeadline6"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@+id/travel_name"
-            app:layout_constraintTop_toBottomOf="@+id/travel_image" />
+            app:layout_constraintStart_toStartOf="@+id/travel_name"
+            app:layout_constraintTop_toTopOf="@+id/travel_name" />
 
         <ImageView
             android:id="@+id/group_number_icon"
-            android:layout_width="30dp"
-            android:layout_height="27dp"
-            android:layout_marginStart="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
             android:layout_marginTop="8dp"
             android:contentDescription="@string/group_number_icon"
             app:layout_constraintStart_toEndOf="@+id/group_number"
-            app:layout_constraintTop_toBottomOf="@+id/travel_image"
-            app:srcCompat="@drawable/ic_baseline_group_24" />
+            app:layout_constraintTop_toTopOf="@+id/travel_name"
+            app:srcCompat="@drawable/outline_group_24" />
 
         <ImageView
             android:id="@+id/delete_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="5dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginEnd="16dp"
             android:contentDescription="@string/delete_icon"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/group_number_icon"
-            app:layout_constraintTop_toBottomOf="@+id/travel_image"
-            app:srcCompat="@drawable/ic_baseline_delete_24" />
+            app:layout_constraintTop_toTopOf="@+id/travel_name"
+            app:srcCompat="@drawable/baseline_delete_outline_24" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

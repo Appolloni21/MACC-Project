@@ -78,9 +78,10 @@ class Homepage : Fragment() {
     }
 
      private fun getTravels(){
-        database = Firebase.database.getReference("travels")
+         //per ora prende tutti i travel nel db, bisognerà cambiarlo per fare la get su solo i travel a cui partecipa l'utente
+         database = Firebase.database.getReference("travels")
 
-        database.addValueEventListener(object : ValueEventListener {
+         database.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot : DataSnapshot) {
                 if(snapshot.exists()){
