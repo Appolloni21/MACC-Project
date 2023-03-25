@@ -13,7 +13,6 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.macc.adapter.TravelAdapter
 import com.example.macc.model.Travel
-import com.example.macc.model.User
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -29,7 +28,6 @@ class Homepage : Fragment() {
     private lateinit var database : DatabaseReference
     private lateinit var recyclerView : RecyclerView
     private lateinit var travelArrayList : ArrayList<Travel>
-    private var userTravelsSet: Set<String>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,8 +40,8 @@ class Homepage : Fragment() {
 
 
         // Initialize data.
-        travelArrayList = arrayListOf<Travel>()
-        getTravels()
+        travelArrayList = arrayListOf()
+        getTravelsHomepage()
 
         recyclerView = view.findViewById(R.id.recycler_view)
         //val activity = activity as Context
@@ -60,7 +58,7 @@ class Homepage : Fragment() {
         //Toolbar with nav component
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
-        val toolbar: Toolbar = view.findViewById<Toolbar>(R.id.toolbar)
+        val toolbar: Toolbar = view.findViewById(R.id.toolbar)
 
         toolbar.setupWithNavController(navController, appBarConfiguration)
 
@@ -75,42 +73,30 @@ class Homepage : Fragment() {
         }
     }
 
-     private fun getTravels(){
+     private fun getTravelsHomepage(){
 
          val userUid = Firebase.auth.currentUser?.uid.toString()
-         database = Firebase.database.getReference("users")
-         userTravelsSet = setOf()
 
-         //Prima di tutto prendiamo i riferimenti ai travel fatti dall'utente da dentro l'utente
-         database.child(userUid).get().addOnSuccessListener {
-             val user = it.getValue(User::class.java)
-             userTravelsSet = user?.trips?.keys
-             //Log.i(TAG, "viaggi dell'utente:${userTravelsSet}")
-
-             //Poi dall'elenco dei travel nel db selezioniamo solo quelli che matchano con i travel effettivamente fatti dall'utente
-             database = Firebase.database.getReference("travels")
-             database.addValueEventListener(object : ValueEventListener {
-                 override fun onDataChange(snapshot : DataSnapshot) {
-                     if(snapshot.exists()){
-                         for(travelSnapshot in snapshot.children){
-                             val travelKey = travelSnapshot.key.toString()
-                             val travel = travelSnapshot.getValue(Travel::class.java)
-                             if(userTravelsSet!!.contains(travelKey)){
-                                 travelArrayList.add(travel!!)
-                             }
+         database = Firebase.database.getReference("travels")
+         database.addValueEventListener(object : ValueEventListener {
+             override fun onDataChange(snapshot : DataSnapshot) {
+                 //Svuotiamo la lista dei travel altrimenti in homepage compaiono dei duplicati
+                 travelArrayList.clear()
+                 if(snapshot.exists()){
+                     for(travelSnapshot in snapshot.children){
+                         val travel = travelSnapshot.getValue(Travel::class.java)
+                         //Dall'elenco dei travel nel db selezioniamo solo quelli che matchano con i travel effettivamente fatti dall'utente
+                         if(travel?.members?.containsKey(userUid) == true){
+                             travelArrayList.add(travel)
                          }
-                         recyclerView.adapter = TravelAdapter(travelArrayList)
                      }
+                     recyclerView.adapter = TravelAdapter(travelArrayList)
                  }
-                 override fun onCancelled(databaseError: DatabaseError) {
-                     Log.w(TAG, "getTravels:onCancelled", databaseError.toException())
-
-                 }
-             })
-
-         }.addOnFailureListener{
-             Log.e(TAG, "Error getting data", it)
-         }
+             }
+             override fun onCancelled(databaseError: DatabaseError) {
+                 Log.w(TAG, "getTravelsHomepage:onCancelled", databaseError.toException())
+             }
+         })
 
     }
 }

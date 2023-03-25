@@ -37,7 +37,7 @@ class TravelAdapter(private val travelList : ArrayList<Travel>) : RecyclerView.A
 
         //Loads the image from the url with Glide
         Glide.with(holder.view)
-            .load(item.img_url)
+            .load(item.imgUrl)
             .into(holder.travelImage)
 
         holder.travelImage.setOnClickListener{
