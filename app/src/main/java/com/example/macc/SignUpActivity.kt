@@ -1,6 +1,7 @@
 package com.example.macc
 
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -34,7 +35,7 @@ class SignUpActivity : AppCompatActivity() {
         //back navigation
         val backIcon: ImageView = findViewById(R.id.back_icon)
         backIcon.setOnClickListener {
-            this@SignUpActivity.onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
         }
 
 
@@ -47,57 +48,33 @@ class SignUpActivity : AppCompatActivity() {
             val email: String = findViewById<EditText>(R.id.email).text.toString().trim { it <= ' ' }
             val password: String = findViewById<EditText>(R.id.password).text.toString().trim { it <= ' ' }
 
+
             when {
                 TextUtils.isEmpty(name) -> {
-                    Toast.makeText(
-                        this@SignUpActivity,
-                        "Please enter name",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    makeToast("name")
                 }
 
                 TextUtils.isEmpty(surname) -> {
-                    Toast.makeText(
-                        this@SignUpActivity,
-                        "Please enter surname",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    makeToast("surname")
                 }
 
                 TextUtils.isEmpty(nickname) -> {
-                    Toast.makeText(
-                        this@SignUpActivity,
-                        "Please enter surname",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    makeToast("nickname")
                 }
 
                 TextUtils.isEmpty(email) -> {
-                    Toast.makeText(
-                        this@SignUpActivity,
-                        "Please enter email",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    makeToast("email")
                 }
 
                 TextUtils.isEmpty(password) -> {
-                    Toast.makeText(
-                        this@SignUpActivity,
-                        "Please enter password",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    makeToast("password")
                 }
 
                 !passwordsAreEquals(this@SignUpActivity) -> {
-                    Toast.makeText(
-                        this@SignUpActivity,
-                        "Passwords are not equals",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    makeToast("Passwords are not equals")
                 }
 
                 else -> {
-
                     signUpUser(name, surname, nickname, email, password)
                 }
             }
@@ -149,6 +126,13 @@ class SignUpActivity : AppCompatActivity() {
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
                 }
             }
+    }
+    private fun makeToast(msg:String){
+        Toast.makeText(
+            this@SignUpActivity,
+            "Please enter $msg",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }
 

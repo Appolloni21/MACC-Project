@@ -82,18 +82,19 @@ class AddTravel : Fragment() {
             val members: Map<String,Boolean> = mapOf(userUid to true)
             //TODO: gestire casistica in cui si inseriscano altri utenti
             //TODO: gestire casi in cui i campi sono vuoti e riordinare in generale il codice
-            addTravel(travelName,destination,startDate,endDate,members)
+            addTravel(userUid,travelName,destination,startDate,endDate,members)
             navController.navigateUp()
         }
     }
 
 
-    private fun addTravel(travelName:String, destination:String, startDate:String, endDate:String, members:Map<String,Boolean>){
+    private fun addTravel(userUid:String ,travelName:String, destination:String, startDate:String, endDate:String, members:Map<String,Boolean>){
 
         realtimeDatabase = Firebase.database.getReference("travels")
         val key = realtimeDatabase.push().key.toString()
         val storage = Firebase.storage.getReference("travels/$key/img")
         //Log.d(TAG, "Storage: $storage")
+        //Carichiamo l'immagine del travel
         storage.putFile(imageCoverURI).continueWithTask { task ->
             if (!task.isSuccessful) {
                 task.exception?.let {
@@ -105,14 +106,22 @@ class AddTravel : Fragment() {
             if (task.isSuccessful) {
                 Log.d(TAG, "Upload travel cover on Firebase Storage: success")
                 val downloadUri = task.result
-
                 val imgUrl: String = downloadUri.toString()
                 val travel = Travel(travelName,destination, startDate,endDate, imgUrl, members)
 
+                //Aggiungiamo il travel nell'elenco del Realtime db
                 realtimeDatabase.child(key).setValue(travel).addOnSuccessListener {
                     Log.d(TAG, "create travel in Realtime db: success")
                 }.addOnFailureListener{
                     Log.d(TAG, "create travel in Realtime db: failure")
+                }
+
+                //Dobbiamo aggiungere il riferimento del travel anche nella lista "trips" dell'utente corrente
+                realtimeDatabase = Firebase.database.getReference("users")
+                realtimeDatabase.child(userUid).child("trips").child(key).setValue(true).addOnSuccessListener {
+                    Log.d(TAG, "Add travel in user trips: success")
+                }.addOnFailureListener{
+                    Log.d(TAG, "Add travel in user trips: failure")
                 }
             } else {
                 // Handle failures

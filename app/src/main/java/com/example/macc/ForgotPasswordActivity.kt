@@ -19,7 +19,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
         //back navigation
         val backIcon : ImageView = findViewById(R.id.back_icon2)
         backIcon.setOnClickListener {
-            this@ForgotPasswordActivity.onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
         }
 
         val submitButton: Button = findViewById(R.id.submit_btn)

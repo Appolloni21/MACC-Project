@@ -21,37 +21,29 @@ class LoginActivity : AppCompatActivity(){
         setContentView(R.layout.login_page)
 
 
-        val passwordEditText = findViewById<EditText>(R.id.password_text)
+        //val passwordEditText = findViewById<EditText>(R.id.password_text)
 
         val loginButton: Button = findViewById(R.id.login_btn)
         loginButton.setOnClickListener {
-            when {
-                TextUtils.isEmpty(
-                    findViewById<EditText>(R.id.email_text).text.toString().trim { it <= ' ' }) -> {
-                    Toast.makeText(
-                        this@LoginActivity,
-                        "Please enter email",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
 
-                TextUtils.isEmpty(
-                    findViewById<EditText>(R.id.password_text).text.toString()
-                        .trim { it <= ' ' }) -> {
-                    Toast.makeText(
-                        this@LoginActivity,
-                        "Please enter password",
-                        Toast.LENGTH_SHORT
-                    ).show()
+            val email: String = findViewById<EditText>(R.id.email_text).text.toString().trim { it <= ' ' }
+            val password: String = findViewById<EditText>(R.id.password_text).text.toString().trim { it <= ' ' }
+
+            when {
+                TextUtils.isEmpty(email) -> {
+                    makeToast("Please enter email")
+                }
+                TextUtils.isEmpty(password) -> {
+                    makeToast("Please enter password")
                 }
 
                 else -> {
 
 
-                    val email: String =
+                    /*val email: String =
                         findViewById<EditText>(R.id.email_text).text.toString().trim { it <= ' ' }
                     val password: String =
-                        passwordEditText.text.toString().trim { it <= ' ' }
+                        passwordEditText.text.toString().trim { it <= ' ' }*/
 
                     //Login user with email and password
                     FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
@@ -98,8 +90,14 @@ class LoginActivity : AppCompatActivity(){
             val intent = Intent(this@LoginActivity, ForgotPasswordActivity::class.java)
             startActivity(intent)
         }
+    }
 
-
+    private fun makeToast(msg:String){
+        Toast.makeText(
+            this@LoginActivity,
+            "Please enter $msg",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
 }
