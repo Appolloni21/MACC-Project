@@ -94,7 +94,8 @@ class AddTravel : Fragment() {
         val key = realtimeDatabase.push().key.toString()
         val storage = Firebase.storage.getReference("travels/$key/img")
         //Log.d(TAG, "Storage: $storage")
-        //Carichiamo l'immagine del travel
+
+        //Carichiamo l'immagine del travel nel Firebase storage
         storage.putFile(imageCoverURI).continueWithTask { task ->
             if (!task.isSuccessful) {
                 task.exception?.let {
