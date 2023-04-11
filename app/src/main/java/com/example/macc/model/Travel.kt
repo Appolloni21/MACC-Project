@@ -2,7 +2,6 @@ package com.example.macc.model
 
 
 data class Travel(
-    //var tid: String? = null,
     var name: String? = null,
     var destination: String? = null,
     var startDate: String? = null,

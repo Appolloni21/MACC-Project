@@ -1,5 +1,6 @@
 package com.example.macc.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,11 @@ import com.example.macc.HomepageDirections
 import com.example.macc.R
 import com.example.macc.model.Travel
 
-class TravelAdapter(private val travelList : ArrayList<Travel>) : RecyclerView.Adapter<TravelAdapter.TravelViewHolder>() {
+const val TAG = "TravelAdapter"
+
+class TravelAdapter : RecyclerView.Adapter<TravelAdapter.TravelViewHolder>() {
+
+    private val travelsList : ArrayList<Travel> = arrayListOf()
 
     class TravelViewHolder(val view: View) : RecyclerView.ViewHolder(view){
         val travelName : TextView = view.findViewById(R.id.travel_name)
@@ -21,17 +26,16 @@ class TravelAdapter(private val travelList : ArrayList<Travel>) : RecyclerView.A
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TravelViewHolder {
-
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_travel, parent, false)
         return TravelViewHolder(itemView)
     }
 
     override fun getItemCount(): Int {
-        return travelList.size
+        return travelsList.size
     }
 
     override fun onBindViewHolder(holder: TravelViewHolder, position: Int) {
-        val item = travelList[position]
+        val item = travelsList[position]
         holder.travelName.text = item.name
         holder.travelMembers.text = item.members?.size.toString()
 
@@ -46,5 +50,12 @@ class TravelAdapter(private val travelList : ArrayList<Travel>) : RecyclerView.A
             val action = HomepageDirections.actionHomepageToExpenseList()
             holder.view.findNavController().navigate(action)
         }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setTravelsList(travelList : List<Travel>){
+        this.travelsList.clear()
+        this.travelsList.addAll(travelList)
+        notifyDataSetChanged()
     }
 }
