@@ -13,22 +13,18 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.macc.model.User
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
+import com.example.macc.data.AuthViewModel
+
 
 
 private const val TAG: String = "SignUp Activity"
 
 class SignUpActivity : AppCompatActivity() {
 
-    private lateinit var realtimeDatabase: DatabaseReference
     private lateinit var imageAvatarURI: Uri
+    private val sharedViewModel: AuthViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,23 +72,23 @@ class SignUpActivity : AppCompatActivity() {
 
             when {
                 TextUtils.isEmpty(name) -> {
-                    makeToast("name")
+                    makeToast("Please enter name")
                 }
 
                 TextUtils.isEmpty(surname) -> {
-                    makeToast("surname")
+                    makeToast("Please enter surname")
                 }
 
                 TextUtils.isEmpty(nickname) -> {
-                    makeToast("nickname")
+                    makeToast("Please enter nickname")
                 }
 
                 TextUtils.isEmpty(email) -> {
-                    makeToast("email")
+                    makeToast("Please enter email")
                 }
 
                 TextUtils.isEmpty(password) -> {
-                    makeToast("password")
+                    makeToast("Please enter password")
                 }
 
                 !passwordsAreEquals(this@SignUpActivity) -> {
@@ -100,80 +96,33 @@ class SignUpActivity : AppCompatActivity() {
                 }
 
                 else -> {
-                    signUpUser(name, surname, nickname, description, email, password, trips)
+                    val context = applicationContext
+                    sharedViewModel.signUpUser(name, surname, nickname, description, email, password, trips, imageAvatarURI, context)
                 }
+            }
+        }
+
+        sharedViewModel.userData.observe(this){
+            if(it != null){
+
+                //User is registered and so logged in, we send him to the homepage
+                val intent = Intent(
+                    this@SignUpActivity,
+                    MainActivity::class.java
+                )
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
             }
         }
 
     }
 
-    private fun signUpUser(name:String, surname:String, nickname:String, description: String, email:String, password:String, trips:Map<String,Boolean>){
-        //Sign-up user with email and password
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this)
-            { task ->
-                //If the registration is successfully done
-                if (task.isSuccessful) {
 
-                    //register the user on Firebase Authenticator also on the Realtime Database
-                    val firebaseUser: FirebaseUser = task.result!!.user!!
-                    val userUid:String = firebaseUser.uid
-
-                    val storage = Firebase.storage.getReference("users/$userUid/avatar")
-
-                    //Carichiamo l'avatar dell'utente nel Firebase storage
-                    storage.putFile(imageAvatarURI).continueWithTask { taskStorage ->
-                        if (!taskStorage.isSuccessful) {
-                            task.exception?.let {
-                                throw it
-                            }
-                        }
-                        storage.downloadUrl
-                    }.addOnCompleteListener { taskStorage ->
-                        if (taskStorage.isSuccessful) {
-                            Log.d(TAG, "Upload user avatar on Firebase Storage: success")
-                            val downloadUri = task.result
-                            val avatar: String = downloadUri.toString()
-
-
-                            //Adesso aggiungiamo l'utente nel Realtime database
-                            val user = User(name,surname,nickname,description,email,avatar,trips)
-                            realtimeDatabase = Firebase.database.getReference("users")
-                            realtimeDatabase.child(userUid).setValue(user).addOnSuccessListener {
-                                Log.d(TAG, "create user in Realtime db: success")
-                            }.addOnFailureListener{
-                                Log.d(TAG, "create user in Realtime db: failure")
-                            }
-
-                        } else {
-                            // Handle failures
-                            Log.d(TAG, "Upload user avatar on Firebase Storage: failure")
-                        }
-                    }
-
-                    makeToast("You are registered successfully")
-                    Log.d(TAG, "createUserWithEmail:success")
-
-                    //User is registered and so logged in, we send him to the homepage
-                    val intent = Intent(
-                        this@SignUpActivity,
-                        MainActivity::class.java
-                    )
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
-                    finish()
-                }
-                else {
-                    //If the registration was not successful, then show the error message
-                    makeToast(task.exception!!.message.toString())
-                    Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                }
-            }
-    }
     private fun makeToast(msg:String){
         Toast.makeText(
             this@SignUpActivity,
-            "Please enter $msg",
+            msg,
             Toast.LENGTH_SHORT
         ).show()
     }

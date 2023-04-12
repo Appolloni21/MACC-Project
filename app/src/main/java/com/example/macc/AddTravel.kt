@@ -14,16 +14,14 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import com.example.macc.model.Travel
+import com.example.macc.data.HomepageViewModel
 import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
+
 
 
 
@@ -33,6 +31,7 @@ class AddTravel : Fragment() {
 
     private lateinit var realtimeDatabase: DatabaseReference
     private lateinit var imageCoverURI: Uri
+    private val sharedViewModel: HomepageViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -74,60 +73,14 @@ class AddTravel : Fragment() {
 
         val addTravelButton = view.findViewById<Button>(R.id.addTravelButton)
         addTravelButton.setOnClickListener{
-            val userUid = Firebase.auth.currentUser?.uid.toString()
             val travelName: String = view.findViewById<TextInputLayout>(R.id.travelName)?.editText?.text.toString().trim { it <= ' ' }
             val destination: String = view.findViewById<TextInputLayout>(R.id.destination)?.editText?.text.toString().trim { it <= ' ' }
             val startDate: String = view.findViewById<EditText>(R.id.startDate)?.text.toString().trim { it <= ' ' }
             val endDate: String = view.findViewById<EditText>(R.id.endDate)?.text.toString().trim { it <= ' ' }
-            val members: Map<String,Boolean> = mapOf(userUid to true)
             //TODO: gestire casistica in cui si inseriscano altri utenti
             //TODO: gestire casi in cui i campi sono vuoti e riordinare in generale il codice
-            addTravel(userUid,travelName,destination,startDate,endDate,members)
+            sharedViewModel.addTravel(travelName,destination,startDate,endDate,imageCoverURI)
             navController.navigateUp()
-        }
-    }
-
-
-    private fun addTravel(userUid:String ,travelName:String, destination:String, startDate:String, endDate:String, members:Map<String,Boolean>){
-
-        realtimeDatabase = Firebase.database.getReference("travels")
-        val key = realtimeDatabase.push().key.toString()
-        val storage = Firebase.storage.getReference("travels/$key/img")
-        //Log.d(TAG, "Storage: $storage")
-
-        //Carichiamo l'immagine del travel nel Firebase storage
-        storage.putFile(imageCoverURI).continueWithTask { task ->
-            if (!task.isSuccessful) {
-                task.exception?.let {
-                    throw it
-                }
-            }
-            storage.downloadUrl
-        }.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Log.d(TAG, "Upload travel cover on Firebase Storage: success")
-                val downloadUri = task.result
-                val imgUrl: String = downloadUri.toString()
-                val travel = Travel(travelName,destination, startDate,endDate, imgUrl, members)
-
-                //Aggiungiamo il travel nell'elenco del Realtime db
-                realtimeDatabase.child(key).setValue(travel).addOnSuccessListener {
-                    Log.d(TAG, "create travel in Realtime db: success")
-                }.addOnFailureListener{
-                    Log.d(TAG, "create travel in Realtime db: failure")
-                }
-
-                //Dobbiamo aggiungere il riferimento del travel anche nella lista "trips" dell'utente corrente
-                realtimeDatabase = Firebase.database.getReference("users")
-                realtimeDatabase.child(userUid).child("trips").child(key).setValue(true).addOnSuccessListener {
-                    Log.d(TAG, "Add travel in user trips: success")
-                }.addOnFailureListener{
-                    Log.d(TAG, "Add travel in user trips: failure")
-                }
-            } else {
-                // Handle failures
-                Log.d(TAG, "Upload travel cover on Firebase Storage: failure")
-            }
         }
     }
 }

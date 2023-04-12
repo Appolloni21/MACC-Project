@@ -1,5 +1,6 @@
 package com.example.macc.data
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,6 +22,10 @@ class HomepageViewModel : ViewModel() {
         _travelArrayList.value = arrayListOf()
         repository = FirebaseDatabaseRepository().getIstance()
         repository.loadTravelsHome(_travelArrayList)
+    }
+
+    fun addTravel(travelName:String, destination:String, startDate:String, endDate:String, imgCover: Uri){
+        repository.addTravel(travelName, destination, startDate, endDate, imgCover)
     }
 
 }
