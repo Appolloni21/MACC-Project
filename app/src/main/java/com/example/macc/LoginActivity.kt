@@ -7,21 +7,19 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
-
+import com.example.macc.data.AuthViewModel
 
 class LoginActivity : AppCompatActivity(){
 
+    private val sharedViewModel: AuthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         supportActionBar?.hide()
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_page)
-
-
-        //val passwordEditText = findViewById<EditText>(R.id.password_text)
 
         val loginButton: Button = findViewById(R.id.login_btn)
         loginButton.setOnClickListener {
@@ -31,51 +29,30 @@ class LoginActivity : AppCompatActivity(){
 
             when {
                 TextUtils.isEmpty(email) -> {
-                    makeToast("Please enter email")
+                    makeToast("email")
                 }
                 TextUtils.isEmpty(password) -> {
-                    makeToast("Please enter password")
+                    makeToast("password")
                 }
-
                 else -> {
 
-
-                    /*val email: String =
-                        findViewById<EditText>(R.id.email_text).text.toString().trim { it <= ' ' }
-                    val password: String =
-                        passwordEditText.text.toString().trim { it <= ' ' }*/
-
                     //Login user with email and password
-                    FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener{ task ->
-                            //If the login is successfully done
-                            if (task.isSuccessful) {
-
-                                Toast.makeText(
-                                    this@LoginActivity,
-                                    "You are logged in successfully",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-
-                                //User is logged in, we send him to the homepage
-                                val intent = Intent(
-                                    this@LoginActivity,
-                                    MainActivity::class.java
-                                )
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                startActivity(intent)
-                                finish()
-                            } else {
-                                //If the login was not successful, then show the error message
-                                Toast.makeText(
-                                    this@LoginActivity,
-                                    task.exception!!.message.toString(),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-
-                        }
+                    sharedViewModel.logInUser(email,password, applicationContext)
                 }
+            }
+        }
+
+        sharedViewModel.userData.observe(this){
+            if(it != null){
+
+                //User is logged in, we send him to the homepage
+                val intent = Intent(
+                    this@LoginActivity,
+                    MainActivity::class.java
+                )
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
             }
         }
 

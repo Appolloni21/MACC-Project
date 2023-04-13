@@ -96,8 +96,7 @@ class SignUpActivity : AppCompatActivity() {
                 }
 
                 else -> {
-                    val context = applicationContext
-                    sharedViewModel.signUpUser(name, surname, nickname, description, email, password, trips, imageAvatarURI, context)
+                    sharedViewModel.signUpUser(name, surname, nickname, description, email, password, trips, imageAvatarURI, applicationContext)
                 }
             }
         }

@@ -17,6 +17,9 @@ class AuthViewModel: ViewModel() {
     fun signUpUser(name:String, surname:String, nickname:String, description: String, email:String,
                    password:String, trips:Map<String,Boolean>, imgAvatar: Uri, context: Context){
         repository.signUpUser(name,surname,nickname,description,email,password,trips, imgAvatar, _userData, context)
+    }
 
+    fun logInUser(email: String, password: String, context: Context){
+        repository.logInUser(email, password, _userData, context)
     }
 }

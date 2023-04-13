@@ -20,16 +20,12 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.example.macc.data.HomepageViewModel
 import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.database.DatabaseReference
-
-
 
 
 private const val TAG: String = "AddTravel Fragment"
 
 class AddTravel : Fragment() {
 
-    private lateinit var realtimeDatabase: DatabaseReference
     private lateinit var imageCoverURI: Uri
     private val sharedViewModel: HomepageViewModel by viewModels()
 

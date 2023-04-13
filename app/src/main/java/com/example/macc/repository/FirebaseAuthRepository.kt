@@ -1,10 +1,12 @@
 package com.example.macc.repository
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
+import com.example.macc.MainActivity
 import com.example.macc.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -20,7 +22,6 @@ class FirebaseAuthRepository {
 
     private lateinit var databaseReference: DatabaseReference
     private lateinit var storageReference: StorageReference
-
 
     fun signUpUser(name:String, surname:String, nickname:String, description: String, email:String, password:String,
                    trips:Map<String,Boolean>, imgAvatar: Uri, userData: MutableLiveData<FirebaseUser>, context: Context){
@@ -79,7 +80,30 @@ class FirebaseAuthRepository {
                     //If the registration was not successful, then show the error message
                     makeToast(context, "Error in the registration")
                     Log.d(TAG, task.exception!!.message.toString() )
-                    Log.d(TAG, "createUserWithEmail:failure", task.exception)
+                    Log.d(TAG, "createUserWithEmail: failure", task.exception)
+                }
+            }
+    }
+
+    fun logInUser(email: String, password: String, userData: MutableLiveData<FirebaseUser>, context: Context){
+
+        //Log in user with email and password in Firebase Auth
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener{ task ->
+
+                //If the login is successfully done
+                if (task.isSuccessful) {
+
+                    val firebaseUser: FirebaseUser = task.result!!.user!!
+                    userData.postValue(firebaseUser)
+                    makeToast(context,"You are logged in successfully")
+
+                } else {
+
+                    //If the login was not successful, then show the error message
+                    Log.d(TAG, task.exception!!.message.toString())
+                    Log.d(TAG, "signInWithEmailAndPassword: failure", task.exception)
+                    makeToast(context, "Error in logging in")
                 }
             }
     }
