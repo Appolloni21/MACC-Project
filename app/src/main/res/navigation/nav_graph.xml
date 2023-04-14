@@ -29,6 +29,9 @@
         android:name="com.example.macc.ExpenseList"
         android:label="ExpenseList"
         tools:layout="@layout/expense_list_page">
+        <argument
+            android:name="position"
+            app:argType="integer" />
         <action
             android:id="@+id/action_expenseList_to_insertExpense"
             app:destination="@id/insertExpense" />

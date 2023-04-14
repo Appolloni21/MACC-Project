@@ -1,6 +1,7 @@
 package com.example.macc.adapter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +22,7 @@ class TravelAdapter : RecyclerView.Adapter<TravelAdapter.TravelViewHolder>() {
 
     class TravelViewHolder(val view: View) : RecyclerView.ViewHolder(view){
         val travelName : TextView = view.findViewById(R.id.travel_name)
-        val travelImage : ImageView = view.findViewById(R.id.travel_image)
+        val travelImage : ImageView = view.findViewById(R.id.travelCover)
         val travelMembers : TextView = view.findViewById(R.id.group_number)
     }
 
@@ -36,6 +37,8 @@ class TravelAdapter : RecyclerView.Adapter<TravelAdapter.TravelViewHolder>() {
 
     override fun onBindViewHolder(holder: TravelViewHolder, position: Int) {
         val item = travelsList[position]
+        Log.d(TAG, "$item")
+
         holder.travelName.text = item.name
         holder.travelMembers.text = item.members?.size.toString()
 
@@ -47,7 +50,7 @@ class TravelAdapter : RecyclerView.Adapter<TravelAdapter.TravelViewHolder>() {
         holder.travelImage.setOnClickListener{
 
             //Action from homepage to expense list page
-            val action = HomepageDirections.actionHomepageToExpenseList()
+            val action = HomepageDirections.actionHomepageToExpenseList(position)
             holder.view.findNavController().navigate(action)
         }
     }

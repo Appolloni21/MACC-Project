@@ -18,7 +18,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/travel_image"
+            android:id="@+id/travelCover"
             android:layout_width="match_parent"
             android:layout_height="194dp"
             android:importantForAccessibility="no"
@@ -43,7 +43,7 @@
             android:textColor="@color/white"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/travel_image"
+            app:layout_constraintTop_toTopOf="@+id/travelCover"
             tools:ignore="TextContrastCheck" />
 
         <TextView
@@ -61,7 +61,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/travel_image" />
+            app:layout_constraintTop_toTopOf="@+id/travelCover" />
 
         <TextView
             android:id="@+id/group_number"
