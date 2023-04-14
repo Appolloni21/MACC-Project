@@ -13,7 +13,7 @@ import com.example.macc.HomepageDirections
 import com.example.macc.R
 import com.example.macc.model.Travel
 
-const val TAG = "TravelAdapter"
+private const val TAG = "Travel Adapter"
 
 class TravelAdapter : RecyclerView.Adapter<TravelAdapter.TravelViewHolder>() {
 

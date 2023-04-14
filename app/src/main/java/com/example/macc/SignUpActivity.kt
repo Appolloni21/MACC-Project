@@ -105,16 +105,12 @@ class SignUpActivity : AppCompatActivity() {
             if(it != null){
 
                 //User is registered and so logged in, we send him to the homepage
-                val intent = Intent(
-                    this@SignUpActivity,
-                    MainActivity::class.java
-                )
+                val intent = Intent(this@SignUpActivity, MainActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
                 finish()
             }
         }
-
     }
 
 

@@ -1,8 +1,10 @@
 package com.example.macc.repository
 
 
+import android.content.Context
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.example.macc.model.Travel
 import com.google.firebase.auth.ktx.auth
@@ -62,7 +64,7 @@ class FirebaseDatabaseRepository {
         })
     }
 
-    fun addTravel(travelName:String, destination:String, startDate:String, endDate:String, imgCover: Uri){
+    fun addTravel(travelName:String, destination:String, startDate:String, endDate:String, imgCover: Uri, travelAdded: MutableLiveData<Travel>, context: Context?){
         databaseReference = Firebase.database.getReference("travels")
 
         val key = databaseReference.push().key.toString()
@@ -87,6 +89,11 @@ class FirebaseDatabaseRepository {
                 val travel = Travel(travelName,destination, startDate,endDate, imgUrl, members)
                 databaseReference.child(key).setValue(travel).addOnSuccessListener {
                     Log.d(TAG, "create travel in Realtime db: success")
+
+                    //Aggiorniamo il MutableLiveData per triggherare il cambio pagina dell'UI
+                    travelAdded.postValue(travel)
+                    makeToast(context,"The travel has been added!")
+
                 }.addOnFailureListener{
                     Log.d(TAG, "create travel in Realtime db: failure")
                 }
@@ -103,5 +110,13 @@ class FirebaseDatabaseRepository {
                 Log.d(TAG, "Upload travel cover on Firebase Storage: failure")
             }
         }
+    }
+
+    private fun makeToast(context: Context?, msg:String){
+        Toast.makeText(
+            context,
+            msg,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }

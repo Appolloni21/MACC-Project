@@ -3,6 +3,7 @@ package com.example.macc
 
 import android.net.Uri
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
@@ -26,7 +28,7 @@ private const val TAG: String = "AddTravel Fragment"
 
 class AddTravel : Fragment() {
 
-    private lateinit var imageCoverURI: Uri
+    private var imageCoverURI: Uri = Uri.EMPTY
     private val sharedViewModel: HomepageViewModel by viewModels()
 
     override fun onCreateView(
@@ -74,9 +76,48 @@ class AddTravel : Fragment() {
             val startDate: String = view.findViewById<EditText>(R.id.startDate)?.text.toString().trim { it <= ' ' }
             val endDate: String = view.findViewById<EditText>(R.id.endDate)?.text.toString().trim { it <= ' ' }
             //TODO: gestire casistica in cui si inseriscano altri utenti
-            //TODO: gestire casi in cui i campi sono vuoti e riordinare in generale il codice
-            sharedViewModel.addTravel(travelName,destination,startDate,endDate,imageCoverURI)
-            navController.navigateUp()
+
+            when{
+                TextUtils.isEmpty(imageCoverURI.toString()) -> {
+                    makeToast("Please enter cover image")
+                }
+
+                TextUtils.isEmpty(travelName) -> {
+                    makeToast("Please enter travel name")
+                }
+
+                TextUtils.isEmpty(destination) -> {
+                    makeToast("Please enter destination")
+                }
+
+                TextUtils.isEmpty(startDate) -> {
+                    makeToast("Please enter start date")
+                }
+
+                TextUtils.isEmpty(endDate) -> {
+                    makeToast("Please enter end date")
+                }
+
+                else -> {
+                    sharedViewModel.addTravel(travelName,destination,startDate,endDate,imageCoverURI, context)
+                }
+            }
         }
+
+        sharedViewModel.travelAdded.observe(viewLifecycleOwner){
+            if(it != null){
+
+                //Il viaggio è stato aggiunto correttamente, facciamo ritornare l'utente alla homepage
+                navController.navigateUp()
+            }
+        }
+    }
+
+    private fun makeToast(msg:String){
+        Toast.makeText(
+            context,
+            msg,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }

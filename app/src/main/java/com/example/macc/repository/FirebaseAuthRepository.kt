@@ -1,15 +1,14 @@
 package com.example.macc.repository
 
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
-import com.example.macc.MainActivity
 import com.example.macc.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -22,12 +21,17 @@ class FirebaseAuthRepository {
 
     private lateinit var databaseReference: DatabaseReference
     private lateinit var storageReference: StorageReference
+    private lateinit var auth: FirebaseAuth
+
 
     fun signUpUser(name:String, surname:String, nickname:String, description: String, email:String, password:String,
                    trips:Map<String,Boolean>, imgAvatar: Uri, userData: MutableLiveData<FirebaseUser>, context: Context){
 
+        // Initialize Firebase Auth
+        auth = Firebase.auth
+
         //Sign up user with email and password in Firebase Auth
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+        auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener()
             { task ->
 
@@ -87,8 +91,11 @@ class FirebaseAuthRepository {
 
     fun logInUser(email: String, password: String, userData: MutableLiveData<FirebaseUser>, context: Context){
 
+        // Initialize Firebase Auth
+        auth = Firebase.auth
+
         //Log in user with email and password in Firebase Auth
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+        auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener{ task ->
 
                 //If the login is successfully done
