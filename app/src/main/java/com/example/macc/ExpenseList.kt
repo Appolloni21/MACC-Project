@@ -13,7 +13,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.macc.adapter.ExpenseAdapter
 import com.example.macc.data.HomepageViewModel
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -24,6 +26,8 @@ class ExpenseList : Fragment() {
 
     private var travelPositionId: Int = 0
     private val sharedViewModel: HomepageViewModel by viewModels()
+    private lateinit var recyclerView : RecyclerView
+    lateinit var adapter: ExpenseAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,6 +36,10 @@ class ExpenseList : Fragment() {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.expense_list_page, container,
             false)
+
+        recyclerView = view.findViewById(R.id.recycler_view_expense)
+        adapter = ExpenseAdapter()
+        recyclerView.adapter = adapter
 
         //Serve per sapere la posizione del Travel nella lista della homepage.
         travelPositionId = arguments?.getInt("position")!!
@@ -46,8 +54,24 @@ class ExpenseList : Fragment() {
 
                 //Carichiamo l'immagine
                 Glide.with(view).load(travel.imgUrl).into(view.findViewById(R.id.travelCoverImg))
+
+                /*********/
+                sharedViewModel.loadTravelExpenses(travelPositionId)
+                sharedViewModel.expenses.observe(viewLifecycleOwner){ exp ->
+                    if(exp != null){
+                        Log.d(TAG,"$exp")
+                        //passare all'adapter la lista ed è fatta
+                        adapter.setExpensesList(exp)
+                    }
+                }
+
             }
         }
+
+        // Use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        recyclerView.setHasFixedSize(true)
+
         return view
     }
 

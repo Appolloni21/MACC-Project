@@ -84,122 +84,26 @@
         app:layout_constraintTop_toBottomOf="@+id/materialCardView"
         app:srcCompat="@drawable/ic_baseline_arrow_drop_down_24" />
 
-    <TextView
-        android:id="@+id/expense_name"
-        android:layout_width="96dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="60dp"
-        android:text="@string/expense_name"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.044"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/day_number" />
-
-    <ImageView
-        android:id="@+id/box"
-        android:layout_width="250dp"
-        android:layout_height="160dp"
-        android:layout_marginStart="32dp"
+    <FrameLayout
+        android:id="@+id/frameLayout_expense"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="320dp"
+        android:layout_marginBottom="55dp"
+        android:background="@color/black_light_material"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/expense_name"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/box"
-        android:contentDescription="@string/expense_box" />
+        app:layout_constraintTop_toBottomOf="@+id/day_number"
+        tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/day_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="56dp"
-        android:text="@string/mer"
-        android:textColor="@color/sky_blue"
-        app:layout_constraintStart_toStartOf="@+id/box"
-        app:layout_constraintTop_toTopOf="@+id/box"
-        tools:ignore="TextContrastCheck" />
-
-    <ImageView
-        android:id="@+id/circle"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="13dp"
-        app:layout_constraintStart_toStartOf="@+id/box"
-        app:layout_constraintTop_toBottomOf="@+id/day_text"
-        app:srcCompat="@drawable/circle"
-        android:contentDescription="@string/day_circle" />
-
-    <TextView
-        android:id="@+id/day_number_black"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="14dp"
-        android:text="@string/_7"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/circle"
-        app:layout_constraintTop_toBottomOf="@+id/day_text"
-        tools:ignore="TextContrastCheck" />
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="220dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="@+id/box"
-        app:layout_constraintTop_toTopOf="@+id/box"
-        app:srcCompat="@drawable/ic_baseline_more_vert_24"
-        android:contentDescription="@string/expense_menu_icon" />
-
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="64dp"
-        app:layout_constraintStart_toEndOf="@+id/circle"
-        app:layout_constraintTop_toTopOf="@+id/box"
-        app:srcCompat="@drawable/ic_baseline_location_on_24"
-        android:contentDescription="@string/expense_location_icon" />
-
-    <TextView
-        android:id="@+id/place"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:text="@string/via_ostiense_125"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toEndOf="@+id/imageView5"
-        app:layout_constraintTop_toTopOf="@+id/box" />
-
-    <TextView
-        android:id="@+id/tag_expense"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="5dp"
-        android:background="#fbc02d"
-        android:text="@string/group"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toEndOf="@+id/circle"
-        app:layout_constraintTop_toBottomOf="@+id/place"
-        tools:ignore="TextContrastCheck" />
-
-    <TextView
-        android:id="@+id/total"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="12dp"
-        android:text="@string/tot_15"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toEndOf="@+id/circle"
-        app:layout_constraintTop_toBottomOf="@+id/tag_expense" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_expense"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            app:layoutManager="LinearLayoutManager" />
+    </FrameLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -207,11 +111,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_marginStart="324dp"
-        android:layout_marginTop="88dp"
+        android:layout_marginTop="300dp"
         android:contentDescription="@string/add_expense"
         android:src="@drawable/ic_baseline_add_24"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/box" />
+        app:layout_constraintTop_toBottomOf="@+id/extended_fab" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/extended_fab"

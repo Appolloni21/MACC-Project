@@ -6,6 +6,7 @@ import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
+import com.example.macc.model.Expense
 import com.example.macc.model.Travel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
@@ -111,6 +112,49 @@ class FirebaseDatabaseRepository {
             }
         }
     }
+
+    fun loadTravelExpenses(position: Int, travelArrayList: MutableLiveData<ArrayList<Travel>>, expenseArrayList: MutableLiveData<ArrayList<Expense>>){
+        val travel = travelArrayList.value!![position]
+        val expensesRef = travel.expenses
+        databaseReference = Firebase.database.getReference("expenses")
+
+        //da qui si fa la get (onDataChange) e si selezionano solo le expenses con id uguali a quelli contenuti in expenseList
+        databaseReference.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                try{
+                    //Dobbiamo aggiungere le expense prima a questa lista e poi metterla dentro la MutableLiveData tutta insieme.
+                    val expenseList : ArrayList<Expense> = arrayListOf()
+                    if(snapshot.exists()){
+                        for(expenseSnapshot in snapshot.children){
+                            val expense = expenseSnapshot.getValue(Expense::class.java)
+
+                            //Dall'elenco delle expense nel db selezioniamo solo quelli che matchano con i riferimenti expense contenuti nel travel
+                            if(expensesRef!!.containsKey(expenseSnapshot.key)){
+                                if (expense != null) {
+                                    expenseList.add(expense)
+                                }
+                            }
+                        }
+                    }
+                    //postValue funziona correttamente insieme ai vari listener
+                    expenseArrayList.postValue(expenseList)
+                }catch(e: Exception){
+                    Log.d(TAG,"$e")
+                }
+
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.w(TAG, "loadTravelExpenses:onCancelled", databaseError.toException())
+            }
+        })
+    }
+
+    //Temp
+    /*fun addExpense(){
+        databaseReference = Firebase.database.getReference("expenses")
+        val key = databaseReference.push().key.toString()
+        Log.d(TAG, key)
+    }*/
 
     private fun makeToast(context: Context?, msg:String){
         Toast.makeText(

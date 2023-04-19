@@ -7,6 +7,7 @@ data class Travel(
     var startDate: String? = null,
     var endDate: String? = null,
     var imgUrl: String? = null,
-    var members: Map<String,Boolean> ?= null
+    var members: Map<String,Boolean> ?= null,
+    var expenses: Map<String,Boolean> ?= null
 ) {
 }
