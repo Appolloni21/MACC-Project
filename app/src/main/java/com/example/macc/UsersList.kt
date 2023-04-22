@@ -36,5 +36,7 @@ class UsersList : Fragment() {
             val action = UsersListDirections.actionUsersListToUserProfile()
             view.findNavController().navigate(action)
         }
+
+        //TODO: inserire la recyclerview
     }
 }

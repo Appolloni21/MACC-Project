@@ -75,7 +75,7 @@ class AddTravel : Fragment() {
             val destination: String = view.findViewById<TextInputLayout>(R.id.destination)?.editText?.text.toString().trim { it <= ' ' }
             val startDate: String = view.findViewById<EditText>(R.id.startDate)?.text.toString().trim { it <= ' ' }
             val endDate: String = view.findViewById<EditText>(R.id.endDate)?.text.toString().trim { it <= ' ' }
-            //TODO: gestire casistica in cui si inseriscano altri utenti
+            //TODO: gestire casistica in cui si inseriscano altri utenti (anche lato frontend)
 
             when{
                 TextUtils.isEmpty(imageCoverURI.toString()) -> {

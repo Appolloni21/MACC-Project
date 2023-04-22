@@ -149,12 +149,15 @@ class FirebaseDatabaseRepository {
         })
     }
 
-    //Temp
+    //TODO: addExpense
     /*fun addExpense(){
         databaseReference = Firebase.database.getReference("expenses")
         val key = databaseReference.push().key.toString()
         Log.d(TAG, key)
     }*/
+
+    //TODO: deleteExpense
+    //TODO: deleteTravel
 
     private fun makeToast(context: Context?, msg:String){
         Toast.makeText(

@@ -45,6 +45,7 @@ class ExpenseList : Fragment() {
         travelPositionId = arguments?.getInt("position")!!
         Log.d(TAG, "Position: $travelPositionId")
 
+        //TODO: migliorare codice qui sotto senza fare il nest di due observe
         //Prendiamo la lista dei viaggi che è contenuta nel ViewModel
         sharedViewModel.travelArrayList.observe(viewLifecycleOwner) {
             if(it.isNotEmpty()){
@@ -95,6 +96,8 @@ class ExpenseList : Fragment() {
             val action = ExpenseListDirections.actionExpenseListToInsertExpense()
             view.findNavController().navigate(action)
         }
+
+        //TODO: rendere l'icona dei tre puntini dentro la expense cliccabile e collegarla la funzione di edit della expense
 
     }
 
