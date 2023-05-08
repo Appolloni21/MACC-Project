@@ -27,17 +27,22 @@
     <fragment
         android:id="@+id/expenseList"
         android:name="com.example.macc.ExpenseList"
-        android:label="ExpenseList"
+        android:label="Expense List"
         tools:layout="@layout/expense_list_page">
-        <argument
-            android:name="position"
-            app:argType="integer" />
         <action
             android:id="@+id/action_expenseList_to_insertExpense"
             app:destination="@id/insertExpense" />
         <action
             android:id="@+id/action_expenseList_to_usersList"
             app:destination="@id/usersList" />
+        <argument
+            android:name="travelID"
+            app:argType="string"
+            android:defaultValue='"travelID"' />
+        <argument
+            android:name="travelPosition"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
     <fragment
         android:id="@+id/insertExpense"

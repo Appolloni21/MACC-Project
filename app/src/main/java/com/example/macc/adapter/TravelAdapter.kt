@@ -48,17 +48,18 @@ class TravelAdapter : RecyclerView.Adapter<TravelAdapter.TravelViewHolder>() {
             .into(holder.travelImage)
 
         holder.travelImage.setOnClickListener{
+            val travelID = item.travelID.toString()
 
             //Action from homepage to expense list page
-            val action = HomepageDirections.actionHomepageToExpenseList(position)
+            val action = HomepageDirections.actionHomepageToExpenseList(travelID, position)
             holder.view.findNavController().navigate(action)
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setTravelsList(travelList : List<Travel>){
+    fun setTravelsList(travels : List<Travel>){
         this.travelsList.clear()
-        this.travelsList.addAll(travelList)
+        this.travelsList.addAll(travels)
         notifyDataSetChanged()
     }
 }

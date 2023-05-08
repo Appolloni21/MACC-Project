@@ -33,33 +33,27 @@ class FirebaseDatabaseRepository {
         }
     }
 
-    fun loadTravelsHome(travelArrayList: MutableLiveData<ArrayList<Travel>>){
+    fun getTravels(travelArrayList: MutableLiveData<ArrayList<Travel>>){
         databaseReference = Firebase.database.getReference("travels")
-        databaseReference.addValueEventListener(object: ValueEventListener{
+        databaseReference.orderByChild("members/$userUid").equalTo(true).addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 try{
-                    //Dobbiamo aggiungere i viaggi prima a questa lista e poi metterla dentro la MutableLiveData tutta insieme.
-                    //Se aggiungessimo i viaggi direttamente a travelArrayList non funzionerebbe
                     val travelsList : ArrayList<Travel> = arrayListOf()
                     if(snapshot.exists()){
                         for(travelSnapshot in snapshot.children){
-                            val travel = travelSnapshot.getValue(Travel::class.java)
-
-                            //Dall'elenco dei travel nel db selezioniamo solo quelli che matchano con i travel effettivamente fatti dall'utente
-                            if(travel?.members?.containsKey(userUid) == true){
-                                travelsList.add(travel)
-                            }
+                            val travel = travelSnapshot.getValue(Travel::class.java)!!
+                            travel.travelID = travelSnapshot.key
+                            travelsList.add(travel)
                         }
                     }
                     //postValue funziona correttamente insieme ai vari listener
                     travelArrayList.postValue(travelsList)
                 }catch(e: Exception){
-                    Log.d(TAG,"$e")
+                    Log.d(TAG,"getTravels Exception: $e")
                 }
-
             }
             override fun onCancelled(databaseError: DatabaseError) {
-                Log.w(TAG, "getTravelsHome:onCancelled", databaseError.toException())
+                Log.w(TAG, "getTravels:onCancelled", databaseError.toException())
             }
 
         })
@@ -113,38 +107,28 @@ class FirebaseDatabaseRepository {
         }
     }
 
-    fun loadTravelExpenses(position: Int, travelArrayList: MutableLiveData<ArrayList<Travel>>, expenseArrayList: MutableLiveData<ArrayList<Expense>>){
-        val travel = travelArrayList.value!![position]
-        val expensesRef = travel.expenses
+    fun getExpenses(travelID: String, expenseArrayList: MutableLiveData<ArrayList<Expense>>){
         databaseReference = Firebase.database.getReference("expenses")
-
-        //da qui si fa la get (onDataChange) e si selezionano solo le expenses con id uguali a quelli contenuti in expenseList
-        databaseReference.addValueEventListener(object: ValueEventListener{
+        databaseReference.orderByChild("travelID").equalTo(travelID).addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 try{
                     //Dobbiamo aggiungere le expense prima a questa lista e poi metterla dentro la MutableLiveData tutta insieme.
                     val expenseList : ArrayList<Expense> = arrayListOf()
                     if(snapshot.exists()){
                         for(expenseSnapshot in snapshot.children){
-                            val expense = expenseSnapshot.getValue(Expense::class.java)
-
-                            //Dall'elenco delle expense nel db selezioniamo solo quelli che matchano con i riferimenti expense contenuti nel travel
-                            if(expensesRef!!.containsKey(expenseSnapshot.key)){
-                                if (expense != null) {
-                                    expenseList.add(expense)
-                                }
-                            }
+                            val expense = expenseSnapshot.getValue(Expense::class.java)!!
+                            expenseList.add(expense)
                         }
                     }
                     //postValue funziona correttamente insieme ai vari listener
                     expenseArrayList.postValue(expenseList)
                 }catch(e: Exception){
-                    Log.d(TAG,"$e")
+                    Log.d(TAG,"getExpenses exception: $e")
                 }
 
             }
             override fun onCancelled(databaseError: DatabaseError) {
-                Log.w(TAG, "loadTravelExpenses:onCancelled", databaseError.toException())
+                Log.w(TAG, "getExpenses:onCancelled", databaseError.toException())
             }
         })
     }

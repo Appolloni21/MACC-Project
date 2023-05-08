@@ -24,7 +24,8 @@ private const val TAG = "Expense List Fragment"
 
 class ExpenseList : Fragment() {
 
-    private var travelPositionId: Int = 0
+    private var travelID: String = "travelID"
+    private var travelPosition: Int = 0
     private val sharedViewModel: HomepageViewModel by viewModels()
     private lateinit var recyclerView : RecyclerView
     lateinit var adapter: ExpenseAdapter
@@ -42,30 +43,27 @@ class ExpenseList : Fragment() {
         recyclerView.adapter = adapter
 
         //Serve per sapere la posizione del Travel nella lista della homepage.
-        travelPositionId = arguments?.getInt("position")!!
-        Log.d(TAG, "Position: $travelPositionId")
+        travelID = arguments?.getString("travelID")!!
+        travelPosition = arguments?.getInt("travelPosition")!!
+        Log.d(TAG, "travelID: $travelID")
 
-        //TODO: migliorare codice qui sotto senza fare il nest di due observe
+
         //Prendiamo la lista dei viaggi che è contenuta nel ViewModel
         sharedViewModel.travelArrayList.observe(viewLifecycleOwner) {
             if(it.isNotEmpty()){
                 //Ricaviamo il viaggio e applichiamo alla pagina il nome corretto del viaggio
-                val travel = it[travelPositionId]
+                val travel = it[travelPosition]
                 view.findViewById<TextView>(R.id.travelNameLabel).text = travel.name
 
                 //Carichiamo l'immagine
                 Glide.with(view).load(travel.imgUrl).into(view.findViewById(R.id.travelCoverImg))
-
-                /*********/
-                sharedViewModel.loadTravelExpenses(travelPositionId)
-                sharedViewModel.expenses.observe(viewLifecycleOwner){ exp ->
-                    if(exp != null){
-                        Log.d(TAG,"$exp")
-                        //passare all'adapter la lista ed è fatta
-                        adapter.setExpensesList(exp)
-                    }
-                }
-
+            }
+        }
+        sharedViewModel.getExpenses(travelID)
+        sharedViewModel.expenses.observe(viewLifecycleOwner){ expenseList ->
+            if(expenseList != null){
+                //passare all'adapter la lista
+                adapter.setExpensesList(expenseList)
             }
         }
 

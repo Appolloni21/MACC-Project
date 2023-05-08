@@ -1,5 +1,7 @@
 package com.example.macc.model
 
+import android.media.AudioMetadata.Key
+
 
 data class Travel(
     var name: String? = null,
@@ -8,6 +10,7 @@ data class Travel(
     var endDate: String? = null,
     var imgUrl: String? = null,
     var members: Map<String,Boolean> ?= null,
-    var expenses: Map<String,Boolean> ?= null
+    var expenses: Map<String,Boolean> ?= null,
+    var travelID: String? = null
 ) {
 }

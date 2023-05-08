@@ -28,16 +28,15 @@ class HomepageViewModel : ViewModel() {
     init {
         _travelArrayList.value = arrayListOf()
         repository = FirebaseDatabaseRepository().getIstance()
-        repository.loadTravelsHome(_travelArrayList)
-        Log.d(TAG, "Init view model")
+        repository.getTravels(_travelArrayList)
     }
 
     fun addTravel(travelName:String, destination:String, startDate:String, endDate:String, imgCover: Uri, context: Context?){
         repository.addTravel(travelName, destination, startDate, endDate, imgCover, _travelAdded, context)
     }
 
-    fun loadTravelExpenses(position: Int){
-        repository.loadTravelExpenses(position, _travelArrayList, _expenses)
+    fun getExpenses(travelID: String){
+        repository.getExpenses(travelID, _expenses)
     }
 
     //Temp
