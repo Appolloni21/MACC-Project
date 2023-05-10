@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.example.macc.model.Expense
 import com.example.macc.model.Travel
+import com.example.macc.model.User
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
@@ -129,6 +130,32 @@ class FirebaseDatabaseRepository {
             }
             override fun onCancelled(databaseError: DatabaseError) {
                 Log.w(TAG, "getExpenses:onCancelled", databaseError.toException())
+            }
+        })
+    }
+
+    fun getUsers(travelID: String, userArrayList: MutableLiveData<ArrayList<User>>){
+        databaseReference = Firebase.database.getReference("users")
+        databaseReference.orderByChild("trips/$travelID").equalTo(true).addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                try{
+
+                    val userList : ArrayList<User> = arrayListOf()
+                    if(snapshot.exists()){
+                        for(userSnapshot in snapshot.children){
+                            val user = userSnapshot.getValue(User::class.java)!!
+                            userList.add(user)
+                        }
+                    }
+                    //postValue funziona correttamente insieme ai vari listener
+                    userArrayList.postValue(userList)
+                }catch(e: Exception){
+                    Log.d(TAG,"getUsers exception: $e")
+                }
+
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.w(TAG, "getUsers:onCancelled", databaseError.toException())
             }
         })
     }

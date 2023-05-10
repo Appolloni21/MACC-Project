@@ -57,6 +57,9 @@
         <action
             android:id="@+id/action_usersList_to_userProfile"
             app:destination="@id/userProfile" />
+        <argument
+            android:name="travelID"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/addTravel"

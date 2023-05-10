@@ -84,7 +84,7 @@ class ExpenseList : Fragment() {
 
         val usersListButton = view.findViewById<ExtendedFloatingActionButton>(R.id.extended_fab)
         usersListButton.setOnClickListener{
-            val action = ExpenseListDirections.actionExpenseListToUsersList()
+            val action = ExpenseListDirections.actionExpenseListToUsersList(travelID)
             view.findNavController().navigate(action)
         }
 

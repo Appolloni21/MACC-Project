@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.macc.model.Expense
 import com.example.macc.model.Travel
+import com.example.macc.model.User
 import com.example.macc.repository.FirebaseDatabaseRepository
 
 private const val TAG = "HomepageViewModel"
@@ -25,6 +26,9 @@ class HomepageViewModel : ViewModel() {
     private val _expenses: MutableLiveData<ArrayList<Expense>> = MutableLiveData()
     val expenses: LiveData<ArrayList<Expense>> = _expenses
 
+    private val _users: MutableLiveData<ArrayList<User>> = MutableLiveData()
+    val users: LiveData<ArrayList<User>> = _users
+
     init {
         _travelArrayList.value = arrayListOf()
         repository = FirebaseDatabaseRepository().getIstance()
@@ -37,6 +41,10 @@ class HomepageViewModel : ViewModel() {
 
     fun getExpenses(travelID: String){
         repository.getExpenses(travelID, _expenses)
+    }
+
+    fun getUsers(travelID: String){
+        repository.getUsers(travelID, _users)
     }
 
     //Temp

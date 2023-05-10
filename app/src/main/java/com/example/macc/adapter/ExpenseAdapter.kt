@@ -25,7 +25,7 @@ class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_expense, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_expense, parent, false)
         return ExpenseViewHolder(itemView)
     }
 
@@ -33,6 +33,7 @@ class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() 
         return expensesList.size
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ExpenseViewHolder, position: Int) {
         val item = expensesList[position]
         Log.d(TAG, "$item")

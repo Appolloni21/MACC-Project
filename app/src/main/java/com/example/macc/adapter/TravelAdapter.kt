@@ -27,7 +27,7 @@ class TravelAdapter : RecyclerView.Adapter<TravelAdapter.TravelViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TravelViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_travel, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_travel, parent, false)
         return TravelViewHolder(itemView)
     }
 
