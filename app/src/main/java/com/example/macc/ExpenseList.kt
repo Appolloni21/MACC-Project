@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -26,7 +27,7 @@ class ExpenseList : Fragment() {
 
     private var travelID: String = "travelID"
     private var travelPosition: Int = 0
-    private val sharedViewModel: HomepageViewModel by viewModels()
+    private val sharedViewModel: HomepageViewModel by activityViewModels()
     private lateinit var recyclerView : RecyclerView
     lateinit var adapter: ExpenseAdapter
 
@@ -45,8 +46,6 @@ class ExpenseList : Fragment() {
         //Serve per sapere la posizione del Travel nella lista della homepage.
         travelID = arguments?.getString("travelID")!!
         travelPosition = arguments?.getInt("travelPosition")!!
-        Log.d(TAG, "travelID: $travelID")
-
 
         //Prendiamo la lista dei viaggi che è contenuta nel ViewModel
         sharedViewModel.travelArrayList.observe(viewLifecycleOwner) {

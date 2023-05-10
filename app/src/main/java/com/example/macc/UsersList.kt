@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -20,7 +21,7 @@ import com.example.macc.data.HomepageViewModel
 class UsersList : Fragment() {
 
     private var travelID: String = "travelID"
-    private val sharedViewModel: HomepageViewModel by viewModels()
+    private val sharedViewModel: HomepageViewModel by activityViewModels()
     private lateinit var recyclerView : RecyclerView
     lateinit var adapter: UserAdapter
 
@@ -44,6 +45,9 @@ class UsersList : Fragment() {
             }
         }
 
+        // Use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        recyclerView.setHasFixedSize(true)
 
         return view
     }
@@ -55,11 +59,5 @@ class UsersList : Fragment() {
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         view.findViewById<Toolbar>(R.id.toolbar)
             .setupWithNavController(navController, appBarConfiguration)
-
-        //val userProfileImage = view.findViewById<ImageView>(R.id.user_avatar)
-        /*userProfileImage.setOnClickListener{
-            val action = UsersListDirections.actionUsersListToUserProfile()
-            view.findNavController().navigate(action)
-        }*/
     }
 }

@@ -33,6 +33,7 @@ class HomepageViewModel : ViewModel() {
         _travelArrayList.value = arrayListOf()
         repository = FirebaseDatabaseRepository().getIstance()
         repository.getTravels(_travelArrayList)
+        repository.getUsers("", _users)
     }
 
     fun addTravel(travelName:String, destination:String, startDate:String, endDate:String, imgCover: Uri, context: Context?){

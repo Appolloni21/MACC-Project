@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.macc.R
+import com.example.macc.UsersListDirections
 import com.example.macc.model.User
 
 private const val TAG = "User Adapter"
@@ -30,12 +32,17 @@ class UserAdapter : RecyclerView.Adapter<UserAdapter.UserViewHolder>(){
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val item = usersList[position]
-        holder.userNameSurname.text = item.name + " " +  item.surname
+        holder.userNameSurname.text = item.name
 
         //Loads the image from the url with Glide
         Glide.with(holder.view)
             .load(item.avatar)
             .into(holder.userAvatar)
+
+        holder.userAvatar.setOnClickListener{
+            val action = UsersListDirections.actionUsersListToUserProfile(position)
+            holder.view.findNavController().navigate(action)
+        }
     }
 
     override fun getItemCount(): Int {

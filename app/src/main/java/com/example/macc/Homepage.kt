@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -21,7 +22,7 @@ class Homepage : Fragment() {
 
     lateinit var adapter: TravelAdapter
     private lateinit var recyclerView : RecyclerView
-    private val sharedViewModel: HomepageViewModel by viewModels()
+    private val sharedViewModel: HomepageViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
