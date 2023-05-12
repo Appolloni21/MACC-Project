@@ -29,11 +29,15 @@ class HomepageViewModel : ViewModel() {
     private val _users: MutableLiveData<ArrayList<User>> = MutableLiveData()
     val users: LiveData<ArrayList<User>> = _users
 
+    private val _userAdded: MutableLiveData<User> = MutableLiveData()
+    val userAdded: LiveData<User> = _userAdded
+
     init {
         _travelArrayList.value = arrayListOf()
         repository = FirebaseDatabaseRepository().getIstance()
         repository.getTravels(_travelArrayList)
         repository.getUsers("", _users)
+        Log.d(TAG, "init HomePageViewModel")
     }
 
     fun addTravel(travelName:String, destination:String, startDate:String, endDate:String, imgCover: Uri, context: Context?){
@@ -46,6 +50,10 @@ class HomepageViewModel : ViewModel() {
 
     fun getUsers(travelID: String){
         repository.getUsers(travelID, _users)
+    }
+
+    fun addUser(userEmail: String, travelID: String, context: Context?){
+        repository.addUser(userEmail, travelID, _userAdded, context)
     }
 
     //Temp

@@ -106,7 +106,6 @@ class AddTravel : Fragment() {
 
         sharedViewModel.travelAdded.observe(viewLifecycleOwner){
             if(it != null){
-
                 //Il viaggio è stato aggiunto correttamente, facciamo ritornare l'utente alla homepage
                 navController.navigateUp()
             }

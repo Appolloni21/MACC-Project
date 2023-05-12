@@ -67,7 +67,7 @@ class SignUpActivity : AppCompatActivity() {
             val description: String = ""
             val email: String = findViewById<EditText>(R.id.email).text.toString().trim { it <= ' ' }
             val password: String = findViewById<EditText>(R.id.password).text.toString().trim { it <= ' ' }
-            val trips:Map<String,Boolean> = mapOf()
+            val trips:Map<String,Boolean> = mapOf("null" to false)
 
 
             when {

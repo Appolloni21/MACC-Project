@@ -73,5 +73,6 @@
     <string name="realtime_db_test">Test get() Realtime Database Firebase</string>
     <string name="choose_travel_cover">Choose travel cover</string>
     <string name="choose_avatar">Choose Avatar</string>
+    <string name="add_user">Add User</string>
 
 </resources>

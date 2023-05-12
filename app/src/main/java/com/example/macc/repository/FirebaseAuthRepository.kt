@@ -58,7 +58,7 @@ class FirebaseAuthRepository {
                         if (taskStorage.isSuccessful) {
 
                             Log.d(TAG, "Upload user avatar on Firebase Storage: success")
-                            val downloadUri = task.result
+                            val downloadUri = taskStorage.result
                             val avatar: String = downloadUri.toString()
 
                             //register the user of Firebase Authenticator also on the Realtime Database

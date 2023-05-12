@@ -37,7 +37,7 @@ class TravelAdapter : RecyclerView.Adapter<TravelAdapter.TravelViewHolder>() {
 
     override fun onBindViewHolder(holder: TravelViewHolder, position: Int) {
         val item = travelsList[position]
-        Log.d(TAG, "$item")
+        //Log.d(TAG, "$item")
 
         holder.travelName.text = item.name
         holder.travelMembers.text = item.members?.size.toString()

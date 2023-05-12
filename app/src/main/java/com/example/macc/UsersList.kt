@@ -1,22 +1,22 @@
 package com.example.macc
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.example.macc.adapter.ExpenseAdapter
 import com.example.macc.adapter.UserAdapter
 import com.example.macc.data.HomepageViewModel
+
+private const val TAG = "Users List Fragment"
 
 class UsersList : Fragment() {
 
@@ -57,7 +57,18 @@ class UsersList : Fragment() {
         //Toolbar with nav component
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
-        view.findViewById<Toolbar>(R.id.toolbar)
-            .setupWithNavController(navController, appBarConfiguration)
+        val toolbar: Toolbar = view.findViewById(R.id.toolbar)
+        toolbar.setupWithNavController(navController, appBarConfiguration)
+
+        toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.action_addUser -> {
+                    Log.d(TAG, "log")
+                    val action = UsersListDirections.actionUsersListToAddUser(travelID)
+                    view.findNavController().navigate(action)
+                }
+            }
+            true
+        }
     }
 }

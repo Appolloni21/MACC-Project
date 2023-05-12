@@ -60,6 +60,9 @@
         <argument
             android:name="travelID"
             app:argType="string" />
+        <action
+            android:id="@+id/action_usersList_to_addUser"
+            app:destination="@id/addUser" />
     </fragment>
     <fragment
         android:id="@+id/addTravel"
@@ -75,5 +78,15 @@
             android:name="userPosition"
             app:argType="integer"
             android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/addUser"
+        android:name="com.example.macc.AddUser"
+        android:label="Add User"
+        tools:layout="@layout/add_user">
+        <argument
+            android:name="travelID"
+            app:argType="string"
+            android:defaultValue="travelID" />
     </fragment>
 </navigation>
