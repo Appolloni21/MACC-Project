@@ -145,7 +145,7 @@
         app:layout_constraintTop_toBottomOf="@+id/destination"
         android:autofillHints="" />
 
-    <TextView
+    <!--<TextView
         android:id="@+id/addParticipantsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -155,9 +155,9 @@
         android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startDate" />
+        app:layout_constraintTop_toBottomOf="@+id/startDate" />-->
 
-    <com.google.android.material.textfield.TextInputLayout
+    <!--<com.google.android.material.textfield.TextInputLayout
         android:id="@+id/userEmail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -177,9 +177,9 @@
             android:textColorHint="#757575"
             tools:ignore="TextContrastCheck" />
 
-    </com.google.android.material.textfield.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>-->
 
-    <ImageView
+    <!--<ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -188,20 +188,20 @@
         android:contentDescription="@string/add_user_plus_icon"
         app:layout_constraintStart_toEndOf="@+id/userEmail"
         app:layout_constraintTop_toBottomOf="@+id/addParticipantsText"
-        app:srcCompat="@drawable/ic_baseline_add_circle_outline_24" />
+        app:srcCompat="@drawable/ic_baseline_add_circle_outline_24" />-->
 
     <Button
         android:id="@+id/addTravelButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="32dp"
         android:layout_marginBottom="90dp"
         android:contentDescription="@string/add_travel"
         android:text="@string/add_travel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userEmail"
+        app:layout_constraintTop_toBottomOf="@+id/startDate"
         tools:ignore="DuplicateSpeakableTextCheck" />
 
 

@@ -44,6 +44,10 @@ class HomepageViewModel : ViewModel() {
         repository.addTravel(travelName, destination, startDate, endDate, imgCover, _travelAdded, context)
     }
 
+    fun deleteTravel(travel: Travel){
+        repository.deleteTravel(travel)
+    }
+
     fun getExpenses(travelID: String){
         repository.getExpenses(travelID, _expenses)
     }

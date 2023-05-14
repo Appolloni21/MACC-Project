@@ -16,7 +16,7 @@ import com.example.macc.model.Travel
 
 private const val TAG = "Travel Adapter"
 
-class TravelAdapter : RecyclerView.Adapter<TravelAdapter.TravelViewHolder>() {
+class TravelAdapter(private val onDeleteCallback: (Travel) -> Unit) : RecyclerView.Adapter<TravelAdapter.TravelViewHolder>() {
 
     private val travelsList : ArrayList<Travel> = arrayListOf()
 
@@ -24,6 +24,7 @@ class TravelAdapter : RecyclerView.Adapter<TravelAdapter.TravelViewHolder>() {
         val travelName : TextView = view.findViewById(R.id.travel_name)
         val travelImage : ImageView = view.findViewById(R.id.travelCover)
         val travelMembers : TextView = view.findViewById(R.id.group_number)
+        val deleteIcon : ImageView = view.findViewById(R.id.delete_icon)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TravelViewHolder {
@@ -37,7 +38,7 @@ class TravelAdapter : RecyclerView.Adapter<TravelAdapter.TravelViewHolder>() {
 
     override fun onBindViewHolder(holder: TravelViewHolder, position: Int) {
         val item = travelsList[position]
-        //Log.d(TAG, "$item")
+        Log.d(TAG, "item")
 
         holder.travelName.text = item.name
         holder.travelMembers.text = item.members?.size.toString()
@@ -53,6 +54,10 @@ class TravelAdapter : RecyclerView.Adapter<TravelAdapter.TravelViewHolder>() {
             //Action from homepage to expense list page
             val action = HomepageDirections.actionHomepageToExpenseList(travelID, position)
             holder.view.findNavController().navigate(action)
+        }
+
+        holder.deleteIcon.setOnClickListener{
+            onDeleteCallback(item)
         }
     }
 

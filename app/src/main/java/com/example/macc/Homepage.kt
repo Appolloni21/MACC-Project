@@ -2,11 +2,11 @@ package com.example.macc
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -14,6 +14,7 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.macc.adapter.TravelAdapter
 import com.example.macc.data.HomepageViewModel
+import com.example.macc.model.Travel
 
 
 private const val TAG = "Homepage Fragment"
@@ -33,7 +34,7 @@ class Homepage : Fragment() {
             false)
 
         recyclerView = view.findViewById(R.id.recycler_view)
-        adapter = TravelAdapter()
+        adapter = TravelAdapter(::deleteTravel)
         recyclerView.adapter = adapter
 
         //sharedViewModel = ViewModelProvider(this).get(HomepageViewModel::class.java)
@@ -66,5 +67,10 @@ class Homepage : Fragment() {
             }
             true
         }
+        Log.d(TAG, "Homepage")
+    }
+
+    private fun deleteTravel(travel: Travel) {
+        sharedViewModel.deleteTravel(travel)
     }
 }

@@ -109,6 +109,33 @@ class FirebaseDatabaseRepository {
         }
     }
 
+    fun deleteTravel(travel: Travel){
+        //Log.d(TAG,"deleteTravel: $travelID")
+        val travelID = travel.travelID
+
+        databaseReference = Firebase.database.reference
+        //val members = mapOf("id1" to true, "id2" to true)
+        val childUpdates = hashMapOf<String, Any?>()
+
+        //Cancelliamo il riferimento del viaggio dagli utenti partecipanti
+        for(key in travel.members!!.keys){
+            childUpdates["users/$key/trips/$travelID"] = null
+        }
+        //Cancelliamo le spese associate al viaggio
+        for(key in travel.expenses!!.keys){
+            childUpdates["expenses/$key"] = null
+        }
+        //Ora cancelliamo il viaggio dall'elenco principale
+        childUpdates["travels/$travelID"] = null
+
+        //Eseguiamo la query
+        databaseReference.updateChildren(childUpdates).addOnSuccessListener {
+            Log.d(TAG, "deleteTravel: success")
+        }.addOnFailureListener {
+            Log.d(TAG, "deleteTravel: failure")
+        }
+    }
+
     fun getExpenses(travelID: String, expenseArrayList: MutableLiveData<ArrayList<Expense>>){
         databaseReference = Firebase.database.getReference("expenses")
         databaseReference.orderByChild("travelID").equalTo(travelID).addValueEventListener(object: ValueEventListener{
@@ -216,7 +243,7 @@ class FirebaseDatabaseRepository {
     }*/
 
     //TODO: deleteExpense
-    //TODO: deleteTravel
+
 
     private fun makeToast(context: Context?, msg:String){
         Toast.makeText(
