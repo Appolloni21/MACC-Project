@@ -76,6 +76,8 @@ class AddTravel : Fragment() {
             val startDate: String = view.findViewById<EditText>(R.id.startDate)?.text.toString().trim { it <= ' ' }
             val endDate: String = view.findViewById<EditText>(R.id.endDate)?.text.toString().trim { it <= ' ' }
 
+            //TODO: migliorare input date
+
             when{
                 TextUtils.isEmpty(imageCoverURI.toString()) -> {
                     makeToast("Please enter cover image")

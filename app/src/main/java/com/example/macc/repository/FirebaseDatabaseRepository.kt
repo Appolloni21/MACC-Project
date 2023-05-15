@@ -57,17 +57,18 @@ class FirebaseDatabaseRepository {
             override fun onCancelled(databaseError: DatabaseError) {
                 Log.w(TAG, "getTravels:onCancelled", databaseError.toException())
             }
-
         })
     }
 
     fun addTravel(travelName:String, destination:String, startDate:String, endDate:String, imgCover: Uri, travelAdded: MutableLiveData<Travel>, context: Context?){
         databaseReference = Firebase.database.getReference("travels")
 
-        val key = databaseReference.push().key.toString()
-        storageReference = Firebase.storage.getReference("travels/$key/img")
+        //Creiamo la entry nel db con un nuovo ID
+        val travelID = databaseReference.push().key.toString()
 
-        //Carichiamo l'immagine del travel nel Firebase storage
+        storageReference = Firebase.storage.getReference("travels/$travelID")
+
+        //Carichiamo l'immagine del viaggio in Firebase storage
         storageReference.putFile(imgCover).continueWithTask { task ->
             if (!task.isSuccessful) {
                 task.exception?.let {
@@ -77,30 +78,29 @@ class FirebaseDatabaseRepository {
             storageReference.downloadUrl
         }.addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                Log.d(TAG, "Upload travel cover on Firebase Storage: success")
+                Log.d(TAG, "addTravel: Upload travel cover on Firebase Storage: success")
                 val downloadUri = task.result
                 val imgUrl: String = downloadUri.toString()
 
-                //Aggiungiamo il travel nell'elenco del Realtime db
+                //Aggiungiamo il viaggio nell'elenco principale sul Realtime db
+                databaseReference = Firebase.database.reference
+                val childUpdates = hashMapOf<String, Any?>()
                 val members: Map<String,Boolean> = mapOf(userUid to true)
-                val travel = Travel(travelName,destination, startDate,endDate, imgUrl, members)
-                databaseReference.child(key).setValue(travel).addOnSuccessListener {
-                    Log.d(TAG, "create travel in Realtime db: success")
+                val expenses: Map<String, Boolean> = mapOf("null" to false)
+                val travel = Travel(travelName,destination, startDate,endDate, imgUrl, members, expenses)
+                childUpdates["travels/$travelID"] = travel
 
+                //Aggiungiamo il riferimento del viaggio anche nella lista "trips" dell'utente corrente
+                childUpdates["users/$userUid/trips/$travelID"] = true
+
+                //Eseguiamo la query
+                databaseReference.updateChildren(childUpdates).addOnSuccessListener {
+                    Log.d(TAG, "addTravel: success")
                     //Aggiorniamo il MutableLiveData per triggherare il cambio pagina dell'UI
                     travelAdded.postValue(travel)
                     makeToast(context,"The travel has been added!")
-
-                }.addOnFailureListener{
-                    Log.d(TAG, "create travel in Realtime db: failure")
-                }
-
-                //Dobbiamo aggiungere il riferimento del travel anche nella lista "trips" dell'utente corrente
-                databaseReference = Firebase.database.getReference("users")
-                databaseReference.child(userUid).child("trips").child(key).setValue(true).addOnSuccessListener {
-                    Log.d(TAG, "Add travel in user trips: success")
-                }.addOnFailureListener{
-                    Log.d(TAG, "Add travel in user trips: failure")
+                }.addOnFailureListener {
+                    Log.d(TAG, "addTravel: failure")
                 }
             } else {
                 // Handle failures
@@ -114,7 +114,6 @@ class FirebaseDatabaseRepository {
         val travelID = travel.travelID
 
         databaseReference = Firebase.database.reference
-        //val members = mapOf("id1" to true, "id2" to true)
         val childUpdates = hashMapOf<String, Any?>()
 
         //Cancelliamo il riferimento del viaggio dagli utenti partecipanti
@@ -128,12 +127,21 @@ class FirebaseDatabaseRepository {
         //Ora cancelliamo il viaggio dall'elenco principale
         childUpdates["travels/$travelID"] = null
 
-        //Eseguiamo la query
+        //Eseguiamo le query
         databaseReference.updateChildren(childUpdates).addOnSuccessListener {
             Log.d(TAG, "deleteTravel: success")
+
+            //Ora dobbiamo cancellare anche il riferimento su Firebase Storage
+            storageReference = Firebase.storage.getReference("travels")
+            storageReference.child("$travelID").delete().addOnSuccessListener {
+                Log.d(TAG, "deleteTravel: File deleted successfully")
+            }.addOnFailureListener {
+                Log.d(TAG, "deleteTravel: File not deleted due to an error")
+            }
         }.addOnFailureListener {
             Log.d(TAG, "deleteTravel: failure")
         }
+
     }
 
     fun getExpenses(travelID: String, expenseArrayList: MutableLiveData<ArrayList<Expense>>){
@@ -154,7 +162,6 @@ class FirebaseDatabaseRepository {
                 }catch(e: Exception){
                     Log.d(TAG,"getExpenses exception: $e")
                 }
-
             }
             override fun onCancelled(databaseError: DatabaseError) {
                 Log.w(TAG, "getExpenses:onCancelled", databaseError.toException())
@@ -179,7 +186,6 @@ class FirebaseDatabaseRepository {
                 }catch(e: Exception){
                     Log.d(TAG,"getUsers exception: $e")
                 }
-
             }
             override fun onCancelled(databaseError: DatabaseError) {
                 Log.w(TAG, "getUsers:onCancelled", databaseError.toException())
@@ -192,7 +198,7 @@ class FirebaseDatabaseRepository {
         databaseReference.orderByChild("email").equalTo(userEmail).get().addOnSuccessListener {
 
                 if (it.exists()) {
-                    for (userSnapshot in it.children) {
+                for (userSnapshot in it.children) {
                         val user = userSnapshot.getValue<User>()
                         //Prima controlliamo che l' user non sia già stato aggiunto
                         if (user?.trips?.containsKey(travelID)!!) {
@@ -201,26 +207,24 @@ class FirebaseDatabaseRepository {
                         }
                         else{
                             val userID = userSnapshot.key.toString()
-                            //Prima aggiungiamo lo user ai membri del travel
-                            databaseReference = Firebase.database.getReference("travels")
-                            databaseReference.child(travelID).child("members").child(userID)
-                                .setValue(true).addOnSuccessListener {
-                                    Log.d(TAG, "addUser: Add user in travel members: success")
+                            val childUpdates = hashMapOf<String, Any?>()
+                            databaseReference = Firebase.database.reference
 
-                                    //Aggiungiamo il riferimento del travel anche nella lista "trips" dell'utente
-                                    databaseReference = Firebase.database.getReference("users")
-                                    databaseReference.child(userID).child("trips").child(travelID)
-                                        .setValue(true).addOnSuccessListener {
-                                            Log.d(TAG, "addUser: Add travel in user trips: success")
-                                            //L'utente è stato aggiunto correttamente, ora notifichiamo l'observer con postValue
-                                            userAdded.postValue(user)
-                                            makeToast(context, "User added")
-                                        }.addOnFailureListener {
-                                            Log.d(TAG, "addUser: Add travel in user trips: failure")
-                                        }
-                                }.addOnFailureListener {
-                                    Log.d(TAG, "addUser: Add user in travel members: failure")
-                                }
+                            //Prima aggiungiamo l' utente ai membri del viaggio
+                            childUpdates["travels/$travelID/members/$userID"] = true
+
+                            //Poi aggiungiamo il riferimento del viaggio anche nella lista "trips" dell'utente
+                            childUpdates["users/$userID/trips/$travelID"] = true
+
+                            //Eseguiamo le query
+                            databaseReference.updateChildren(childUpdates).addOnSuccessListener {
+                                Log.d(TAG, "addUser: success")
+                                //L'utente è stato aggiunto correttamente, ora notifichiamo l'observer con postValue
+                                userAdded.postValue(user)
+                                makeToast(context, "User has been added in the travel")
+                            }.addOnFailureListener {
+                                Log.d(TAG, "addUser: failure")
+                            }
                         }
                     }
                 } else{
