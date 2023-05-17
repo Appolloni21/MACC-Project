@@ -34,7 +34,7 @@ class Homepage : Fragment() {
             false)
 
         recyclerView = view.findViewById(R.id.recycler_view)
-        adapter = TravelAdapter(::deleteTravel)
+        adapter = TravelAdapter(::deleteTravel, ::actionToExpenseList)
         recyclerView.adapter = adapter
 
         //sharedViewModel = ViewModelProvider(this).get(HomepageViewModel::class.java)
@@ -72,5 +72,11 @@ class Homepage : Fragment() {
 
     private fun deleteTravel(travel: Travel) {
         sharedViewModel.deleteTravel(travel)
+    }
+
+    private fun actionToExpenseList(travelID: String, position: Int){
+        //Action from homepage to expense list page
+        val action = HomepageDirections.actionHomepageToExpenseList(travelID, position)
+        view?.findNavController()?.navigate(action)
     }
 }

@@ -36,13 +36,11 @@ class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ExpenseViewHolder, position: Int) {
         val item = expensesList[position]
-        //Log.d(TAG, "$item")
+        Log.d(TAG, "expense adapter")
 
         holder.expenseName.text = item.name
         holder.expenseAmount.text = "Tot: $" + item.amount.toString()
         holder.expensePlace.text = item.place
-
-
     }
 
     @SuppressLint("NotifyDataSetChanged")

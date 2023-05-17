@@ -7,16 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.macc.HomepageDirections
 import com.example.macc.R
 import com.example.macc.model.Travel
 
 private const val TAG = "Travel Adapter"
 
-class TravelAdapter(private val onDeleteCallback: (Travel) -> Unit) : RecyclerView.Adapter<TravelAdapter.TravelViewHolder>() {
+class TravelAdapter(private val onDeleteCallback: (Travel) -> Unit,
+                    private val onActionCallback: (String, Int) -> Unit) : RecyclerView.Adapter<TravelAdapter.TravelViewHolder>() {
 
     private val travelsList : ArrayList<Travel> = arrayListOf()
 
@@ -50,10 +49,7 @@ class TravelAdapter(private val onDeleteCallback: (Travel) -> Unit) : RecyclerVi
 
         holder.travelImage.setOnClickListener{
             val travelID = item.travelID.toString()
-
-            //Action from homepage to expense list page
-            val action = HomepageDirections.actionHomepageToExpenseList(travelID, position)
-            holder.view.findNavController().navigate(action)
+            onActionCallback(travelID, position)
         }
 
         holder.deleteIcon.setOnClickListener{

@@ -1,21 +1,20 @@
 package com.example.macc.adapter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.macc.R
-import com.example.macc.UsersListDirections
 import com.example.macc.model.User
 
 private const val TAG = "User Adapter"
 
-class UserAdapter : RecyclerView.Adapter<UserAdapter.UserViewHolder>(){
+class UserAdapter(private val onActionCallback: (Int) -> Unit) : RecyclerView.Adapter<UserAdapter.UserViewHolder>(){
 
     private val usersList : ArrayList<User> = arrayListOf()
 
@@ -31,6 +30,7 @@ class UserAdapter : RecyclerView.Adapter<UserAdapter.UserViewHolder>(){
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
+        Log.d(TAG, "user adapter")
         val item = usersList[position]
         holder.userNameSurname.text = item.name
 
@@ -40,8 +40,7 @@ class UserAdapter : RecyclerView.Adapter<UserAdapter.UserViewHolder>(){
             .into(holder.userAvatar)
 
         holder.userAvatar.setOnClickListener{
-            val action = UsersListDirections.actionUsersListToUserProfile(position)
-            holder.view.findNavController().navigate(action)
+            onActionCallback(position)
         }
     }
 

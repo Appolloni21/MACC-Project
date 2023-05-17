@@ -34,7 +34,7 @@ class UsersList : Fragment() {
             false)
 
         recyclerView = view.findViewById(R.id.recycler_view_user)
-        adapter = UserAdapter()
+        adapter = UserAdapter(::actionToUserProfile)
         recyclerView.adapter = adapter
 
         travelID = arguments?.getString("travelID")!!
@@ -70,5 +70,10 @@ class UsersList : Fragment() {
             }
             true
         }
+    }
+
+    private fun actionToUserProfile(position: Int){
+        val action = UsersListDirections.actionUsersListToUserProfile(position)
+        view?.findNavController()?.navigate(action)
     }
 }
