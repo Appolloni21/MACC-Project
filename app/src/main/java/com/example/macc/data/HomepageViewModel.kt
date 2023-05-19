@@ -6,10 +6,13 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.macc.model.Expense
 import com.example.macc.model.Travel
 import com.example.macc.model.User
 import com.example.macc.repository.FirebaseDatabaseRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 private const val TAG = "HomepageViewModel"
 
@@ -57,7 +60,9 @@ class HomepageViewModel : ViewModel() {
     }
 
     fun addUser(userEmail: String, travelID: String, context: Context?){
-        repository.addUser(userEmail, travelID, _userAdded, context)
+        viewModelScope.launch(Dispatchers.Main) {
+            repository.addUser(userEmail, travelID, _userAdded, context)
+        }
     }
 
     //Temp

@@ -16,6 +16,9 @@ import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 private const val TAG = "FirebaseDatabaseRepository"
 
@@ -193,19 +196,25 @@ class FirebaseDatabaseRepository {
         })
     }
 
-    fun addUser(userEmail: String, travelID: String, userAdded: MutableLiveData<User>, context: Context?) {
-        databaseReference = Firebase.database.getReference("users")
-        databaseReference.orderByChild("email").equalTo(userEmail).get().addOnSuccessListener {
+    //TODO: applicare metodo coroutine a tutte le altre funzioni
+    //TODO: modificare le funzioni in modo tale che restituiscano un result di success/failure, utilizzare questo result per usare i makeToast direttamente nel file UI principale invece di chiamarli da dentro questo file repository
+    suspend fun addUser(userEmail: String, travelID: String, userAdded: MutableLiveData<User>, context: Context?) {
+        return withContext(Dispatchers.IO) {
+            databaseReference = Firebase.database.getReference("users")
+            try {
+                val snapshot = databaseReference.orderByChild("email").equalTo(userEmail).get().await()
 
-                if (it.exists()) {
-                for (userSnapshot in it.children) {
+                if (snapshot.exists()) {
+                    for (userSnapshot in snapshot.children) {
                         val user = userSnapshot.getValue<User>()
                         //Prima controlliamo che l' user non sia già stato aggiunto
                         if (user?.trips?.containsKey(travelID)!!) {
                             Log.d(TAG, "addUser: the user is already in this travel")
-                            makeToast(context, "This user is already in this travel!")
-                        }
-                        else{
+                            withContext(Dispatchers.Main) {
+                                makeToast(context, "This user is already in this travel!")
+                            }
+                            return@withContext
+                        } else {
                             val userID = userSnapshot.key.toString()
                             val childUpdates = hashMapOf<String, Any?>()
                             databaseReference = Firebase.database.reference
@@ -217,25 +226,14 @@ class FirebaseDatabaseRepository {
                             childUpdates["users/$userID/trips/$travelID"] = true
 
                             //Eseguiamo le query
-                            databaseReference.updateChildren(childUpdates).addOnSuccessListener {
-                                Log.d(TAG, "addUser: success")
-                                //L'utente è stato aggiunto correttamente, ora notifichiamo l'observer con postValue
-                                userAdded.postValue(user)
-                                makeToast(context, "User has been added in the travel")
-                            }.addOnFailureListener {
-                                Log.d(TAG, "addUser: failure")
-                            }
+                            databaseReference.updateChildren(childUpdates).await()
+                            userAdded.postValue(user)
                         }
                     }
-                } else{
-                    Log.d(TAG, "addUser: the user doesn't exist")
-                    makeToast(context, "User doesn't exist")
                 }
-             /*catch (e: Exception) {
+            } catch (e: Exception) {
                 Log.d(TAG, "addUser: exception: $e")
-            }*/
-        }.addOnFailureListener {
-            Log.e(TAG, "AddUser: failure in getting the correct user", it)
+            }
         }
     }
 
