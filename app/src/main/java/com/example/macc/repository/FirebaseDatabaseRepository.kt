@@ -63,27 +63,21 @@ class FirebaseDatabaseRepository {
         })
     }
 
-    fun addTravel(travelName:String, destination:String, startDate:String, endDate:String, imgCover: Uri, travelAdded: MutableLiveData<Travel>, context: Context?){
-        databaseReference = Firebase.database.getReference("travels")
 
-        //Creiamo la entry nel db con un nuovo ID
-        val travelID = databaseReference.push().key.toString()
+    suspend fun addTravel(travelName:String, destination:String, startDate:String, endDate:String, imgCover: Uri, travelAdded: MutableLiveData<Travel>, context: Context?){
+        return withContext(Dispatchers.IO){
+            try {
+                databaseReference = Firebase.database.getReference("travels")
 
-        storageReference = Firebase.storage.getReference("travels/$travelID")
+                //Creiamo la entry nel db con un nuovo ID
+                val travelID = databaseReference.push().key.toString()
 
-        //Carichiamo l'immagine del viaggio in Firebase storage
-        storageReference.putFile(imgCover).continueWithTask { task ->
-            if (!task.isSuccessful) {
-                task.exception?.let {
-                    throw it
-                }
-            }
-            storageReference.downloadUrl
-        }.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Log.d(TAG, "addTravel: Upload travel cover on Firebase Storage: success")
-                val downloadUri = task.result
-                val imgUrl: String = downloadUri.toString()
+                storageReference = Firebase.storage.getReference("travels/$travelID")
+
+                //Carichiamo l'immagine del viaggio in Firebase storage
+                val task = storageReference.putFile(imgCover).await().storage.downloadUrl.await()
+
+                val imgUrl: String = task.toString()
 
                 //Aggiungiamo il viaggio nell'elenco principale sul Realtime db
                 databaseReference = Firebase.database.reference
@@ -95,56 +89,52 @@ class FirebaseDatabaseRepository {
 
                 //Aggiungiamo il riferimento del viaggio anche nella lista "trips" dell'utente corrente
                 childUpdates["users/$userUid/trips/$travelID"] = true
+                databaseReference.updateChildren(childUpdates).await()
 
-                //Eseguiamo la query
-                databaseReference.updateChildren(childUpdates).addOnSuccessListener {
-                    Log.d(TAG, "addTravel: success")
-                    //Aggiorniamo il MutableLiveData per triggherare il cambio pagina dell'UI
-                    travelAdded.postValue(travel)
+                //Notifichiamo
+                travelAdded.postValue(travel)
+                withContext(Dispatchers.Main){
                     makeToast(context,"The travel has been added!")
-                }.addOnFailureListener {
-                    Log.d(TAG, "addTravel: failure")
                 }
-            } else {
-                // Handle failures
-                Log.d(TAG, "Upload travel cover on Firebase Storage: failure")
+                Log.d(TAG, "addTravel: success")
+            } catch (e: Exception) {
+                Log.d(TAG, "addTravel: exception: $e")
             }
         }
     }
 
-    fun deleteTravel(travel: Travel){
-        //Log.d(TAG,"deleteTravel: $travelID")
-        val travelID = travel.travelID
+    suspend fun deleteTravel(travel: Travel){
+        return withContext(Dispatchers.IO){
+            try {
+                //Log.d(TAG,"deleteTravel: $travelID")
+                val travelID = travel.travelID
 
-        databaseReference = Firebase.database.reference
-        val childUpdates = hashMapOf<String, Any?>()
+                databaseReference = Firebase.database.reference
+                val childUpdates = hashMapOf<String, Any?>()
 
-        //Cancelliamo il riferimento del viaggio dagli utenti partecipanti
-        for(key in travel.members!!.keys){
-            childUpdates["users/$key/trips/$travelID"] = null
-        }
-        //Cancelliamo le spese associate al viaggio
-        for(key in travel.expenses!!.keys){
-            childUpdates["expenses/$key"] = null
-        }
-        //Ora cancelliamo il viaggio dall'elenco principale
-        childUpdates["travels/$travelID"] = null
+                //Cancelliamo il riferimento del viaggio dagli utenti partecipanti
+                for(key in travel.members!!.keys){
+                    childUpdates["users/$key/trips/$travelID"] = null
+                }
+                //Cancelliamo le spese associate al viaggio
+                for(key in travel.expenses!!.keys){
+                    childUpdates["expenses/$key"] = null
+                }
+                //Ora cancelliamo il viaggio dall'elenco principale
+                childUpdates["travels/$travelID"] = null
 
-        //Eseguiamo le query
-        databaseReference.updateChildren(childUpdates).addOnSuccessListener {
-            Log.d(TAG, "deleteTravel: success")
+                //Eseguiamo le query
+                databaseReference.updateChildren(childUpdates).await()
 
-            //Ora dobbiamo cancellare anche il riferimento su Firebase Storage
-            storageReference = Firebase.storage.getReference("travels")
-            storageReference.child("$travelID").delete().addOnSuccessListener {
-                Log.d(TAG, "deleteTravel: File deleted successfully")
-            }.addOnFailureListener {
-                Log.d(TAG, "deleteTravel: File not deleted due to an error")
+                //Ora dobbiamo cancellare anche il riferimento su Firebase Storage
+                storageReference = Firebase.storage.getReference("travels")
+                storageReference.child("$travelID").delete().await()
+                Log.d(TAG, "deleteTravel: success")
+
+            } catch (e: Exception) {
+                Log.d(TAG, "deleteTravel: exception: $e")
             }
-        }.addOnFailureListener {
-            Log.d(TAG, "deleteTravel: failure")
         }
-
     }
 
     fun getExpenses(travelID: String, expenseArrayList: MutableLiveData<ArrayList<Expense>>){
@@ -228,6 +218,7 @@ class FirebaseDatabaseRepository {
                             //Eseguiamo le query
                             databaseReference.updateChildren(childUpdates).await()
                             userAdded.postValue(user)
+                            Log.d(TAG, "addUser: success")
                         }
                     }
                 }

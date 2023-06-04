@@ -14,6 +14,9 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 private const val TAG = "Firebase Auth Repository"
 
@@ -24,95 +27,70 @@ class FirebaseAuthRepository {
     private lateinit var auth: FirebaseAuth
 
 
-    fun signUpUser(name:String, surname:String, nickname:String, description: String, email:String, password:String,
+    suspend fun signUpUser(name:String, surname:String, nickname:String, description: String, email:String, password:String,
                    trips:Map<String,Boolean>, imgAvatar: Uri, userData: MutableLiveData<FirebaseUser>, context: Context){
 
-        // Initialize Firebase Auth
-        auth = Firebase.auth
+        return withContext(Dispatchers.IO){
+            try {
+                // Initialize Firebase Auth
+                auth = Firebase.auth
 
-        //Sign up user with email and password in Firebase Auth
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener()
-            { task ->
+                //Sign up user with email and password in Firebase Auth
+                val result = auth.createUserWithEmailAndPassword(email, password).await()
+                val firebaseUser: FirebaseUser = result.user!!
 
-                //If the registration is successfully done
-                if (task.isSuccessful) {
+                //Carichiamo l'avatar sul Firebase Cloud Storage
+                val userUid:String = firebaseUser.uid
+                storageReference = Firebase.storage.getReference("users/$userUid")
 
-                    //Aggiorniamo il MutableLiveData
-                    val firebaseUser: FirebaseUser = task.result!!.user!!
-                    userData.postValue(firebaseUser)
+                //Carichiamo l'avatar dell'utente nel Firebase storage
+                val task = storageReference.putFile(imgAvatar).await().storage.downloadUrl.await()
+                val avatar: String = task.toString()
 
-                    //Carichiamo l'avatar sul Firebase Cloud Storage
-                    val userUid:String = firebaseUser.uid
-                    storageReference = Firebase.storage.getReference("users/$userUid/avatar")
-
-                    //Carichiamo l'avatar dell'utente nel Firebase storage
-                    storageReference.putFile(imgAvatar).continueWithTask { taskStorage ->
-                        if (!taskStorage.isSuccessful) {
-                            task.exception?.let {
-                                throw it
-                            }
-                        }
-                        storageReference.downloadUrl
-                    }.addOnCompleteListener { taskStorage ->
-                        if (taskStorage.isSuccessful) {
-
-                            Log.d(TAG, "Upload user avatar on Firebase Storage: success")
-                            val downloadUri = taskStorage.result
-                            val avatar: String = downloadUri.toString()
-
-                            //register the user of Firebase Authenticator also on the Realtime Database
-                            val user = User(name,surname,nickname,description,email,avatar,trips)
-                            databaseReference = Firebase.database.getReference("users")
-                            databaseReference.child(userUid).setValue(user).addOnSuccessListener {
-                                Log.d(TAG, "create user in Realtime db: success")
-                            }.addOnFailureListener{
-                                Log.d(TAG, "create user in Realtime db: failure")
-                            }
-
-                        } else {
-                            // Handle failures
-                            Log.d(TAG, "Upload user avatar on Firebase Storage: failure")
-                        }
-                    }
-
+                //register the user of Firebase Authenticator also on the Realtime Database
+                val user = User(name,surname,nickname,description,email,avatar,trips)
+                databaseReference = Firebase.database.getReference("users")
+                databaseReference.child(userUid).setValue(user).await()
+                withContext(Dispatchers.Main){
                     makeToast(context,"You are registered successfully")
-                    Log.d(TAG, "createUserWithEmail:success")
-
                 }
-                else {
-                    //If the registration was not successful, then show the error message
+
+                Log.d(TAG, "signUpUser: success")
+                //Aggiorniamo il MutableLiveData
+                userData.postValue(firebaseUser)
+
+            } catch(e: Exception){
+                Log.d(TAG,"signUpUser exception: $e")
+                withContext(Dispatchers.Main){
                     makeToast(context, "Error in the registration")
-                    Log.d(TAG, task.exception!!.message.toString() )
-                    Log.d(TAG, "createUserWithEmail: failure", task.exception)
                 }
             }
+        }
     }
 
-    fun logInUser(email: String, password: String, userData: MutableLiveData<FirebaseUser>, context: Context){
+    suspend fun logInUser(email: String, password: String, userData: MutableLiveData<FirebaseUser>, context: Context){
+        return withContext(Dispatchers.IO){
+            try {
+                // Initialize Firebase Auth
+                auth = Firebase.auth
 
-        // Initialize Firebase Auth
-        auth = Firebase.auth
+                //Log in user with email and password in Firebase Auth
+                val result = auth.signInWithEmailAndPassword(email, password).await()
 
-        //Log in user with email and password in Firebase Auth
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener{ task ->
-
-                //If the login is successfully done
-                if (task.isSuccessful) {
-
-                    val firebaseUser: FirebaseUser = task.result!!.user!!
-                    userData.postValue(firebaseUser)
+                val firebaseUser: FirebaseUser = result.user!!
+                userData.postValue(firebaseUser)
+                withContext(Dispatchers.Main){
                     makeToast(context,"You are logged in successfully")
+                }
+                Log.d(TAG,"logInUser: success")
 
-                } else {
-
-                    //If the login was not successful, then show the error message
-                    Log.d(TAG, task.exception!!.message.toString())
-                    Log.d(TAG, "signInWithEmailAndPassword: failure", task.exception)
+            } catch(e: Exception){
+                Log.d(TAG,"logInUser exception: $e")
+                withContext(Dispatchers.Main){
                     makeToast(context, "Error in logging in")
                 }
             }
+        }
     }
 
     private fun makeToast(context: Context, msg:String){

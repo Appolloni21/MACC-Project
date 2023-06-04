@@ -44,11 +44,15 @@ class HomepageViewModel : ViewModel() {
     }
 
     fun addTravel(travelName:String, destination:String, startDate:String, endDate:String, imgCover: Uri, context: Context?){
-        repository.addTravel(travelName, destination, startDate, endDate, imgCover, _travelAdded, context)
+        viewModelScope.launch(Dispatchers.Main){
+            repository.addTravel(travelName, destination, startDate, endDate, imgCover, _travelAdded, context)
+        }
     }
 
     fun deleteTravel(travel: Travel){
-        repository.deleteTravel(travel)
+        viewModelScope.launch(Dispatchers.Main){
+            repository.deleteTravel(travel)
+        }
     }
 
     fun getExpenses(travelID: String){
