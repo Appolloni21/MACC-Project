@@ -14,7 +14,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.macc.adapter.UserAdapter
-import com.example.macc.data.HomepageViewModel
+import com.example.macc.viewmodel.HomepageViewModel
 
 private const val TAG = "Users List Fragment"
 

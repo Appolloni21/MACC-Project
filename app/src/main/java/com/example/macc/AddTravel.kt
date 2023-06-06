@@ -20,7 +20,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import com.example.macc.data.HomepageViewModel
+import com.example.macc.viewmodel.HomepageViewModel
+import com.example.macc.utility.UIState
 import com.google.android.material.textfield.TextInputLayout
 
 
@@ -100,15 +101,21 @@ class AddTravel : Fragment() {
                 }
 
                 else -> {
-                    sharedViewModel.addTravel(travelName,destination,startDate,endDate,imageCoverURI, context)
+                    sharedViewModel.addTravel(travelName,destination,startDate,endDate,imageCoverURI)
                 }
             }
         }
 
         sharedViewModel.travelAdded.observe(viewLifecycleOwner){
-            if(it != null){
+            when(it){
+                UIState.SUCCESS -> {
                 //Il viaggio è stato aggiunto correttamente, facciamo ritornare l'utente alla homepage
-                navController.navigateUp()
+                    makeToast("The travel has been added")
+                    navController.navigateUp()
+                }
+                UIState.FAILURE -> {
+                    makeToast("Error, the travel has not been added")
+                }
             }
         }
     }

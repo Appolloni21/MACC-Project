@@ -15,7 +15,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.macc.data.AuthViewModel
+import com.example.macc.viewmodel.AuthViewModel
 
 
 

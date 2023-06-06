@@ -1,14 +1,13 @@
 package com.example.macc.repository
 
 
-import android.content.Context
 import android.net.Uri
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.example.macc.model.Expense
 import com.example.macc.model.Travel
 import com.example.macc.model.User
+import com.example.macc.utility.UIState
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
@@ -63,9 +62,8 @@ class FirebaseDatabaseRepository {
         })
     }
 
-
-    suspend fun addTravel(travelName:String, destination:String, startDate:String, endDate:String, imgCover: Uri, travelAdded: MutableLiveData<Travel>, context: Context?){
-        return withContext(Dispatchers.IO){
+    suspend fun addTravel(travelName:String, destination:String, startDate:String, endDate:String, imgCover: Uri): String =
+        withContext(Dispatchers.IO){
             try {
                 databaseReference = Firebase.database.getReference("travels")
 
@@ -91,16 +89,14 @@ class FirebaseDatabaseRepository {
                 childUpdates["users/$userUid/trips/$travelID"] = true
                 databaseReference.updateChildren(childUpdates).await()
 
-                //Notifichiamo
-                travelAdded.postValue(travel)
-                withContext(Dispatchers.Main){
-                    makeToast(context,"The travel has been added!")
-                }
                 Log.d(TAG, "addTravel: success")
+                return@withContext UIState.SUCCESS
+
             } catch (e: Exception) {
-                Log.d(TAG, "addTravel: exception: $e")
+                Log.d(TAG, "addTravel failure exception: $e")
+                return@withContext UIState.FAILURE
             }
-        }
+
     }
 
     suspend fun deleteTravel(travel: Travel){
@@ -186,10 +182,9 @@ class FirebaseDatabaseRepository {
         })
     }
 
-    //TODO: applicare metodo coroutine a tutte le altre funzioni
-    //TODO: modificare le funzioni in modo tale che restituiscano un result di success/failure, utilizzare questo result per usare i makeToast direttamente nel file UI principale invece di chiamarli da dentro questo file repository
-    suspend fun addUser(userEmail: String, travelID: String, userAdded: MutableLiveData<User>, context: Context?) {
-        return withContext(Dispatchers.IO) {
+
+    suspend fun addUser(userEmail: String, travelID: String): String =
+        withContext(Dispatchers.IO) {
             databaseReference = Firebase.database.getReference("users")
             try {
                 val snapshot = databaseReference.orderByChild("email").equalTo(userEmail).get().await()
@@ -200,10 +195,8 @@ class FirebaseDatabaseRepository {
                         //Prima controlliamo che l' user non sia già stato aggiunto
                         if (user?.trips?.containsKey(travelID)!!) {
                             Log.d(TAG, "addUser: the user is already in this travel")
-                            withContext(Dispatchers.Main) {
-                                makeToast(context, "This user is already in this travel!")
-                            }
-                            return@withContext
+                            return@withContext UIState._103
+
                         } else {
                             val userID = userSnapshot.key.toString()
                             val childUpdates = hashMapOf<String, Any?>()
@@ -217,16 +210,21 @@ class FirebaseDatabaseRepository {
 
                             //Eseguiamo le query
                             databaseReference.updateChildren(childUpdates).await()
-                            userAdded.postValue(user)
+
                             Log.d(TAG, "addUser: success")
+                            return@withContext UIState.SUCCESS
                         }
                     }
                 }
+                Log.d(TAG,"addUser: user not found")
+                return@withContext UIState._104
+
             } catch (e: Exception) {
                 Log.d(TAG, "addUser: exception: $e")
+                return@withContext UIState.FAILURE
             }
         }
-    }
+
 
     //TODO: addExpense
     /*fun addExpense(){
@@ -237,12 +235,4 @@ class FirebaseDatabaseRepository {
 
     //TODO: deleteExpense
 
-
-    private fun makeToast(context: Context?, msg:String){
-        Toast.makeText(
-            context,
-            msg,
-            Toast.LENGTH_SHORT
-        ).show()
-    }
 }

@@ -13,7 +13,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.macc.adapter.TravelAdapter
-import com.example.macc.data.HomepageViewModel
+import com.example.macc.viewmodel.HomepageViewModel
 import com.example.macc.model.Travel
 
 

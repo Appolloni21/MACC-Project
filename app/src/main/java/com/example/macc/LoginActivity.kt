@@ -9,7 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.macc.data.AuthViewModel
+import com.example.macc.viewmodel.AuthViewModel
 
 class LoginActivity : AppCompatActivity(){
 

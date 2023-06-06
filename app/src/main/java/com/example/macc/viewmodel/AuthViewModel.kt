@@ -1,4 +1,4 @@
-package com.example.macc.data
+package com.example.macc.viewmodel
 
 import android.content.Context
 import android.net.Uri

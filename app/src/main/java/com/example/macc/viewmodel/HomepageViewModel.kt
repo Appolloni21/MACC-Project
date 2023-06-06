@@ -1,6 +1,6 @@
-package com.example.macc.data
+package com.example.macc.viewmodel
 
-import android.content.Context
+
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -23,8 +23,8 @@ class HomepageViewModel : ViewModel() {
     private val _travelArrayList: MutableLiveData<ArrayList<Travel>> = MutableLiveData()
     val travelArrayList: LiveData<ArrayList<Travel>> = _travelArrayList
 
-    private val _travelAdded: MutableLiveData<Travel> = MutableLiveData()
-    val travelAdded: LiveData<Travel> = _travelAdded
+    private val _travelAdded: MutableLiveData<String> = MutableLiveData()
+    val travelAdded: LiveData<String> = _travelAdded
 
     private val _expenses: MutableLiveData<ArrayList<Expense>> = MutableLiveData()
     val expenses: LiveData<ArrayList<Expense>> = _expenses
@@ -32,8 +32,8 @@ class HomepageViewModel : ViewModel() {
     private val _users: MutableLiveData<ArrayList<User>> = MutableLiveData()
     val users: LiveData<ArrayList<User>> = _users
 
-    private val _userAdded: MutableLiveData<User> = MutableLiveData()
-    val userAdded: LiveData<User> = _userAdded
+    private val _userAdded: MutableLiveData<String> = MutableLiveData()
+    val userAdded: LiveData<String> = _userAdded
 
     init {
         _travelArrayList.value = arrayListOf()
@@ -43,9 +43,10 @@ class HomepageViewModel : ViewModel() {
         Log.d(TAG, "init HomePageViewModel")
     }
 
-    fun addTravel(travelName:String, destination:String, startDate:String, endDate:String, imgCover: Uri, context: Context?){
+    fun addTravel(travelName:String, destination:String, startDate:String, endDate:String, imgCover: Uri){
         viewModelScope.launch(Dispatchers.Main){
-            repository.addTravel(travelName, destination, startDate, endDate, imgCover, _travelAdded, context)
+            val state = repository.addTravel(travelName, destination, startDate, endDate, imgCover)
+            _travelAdded.postValue(state)
         }
     }
 
@@ -63,9 +64,10 @@ class HomepageViewModel : ViewModel() {
         repository.getUsers(travelID, _users)
     }
 
-    fun addUser(userEmail: String, travelID: String, context: Context?){
+    fun addUser(userEmail: String, travelID: String){
         viewModelScope.launch(Dispatchers.Main) {
-            repository.addUser(userEmail, travelID, _userAdded, context)
+            val state = repository.addUser(userEmail, travelID)
+            _userAdded.postValue(state)
         }
     }
 
