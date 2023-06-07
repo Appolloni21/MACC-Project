@@ -26,6 +26,9 @@ class HomepageViewModel : ViewModel() {
     private val _travelAdded: MutableLiveData<String> = MutableLiveData()
     val travelAdded: LiveData<String> = _travelAdded
 
+    private val _travelDeleted: MutableLiveData<String> = MutableLiveData()
+    val travelDeleted: LiveData<String> = _travelDeleted
+
     private val _expenses: MutableLiveData<ArrayList<Expense>> = MutableLiveData()
     val expenses: LiveData<ArrayList<Expense>> = _expenses
 
@@ -52,7 +55,8 @@ class HomepageViewModel : ViewModel() {
 
     fun deleteTravel(travel: Travel){
         viewModelScope.launch(Dispatchers.Main){
-            repository.deleteTravel(travel)
+            val state = repository.deleteTravel(travel)
+            _travelDeleted.postValue(state)
         }
     }
 

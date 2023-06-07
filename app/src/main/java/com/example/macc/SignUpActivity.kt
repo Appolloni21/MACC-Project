@@ -15,6 +15,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.example.macc.utility.UIState
 import com.example.macc.viewmodel.AuthViewModel
 
 
@@ -96,19 +97,24 @@ class SignUpActivity : AppCompatActivity() {
                 }
 
                 else -> {
-                    sharedViewModel.signUpUser(name, surname, nickname, description, email, password, trips, imageAvatarURI, applicationContext)
+                    sharedViewModel.signUpUser(name, surname, nickname, description, email, password, trips, imageAvatarURI)
                 }
             }
         }
 
-        sharedViewModel.userData.observe(this){
-            if(it != null){
-
-                //User is registered and so logged in, we send him to the homepage
-                val intent = Intent(this@SignUpActivity, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                finish()
+        sharedViewModel.signUpState.observe(this){
+            when (it){
+                UIState.SUCCESS -> {
+                    //User is registered and so logged in, we send him to the homepage
+                    Toast.makeText(this@SignUpActivity, "You signed up successfully", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this@SignUpActivity, MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                    finish()
+                }
+                UIState.FAILURE -> {
+                    Toast.makeText(this@SignUpActivity, "Error, couldn't sign up", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

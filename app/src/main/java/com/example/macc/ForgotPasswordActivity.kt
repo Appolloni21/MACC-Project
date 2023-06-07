@@ -2,18 +2,21 @@ package com.example.macc
 
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.example.macc.utility.UIState
+import com.example.macc.viewmodel.AuthViewModel
+
 
 private const val TAG = "Forgot Password Activity"
 
 class ForgotPasswordActivity : AppCompatActivity() {
+
+    private val sharedViewModel: AuthViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide();
@@ -35,24 +38,23 @@ class ForgotPasswordActivity : AppCompatActivity() {
                     makeToast("Please enter email")
                 }
                 else -> {
-                    logOutUser(email)
+                    //logOutUser(email)
+                    sharedViewModel.forgotPassword(email)
                 }
             }
         }
-    }
 
-    private fun logOutUser(email: String){
-        Firebase.auth.sendPasswordResetEmail(email)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d(TAG, "sendPasswordResetEmail: Success")
+        sharedViewModel.forgotPswState.observe(this){
+            when(it){
+                UIState.SUCCESS -> {
                     makeToast("Email sent successfully to reset your password")
                     finish()
-                } else {
-                    Log.w(TAG, "sendPasswordResetEmail: Failure", task.exception)
+                }
+                UIState.FAILURE -> {
                     makeToast("Password reset failed.")
                 }
             }
+        }
     }
 
     private fun makeToast(msg:String){

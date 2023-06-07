@@ -90,17 +90,17 @@ class FirebaseDatabaseRepository {
                 databaseReference.updateChildren(childUpdates).await()
 
                 Log.d(TAG, "addTravel: success")
-                return@withContext UIState.SUCCESS
+                UIState.SUCCESS
 
             } catch (e: Exception) {
                 Log.d(TAG, "addTravel failure exception: $e")
-                return@withContext UIState.FAILURE
+                UIState.FAILURE
             }
 
     }
 
-    suspend fun deleteTravel(travel: Travel){
-        return withContext(Dispatchers.IO){
+    suspend fun deleteTravel(travel: Travel): String =
+        withContext(Dispatchers.IO){
             try {
                 //Log.d(TAG,"deleteTravel: $travelID")
                 val travelID = travel.travelID
@@ -126,12 +126,14 @@ class FirebaseDatabaseRepository {
                 storageReference = Firebase.storage.getReference("travels")
                 storageReference.child("$travelID").delete().await()
                 Log.d(TAG, "deleteTravel: success")
+                UIState.SUCCESS
 
             } catch (e: Exception) {
                 Log.d(TAG, "deleteTravel: exception: $e")
+                UIState.FAILURE
             }
         }
-    }
+
 
     fun getExpenses(travelID: String, expenseArrayList: MutableLiveData<ArrayList<Expense>>){
         databaseReference = Firebase.database.getReference("expenses")
@@ -195,7 +197,7 @@ class FirebaseDatabaseRepository {
                         //Prima controlliamo che l' user non sia già stato aggiunto
                         if (user?.trips?.containsKey(travelID)!!) {
                             Log.d(TAG, "addUser: the user is already in this travel")
-                            return@withContext UIState._103
+                            UIState._103
 
                         } else {
                             val userID = userSnapshot.key.toString()
@@ -212,16 +214,16 @@ class FirebaseDatabaseRepository {
                             databaseReference.updateChildren(childUpdates).await()
 
                             Log.d(TAG, "addUser: success")
-                            return@withContext UIState.SUCCESS
+                            UIState.SUCCESS
                         }
                     }
                 }
                 Log.d(TAG,"addUser: user not found")
-                return@withContext UIState._104
+                UIState._104
 
             } catch (e: Exception) {
                 Log.d(TAG, "addUser: exception: $e")
-                return@withContext UIState.FAILURE
+                UIState.FAILURE
             }
         }
 

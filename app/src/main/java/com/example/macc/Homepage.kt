@@ -4,6 +4,7 @@ package com.example.macc
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.macc.adapter.TravelAdapter
 import com.example.macc.viewmodel.HomepageViewModel
 import com.example.macc.model.Travel
+import com.example.macc.utility.UIState
 
 
 private const val TAG = "Homepage Fragment"
@@ -67,6 +69,18 @@ class Homepage : Fragment() {
             }
             true
         }
+
+        sharedViewModel.travelDeleted.observe(viewLifecycleOwner){
+            when(it){
+                UIState.SUCCESS -> {
+                    Toast.makeText(context,"The travel has been deleted", Toast.LENGTH_SHORT).show()
+                }
+                UIState.FAILURE -> {
+                    Toast.makeText(context,"Error, the travel has not been deleted", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
         Log.d(TAG, "Homepage")
     }
 

@@ -9,6 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.example.macc.utility.UIState
 import com.example.macc.viewmodel.AuthViewModel
 
 class LoginActivity : AppCompatActivity(){
@@ -37,22 +38,27 @@ class LoginActivity : AppCompatActivity(){
                 else -> {
 
                     //Login user with email and password
-                    sharedViewModel.logInUser(email,password, applicationContext)
+                    sharedViewModel.logInUser(email,password)
                 }
             }
         }
 
-        sharedViewModel.userData.observe(this){
-            if(it != null){
-
-                //User is logged in, we send him to the homepage
-                val intent = Intent(
-                    this@LoginActivity,
-                    MainActivity::class.java
-                )
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                finish()
+        sharedViewModel.logInState.observe(this){
+            when(it){
+                UIState.SUCCESS -> {
+                    //User is logged in, we send him to the homepage
+                    Toast.makeText(this@LoginActivity, "You logged in, welcome back", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(
+                        this@LoginActivity,
+                        MainActivity::class.java
+                    )
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                    finish()
+                }
+                UIState.FAILURE -> {
+                    Toast.makeText(this@LoginActivity, "Error in logging in", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 

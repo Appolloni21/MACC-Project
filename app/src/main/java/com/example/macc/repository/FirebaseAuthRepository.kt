@@ -1,11 +1,10 @@
 package com.example.macc.repository
 
-import android.content.Context
+
 import android.net.Uri
 import android.util.Log
-import android.widget.Toast
-import androidx.lifecycle.MutableLiveData
 import com.example.macc.model.User
+import com.example.macc.utility.UIState
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -28,9 +27,8 @@ class FirebaseAuthRepository {
 
 
     suspend fun signUpUser(name:String, surname:String, nickname:String, description: String, email:String, password:String,
-                   trips:Map<String,Boolean>, imgAvatar: Uri, userData: MutableLiveData<FirebaseUser>, context: Context){
-
-        return withContext(Dispatchers.IO){
+                   trips:Map<String,Boolean>, imgAvatar: Uri): String =
+        withContext(Dispatchers.IO){
             try {
                 // Initialize Firebase Auth
                 auth = Firebase.auth
@@ -51,53 +49,59 @@ class FirebaseAuthRepository {
                 val user = User(name,surname,nickname,description,email,avatar,trips)
                 databaseReference = Firebase.database.getReference("users")
                 databaseReference.child(userUid).setValue(user).await()
-                withContext(Dispatchers.Main){
-                    makeToast(context,"You are registered successfully")
-                }
 
                 Log.d(TAG, "signUpUser: success")
-                //Aggiorniamo il MutableLiveData
-                userData.postValue(firebaseUser)
+                UIState.SUCCESS
 
             } catch(e: Exception){
                 Log.d(TAG,"signUpUser exception: $e")
-                withContext(Dispatchers.Main){
-                    makeToast(context, "Error in the registration")
-                }
+                UIState.FAILURE
+
             }
         }
-    }
 
-    suspend fun logInUser(email: String, password: String, userData: MutableLiveData<FirebaseUser>, context: Context){
-        return withContext(Dispatchers.IO){
+
+    suspend fun logInUser(email: String, password: String):String =
+        withContext(Dispatchers.IO){
             try {
                 // Initialize Firebase Auth
                 auth = Firebase.auth
 
                 //Log in user with email and password in Firebase Auth
-                val result = auth.signInWithEmailAndPassword(email, password).await()
+                auth.signInWithEmailAndPassword(email, password).await()
+                //val firebaseUser: FirebaseUser = result.user!!
 
-                val firebaseUser: FirebaseUser = result.user!!
-                userData.postValue(firebaseUser)
-                withContext(Dispatchers.Main){
-                    makeToast(context,"You are logged in successfully")
-                }
                 Log.d(TAG,"logInUser: success")
+                UIState.SUCCESS
 
             } catch(e: Exception){
                 Log.d(TAG,"logInUser exception: $e")
-                withContext(Dispatchers.Main){
-                    makeToast(context, "Error in logging in")
-                }
+                UIState.FAILURE
             }
+        }
+
+    suspend fun logOutUser():String =
+        withContext(Dispatchers.IO){
+            try {
+                //Log Out with Firebase Auth
+                Firebase.auth.signOut()
+                Log.d(TAG,"logOutUser: success")
+                UIState.SUCCESS
+            } catch(e: Exception){
+                Log.d(TAG,"logOutUser exception: $e")
+                UIState.FAILURE
         }
     }
 
-    private fun makeToast(context: Context, msg:String){
-        Toast.makeText(
-            context,
-            msg,
-            Toast.LENGTH_SHORT
-        ).show()
-    }
+    suspend fun forgotPassword(email: String): String =
+        withContext(Dispatchers.IO){
+            try {
+                Firebase.auth.sendPasswordResetEmail(email).await()
+                Log.d(TAG,"forgotPassword: success")
+                UIState.SUCCESS
+            } catch(e: Exception){
+                Log.d(TAG,"forgotPassword exception: $e")
+                UIState.FAILURE
+            }
+        }
 }
