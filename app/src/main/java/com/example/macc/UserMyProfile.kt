@@ -3,6 +3,7 @@ package com.example.macc
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -21,7 +22,7 @@ private const val TAG = "User My Profile Fragment"
 
 class UserMyProfile : Fragment() {
 
-    private val sharedViewModel: AuthViewModel by viewModels()
+    private val sharedViewModel: AuthViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,18 +47,22 @@ class UserMyProfile : Fragment() {
             sharedViewModel.logOutUser()
         }
 
-        sharedViewModel.logOutState.observe(viewLifecycleOwner){
+        sharedViewModel.uiState.observe(viewLifecycleOwner){
             when(it){
                 UIState.SUCCESS -> {
                     Toast.makeText(context, "You are now logged out", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(activity, LoginActivity::class.java))
                     activity?.finish()
+                    sharedViewModel.resetUiState()
                 }
                 UIState.FAILURE -> {
                     Toast.makeText(context, "Error in logging out", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
                 }
             }
         }
+
+        Log.d(TAG,"User My Profile Page")
     }
 
 }

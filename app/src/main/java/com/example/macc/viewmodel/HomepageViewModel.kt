@@ -23,20 +23,14 @@ class HomepageViewModel : ViewModel() {
     private val _travelArrayList: MutableLiveData<ArrayList<Travel>> = MutableLiveData()
     val travelArrayList: LiveData<ArrayList<Travel>> = _travelArrayList
 
-    private val _travelAdded: MutableLiveData<String> = MutableLiveData()
-    val travelAdded: LiveData<String> = _travelAdded
-
-    private val _travelDeleted: MutableLiveData<String> = MutableLiveData()
-    val travelDeleted: LiveData<String> = _travelDeleted
-
     private val _expenses: MutableLiveData<ArrayList<Expense>> = MutableLiveData()
     val expenses: LiveData<ArrayList<Expense>> = _expenses
 
     private val _users: MutableLiveData<ArrayList<User>> = MutableLiveData()
     val users: LiveData<ArrayList<User>> = _users
 
-    private val _userAdded: MutableLiveData<String> = MutableLiveData()
-    val userAdded: LiveData<String> = _userAdded
+    private val _uiState: MutableLiveData<String?> = MutableLiveData()
+    val uiState: LiveData<String?> = _uiState
 
     init {
         _travelArrayList.value = arrayListOf()
@@ -49,14 +43,14 @@ class HomepageViewModel : ViewModel() {
     fun addTravel(travelName:String, destination:String, startDate:String, endDate:String, imgCover: Uri){
         viewModelScope.launch(Dispatchers.Main){
             val state = repository.addTravel(travelName, destination, startDate, endDate, imgCover)
-            _travelAdded.postValue(state)
+            _uiState.postValue(state)
         }
     }
 
     fun deleteTravel(travel: Travel){
         viewModelScope.launch(Dispatchers.Main){
             val state = repository.deleteTravel(travel)
-            _travelDeleted.postValue(state)
+            _uiState.postValue(state)
         }
     }
 
@@ -71,8 +65,12 @@ class HomepageViewModel : ViewModel() {
     fun addUser(userEmail: String, travelID: String){
         viewModelScope.launch(Dispatchers.Main) {
             val state = repository.addUser(userEmail, travelID)
-            _userAdded.postValue(state)
+            _uiState.postValue(state)
         }
+    }
+
+    fun resetUiState(){
+        _uiState.value = null
     }
 
     //Temp

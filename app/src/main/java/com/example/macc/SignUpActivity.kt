@@ -65,10 +65,10 @@ class SignUpActivity : AppCompatActivity() {
             val name: String = findViewById<EditText>(R.id.name).text.toString().trim { it <= ' ' }
             val surname: String = findViewById<EditText>(R.id.surname).text.toString().trim { it <= ' ' }
             val nickname: String = findViewById<EditText>(R.id.nickname).text.toString().trim { it <= ' ' }
-            val description: String = ""
+            val description = ""
             val email: String = findViewById<EditText>(R.id.email).text.toString().trim { it <= ' ' }
             val password: String = findViewById<EditText>(R.id.password).text.toString().trim { it <= ' ' }
-            val trips:Map<String,Boolean> = mapOf("null" to false)
+            //val trips:Map<String,Boolean> = mapOf("null" to false)
 
 
             when {
@@ -97,12 +97,12 @@ class SignUpActivity : AppCompatActivity() {
                 }
 
                 else -> {
-                    sharedViewModel.signUpUser(name, surname, nickname, description, email, password, trips, imageAvatarURI)
+                    sharedViewModel.signUpUser(name, surname, nickname, description, email, password, imageAvatarURI)
                 }
             }
         }
 
-        sharedViewModel.signUpState.observe(this){
+        sharedViewModel.uiState.observe(this){
             when (it){
                 UIState.SUCCESS -> {
                     //User is registered and so logged in, we send him to the homepage
@@ -111,9 +111,11 @@ class SignUpActivity : AppCompatActivity() {
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
                     finish()
+                    sharedViewModel.resetUiState()
                 }
                 UIState.FAILURE -> {
                     Toast.makeText(this@SignUpActivity, "Error, couldn't sign up", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
                 }
             }
         }

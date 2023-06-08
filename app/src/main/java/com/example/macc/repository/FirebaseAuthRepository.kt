@@ -27,7 +27,7 @@ class FirebaseAuthRepository {
 
 
     suspend fun signUpUser(name:String, surname:String, nickname:String, description: String, email:String, password:String,
-                   trips:Map<String,Boolean>, imgAvatar: Uri): String =
+                    imgAvatar: Uri): String =
         withContext(Dispatchers.IO){
             try {
                 // Initialize Firebase Auth
@@ -46,7 +46,7 @@ class FirebaseAuthRepository {
                 val avatar: String = task.toString()
 
                 //register the user of Firebase Authenticator also on the Realtime Database
-                val user = User(name,surname,nickname,description,email,avatar,trips)
+                val user = User(name,surname,nickname,description,email,avatar,null)
                 databaseReference = Firebase.database.getReference("users")
                 databaseReference.child(userUid).setValue(user).await()
 

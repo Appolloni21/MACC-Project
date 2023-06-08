@@ -16,7 +16,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -30,7 +30,7 @@ private const val TAG: String = "AddTravel Fragment"
 class AddTravel : Fragment() {
 
     private var imageCoverURI: Uri = Uri.EMPTY
-    private val sharedViewModel: HomepageViewModel by viewModels()
+    private val sharedViewModel: HomepageViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -106,15 +106,17 @@ class AddTravel : Fragment() {
             }
         }
 
-        sharedViewModel.travelAdded.observe(viewLifecycleOwner){
+        sharedViewModel.uiState.observe(viewLifecycleOwner){
             when(it){
                 UIState.SUCCESS -> {
                 //Il viaggio è stato aggiunto correttamente, facciamo ritornare l'utente alla homepage
                     makeToast("The travel has been added")
+                    sharedViewModel.resetUiState()
                     navController.navigateUp()
                 }
                 UIState.FAILURE -> {
                     makeToast("Error, the travel has not been added")
+                    sharedViewModel.resetUiState()
                 }
             }
         }

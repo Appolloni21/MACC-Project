@@ -43,7 +43,7 @@ class LoginActivity : AppCompatActivity(){
             }
         }
 
-        sharedViewModel.logInState.observe(this){
+        sharedViewModel.uiState.observe(this){
             when(it){
                 UIState.SUCCESS -> {
                     //User is logged in, we send him to the homepage
@@ -55,9 +55,11 @@ class LoginActivity : AppCompatActivity(){
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
                     finish()
+                    sharedViewModel.resetUiState()
                 }
                 UIState.FAILURE -> {
                     Toast.makeText(this@LoginActivity, "Error in logging in", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
                 }
             }
         }

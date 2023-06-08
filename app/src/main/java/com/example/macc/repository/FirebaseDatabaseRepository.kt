@@ -81,8 +81,8 @@ class FirebaseDatabaseRepository {
                 databaseReference = Firebase.database.reference
                 val childUpdates = hashMapOf<String, Any?>()
                 val members: Map<String,Boolean> = mapOf(userUid to true)
-                val expenses: Map<String, Boolean> = mapOf("null" to false)
-                val travel = Travel(travelName,destination, startDate,endDate, imgUrl, members, expenses)
+                val owner: String = userUid
+                val travel = Travel(travelName,destination,startDate,endDate,imgUrl,members,null,travelID,owner)
                 childUpdates["travels/$travelID"] = travel
 
                 //Aggiungiamo il riferimento del viaggio anche nella lista "trips" dell'utente corrente
@@ -113,9 +113,12 @@ class FirebaseDatabaseRepository {
                     childUpdates["users/$key/trips/$travelID"] = null
                 }
                 //Cancelliamo le spese associate al viaggio
-                for(key in travel.expenses!!.keys){
-                    childUpdates["expenses/$key"] = null
+                if(!travel.expenses.isNullOrEmpty()){
+                    for(key in travel.expenses!!.keys){
+                        childUpdates["expenses/$key"] = null
+                    }
                 }
+
                 //Ora cancelliamo il viaggio dall'elenco principale
                 childUpdates["travels/$travelID"] = null
 
@@ -191,42 +194,40 @@ class FirebaseDatabaseRepository {
             try {
                 val snapshot = databaseReference.orderByChild("email").equalTo(userEmail).get().await()
 
-                if (snapshot.exists()) {
-                    for (userSnapshot in snapshot.children) {
-                        val user = userSnapshot.getValue<User>()
-                        //Prima controlliamo che l' user non sia già stato aggiunto
-                        if (user?.trips?.containsKey(travelID)!!) {
-                            Log.d(TAG, "addUser: the user is already in this travel")
-                            UIState._103
+                if(!snapshot.exists()){
+                    Log.d(TAG,"addUser: user not found")
+                    return@withContext UIState._104
+                }
 
-                        } else {
-                            val userID = userSnapshot.key.toString()
-                            val childUpdates = hashMapOf<String, Any?>()
-                            databaseReference = Firebase.database.reference
+                for (userSnapshot in snapshot.children) {
+                    val user = userSnapshot.getValue<User>()
+                    //Prima controlliamo che l' user non sia già stato aggiunto
+                    if (!(user?.trips.isNullOrEmpty()) && user?.trips?.containsKey(travelID)!!) {
+                        Log.d(TAG, "addUser: the user is already in this travel")
+                        UIState._103
+                    } else {
+                        val userID = userSnapshot.key.toString()
+                        val childUpdates = hashMapOf<String, Any?>()
+                        databaseReference = Firebase.database.reference
 
-                            //Prima aggiungiamo l' utente ai membri del viaggio
-                            childUpdates["travels/$travelID/members/$userID"] = true
+                        //Prima aggiungiamo l' utente ai membri del viaggio
+                        childUpdates["travels/$travelID/members/$userID"] = true
 
-                            //Poi aggiungiamo il riferimento del viaggio anche nella lista "trips" dell'utente
-                            childUpdates["users/$userID/trips/$travelID"] = true
+                        //Poi aggiungiamo il riferimento del viaggio anche nella lista "trips" dell'utente
+                        childUpdates["users/$userID/trips/$travelID"] = true
 
-                            //Eseguiamo le query
-                            databaseReference.updateChildren(childUpdates).await()
-
-                            Log.d(TAG, "addUser: success")
-                            UIState.SUCCESS
-                        }
+                        //Eseguiamo le query
+                        databaseReference.updateChildren(childUpdates).await()
                     }
                 }
-                Log.d(TAG,"addUser: user not found")
-                UIState._104
+                Log.d(TAG, "addUser: success")
+                UIState.SUCCESS
 
             } catch (e: Exception) {
                 Log.d(TAG, "addUser: exception: $e")
                 UIState.FAILURE
             }
         }
-
 
     //TODO: addExpense
     /*fun addExpense(){

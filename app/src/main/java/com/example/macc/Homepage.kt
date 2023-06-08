@@ -70,13 +70,15 @@ class Homepage : Fragment() {
             true
         }
 
-        sharedViewModel.travelDeleted.observe(viewLifecycleOwner){
+        sharedViewModel.uiState.observe(viewLifecycleOwner){
             when(it){
                 UIState.SUCCESS -> {
                     Toast.makeText(context,"The travel has been deleted", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
                 }
                 UIState.FAILURE -> {
                     Toast.makeText(context,"Error, the travel has not been deleted", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
                 }
             }
         }

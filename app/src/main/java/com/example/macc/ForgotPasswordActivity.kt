@@ -2,6 +2,7 @@ package com.example.macc
 
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -19,7 +20,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
     private val sharedViewModel: AuthViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar?.hide();
+        supportActionBar?.hide()
         setContentView(R.layout.forgot_password)
 
         //back navigation
@@ -44,17 +45,21 @@ class ForgotPasswordActivity : AppCompatActivity() {
             }
         }
 
-        sharedViewModel.forgotPswState.observe(this){
+        sharedViewModel.uiState.observe(this){
             when(it){
                 UIState.SUCCESS -> {
                     makeToast("Email sent successfully to reset your password")
                     finish()
+                    sharedViewModel.resetUiState()
                 }
                 UIState.FAILURE -> {
                     makeToast("Password reset failed.")
+                    sharedViewModel.resetUiState()
                 }
             }
         }
+
+        Log.d(TAG,"Forgot Password Page")
     }
 
     private fun makeToast(msg:String){
