@@ -123,6 +123,7 @@
         android:hint="@string/start_date"
         android:inputType="date"
         android:minHeight="48dp"
+        android:focusable="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/destination"
@@ -140,55 +141,12 @@
         android:inputType="date"
         android:minHeight="48dp"
         android:textColorHint="#757575"
+        android:focusable="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/startDate"
         app:layout_constraintTop_toBottomOf="@+id/destination"
         android:autofillHints="" />
 
-    <!--<TextView
-        android:id="@+id/addParticipantsText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="52dp"
-        android:text="@string/add_participants"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startDate" />-->
-
-    <!--<com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/userEmail"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:hint="@string/user_email"
-        app:hintTextColor="@color/black_primary_material"
-        app:layout_constraintEnd_toEndOf="@+id/addParticipantsText"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/addParticipantsText"
-        app:layout_constraintTop_toBottomOf="@+id/addParticipantsText">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-
-            android:textColorHint="#757575"
-            tools:ignore="TextContrastCheck" />
-
-    </com.google.android.material.textfield.TextInputLayout>-->
-
-    <!--<ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="32dp"
-        android:contentDescription="@string/add_user_plus_icon"
-        app:layout_constraintStart_toEndOf="@+id/userEmail"
-        app:layout_constraintTop_toBottomOf="@+id/addParticipantsText"
-        app:srcCompat="@drawable/ic_baseline_add_circle_outline_24" />-->
 
     <Button
         android:id="@+id/addTravelButton"

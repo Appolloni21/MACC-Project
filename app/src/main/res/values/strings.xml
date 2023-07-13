@@ -74,5 +74,6 @@
     <string name="choose_travel_cover">Choose travel cover</string>
     <string name="choose_avatar">Choose Avatar</string>
     <string name="add_user">Add User</string>
+    <string name="edit_profile">Edit profile</string>
 
 </resources>

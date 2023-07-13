@@ -109,6 +109,7 @@ class SignUpActivity : AppCompatActivity() {
                     Toast.makeText(this@SignUpActivity, "You signed up successfully", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this@SignUpActivity, MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    intent.putExtra("userID", sharedViewModel.userID.value)
                     startActivity(intent)
                     finish()
                     sharedViewModel.resetUiState()

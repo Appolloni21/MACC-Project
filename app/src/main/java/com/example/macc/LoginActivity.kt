@@ -53,6 +53,7 @@ class LoginActivity : AppCompatActivity(){
                         MainActivity::class.java
                     )
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    intent.putExtra("userID", sharedViewModel.userID.value)
                     startActivity(intent)
                     finish()
                     sharedViewModel.resetUiState()

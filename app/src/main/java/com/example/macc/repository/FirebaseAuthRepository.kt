@@ -3,12 +3,16 @@ package com.example.macc.repository
 
 import android.net.Uri
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.example.macc.model.User
 import com.example.macc.utility.UIState
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
@@ -27,7 +31,7 @@ class FirebaseAuthRepository {
 
 
     suspend fun signUpUser(name:String, surname:String, nickname:String, description: String, email:String, password:String,
-                    imgAvatar: Uri): String =
+                    imgAvatar: Uri, userID: MutableLiveData<String?>): String =
         withContext(Dispatchers.IO){
             try {
                 // Initialize Firebase Auth
@@ -36,6 +40,7 @@ class FirebaseAuthRepository {
                 //Sign up user with email and password in Firebase Auth
                 val result = auth.createUserWithEmailAndPassword(email, password).await()
                 val firebaseUser: FirebaseUser = result.user!!
+                userID.postValue(result.user?.uid)
 
                 //Carichiamo l'avatar sul Firebase Cloud Storage
                 val userUid:String = firebaseUser.uid
@@ -61,15 +66,15 @@ class FirebaseAuthRepository {
         }
 
 
-    suspend fun logInUser(email: String, password: String):String =
+    suspend fun logInUser(email: String, password: String, userID: MutableLiveData<String?>):String =
         withContext(Dispatchers.IO){
             try {
                 // Initialize Firebase Auth
                 auth = Firebase.auth
 
                 //Log in user with email and password in Firebase Auth
-                auth.signInWithEmailAndPassword(email, password).await()
-                //val firebaseUser: FirebaseUser = result.user!!
+                val result = auth.signInWithEmailAndPassword(email, password).await()
+                userID.postValue(result.user?.uid)
 
                 Log.d(TAG,"logInUser: success")
                 UIState.SUCCESS
@@ -104,4 +109,24 @@ class FirebaseAuthRepository {
                 UIState.FAILURE
             }
         }
+
+    fun getUserMyProfile(userID: String, userMyProfile: MutableLiveData<User?>){
+        databaseReference = Firebase.database.getReference("users")
+        databaseReference.child(userID).addValueEventListener(object:
+            ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                try{
+                    if(snapshot.exists()){
+                        val user = snapshot.getValue(User::class.java)!!
+                        userMyProfile.postValue(user)
+                    }
+                }catch(e: Exception){
+                    Log.d(TAG,"getUserMyProfile exception: $e")
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.w(TAG, "getUserMyProfile:onCancelled", databaseError.toException())
+            }
+        })
+    }
 }

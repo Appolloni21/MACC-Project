@@ -1,6 +1,8 @@
 package com.example.macc
 
 
+
+import android.app.DatePickerDialog
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
@@ -23,6 +25,9 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.macc.viewmodel.HomepageViewModel
 import com.example.macc.utility.UIState
 import com.google.android.material.textfield.TextInputLayout
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 
 private const val TAG: String = "AddTravel Fragment"
@@ -39,6 +44,7 @@ class AddTravel : Fragment() {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.add_travel_page, container,
             false)
+
         return view
     }
 
@@ -69,15 +75,27 @@ class AddTravel : Fragment() {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
+        val startDate = view.findViewById<EditText>(R.id.startDate)
+        val endDate = view.findViewById<EditText>(R.id.endDate)
+        val myCalendar = Calendar.getInstance()
+
+
+        //Date picker per data di inizio e fine viaggio
+        startDate.setOnClickListener {
+            DatePickerDialog(requireContext(), picker(startDate,myCalendar), myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show()
+        }
+
+        endDate.setOnClickListener{
+            DatePickerDialog(requireContext(), picker(endDate,myCalendar), myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show()
+        }
+
 
         val addTravelButton = view.findViewById<Button>(R.id.addTravelButton)
         addTravelButton.setOnClickListener{
             val travelName: String = view.findViewById<TextInputLayout>(R.id.travelName)?.editText?.text.toString().trim { it <= ' ' }
             val destination: String = view.findViewById<TextInputLayout>(R.id.destination)?.editText?.text.toString().trim { it <= ' ' }
-            val startDate: String = view.findViewById<EditText>(R.id.startDate)?.text.toString().trim { it <= ' ' }
-            val endDate: String = view.findViewById<EditText>(R.id.endDate)?.text.toString().trim { it <= ' ' }
-
-            //TODO: migliorare input date
+            val startDateT: String = startDate?.text.toString().trim { it <= ' ' }
+            val endDateT: String = endDate?.text.toString().trim { it <= ' ' }
 
             when{
                 TextUtils.isEmpty(imageCoverURI.toString()) -> {
@@ -92,16 +110,16 @@ class AddTravel : Fragment() {
                     makeToast("Please enter destination")
                 }
 
-                TextUtils.isEmpty(startDate) -> {
+                TextUtils.isEmpty(startDateT) -> {
                     makeToast("Please enter start date")
                 }
 
-                TextUtils.isEmpty(endDate) -> {
+                TextUtils.isEmpty(endDateT) -> {
                     makeToast("Please enter end date")
                 }
 
                 else -> {
-                    sharedViewModel.addTravel(travelName,destination,startDate,endDate,imageCoverURI)
+                    sharedViewModel.addTravel(travelName,destination,startDateT,endDateT,imageCoverURI)
                 }
             }
         }
@@ -120,6 +138,22 @@ class AddTravel : Fragment() {
                 }
             }
         }
+    }
+
+
+    private fun picker(editText: EditText, myCalendar: Calendar):  DatePickerDialog.OnDateSetListener{
+        val picker = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+            myCalendar.set(Calendar.YEAR, year)
+            myCalendar.set(Calendar.MONTH, month)
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            editText.setText(updateFormat(myCalendar))
+        }
+        return picker
+    }
+
+    private fun updateFormat(myCalendar: Calendar): String {
+        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.ITALY)
+        return sdf.format(myCalendar.time)
     }
 
     private fun makeToast(msg:String){

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.macc.model.User
 import com.example.macc.repository.FirebaseAuthRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,18 +17,24 @@ class AuthViewModel: ViewModel() {
     private val _uiState: MutableLiveData<String?> = MutableLiveData()
     val uiState: LiveData<String?> = _uiState
 
+    private val _userMyProfile: MutableLiveData<User?> = MutableLiveData()
+    val userMyProfile: LiveData<User?> = _userMyProfile
+
+    private val _userID: MutableLiveData<String?> = MutableLiveData()
+    val userID: LiveData<String?> = _userID
+
     fun signUpUser(name:String, surname:String, nickname:String, description: String, email:String,
                    password:String, imgAvatar: Uri){
 
         viewModelScope.launch(Dispatchers.Main) {
-            val state = repository.signUpUser(name,surname,nickname,description,email,password,imgAvatar)
+            val state = repository.signUpUser(name,surname,nickname,description,email,password,imgAvatar, _userID)
             _uiState.postValue(state)
         }
     }
 
     fun logInUser(email: String, password: String){
         viewModelScope.launch(Dispatchers.Main) {
-            val state = repository.logInUser(email, password)
+            val state = repository.logInUser(email, password, _userID)
             _uiState.postValue(state)
         }
     }
@@ -43,6 +50,13 @@ class AuthViewModel: ViewModel() {
         viewModelScope.launch(Dispatchers.Main){
             val state = repository.forgotPassword(email)
             _uiState.postValue(state)
+        }
+    }
+
+    fun getUserMyProfile(userID: String){
+        viewModelScope.launch(Dispatchers.Main){
+            repository.getUserMyProfile(userID, _userMyProfile)
+            //_uiState.postValue(state)
         }
     }
 
