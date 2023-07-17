@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNavigationView.setupWithNavController(navController)
 
-        val userID = intent.getStringExtra("userID")
-        sharedViewModel.getUserMyProfile(userID!!)
+        //val userID = intent.getStringExtra("userID")
+        sharedViewModel.getUserMyProfile()
     }
 }

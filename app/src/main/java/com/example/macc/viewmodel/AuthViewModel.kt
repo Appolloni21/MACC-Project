@@ -20,21 +20,21 @@ class AuthViewModel: ViewModel() {
     private val _userMyProfile: MutableLiveData<User?> = MutableLiveData()
     val userMyProfile: LiveData<User?> = _userMyProfile
 
-    private val _userID: MutableLiveData<String?> = MutableLiveData()
-    val userID: LiveData<String?> = _userID
+    //private val _userID: MutableLiveData<String?> = MutableLiveData()
+    //val userID: LiveData<String?> = _userID
 
     fun signUpUser(name:String, surname:String, nickname:String, description: String, email:String,
                    password:String, imgAvatar: Uri){
 
         viewModelScope.launch(Dispatchers.Main) {
-            val state = repository.signUpUser(name,surname,nickname,description,email,password,imgAvatar, _userID)
+            val state = repository.signUpUser(name,surname,nickname,description,email,password,imgAvatar)
             _uiState.postValue(state)
         }
     }
 
     fun logInUser(email: String, password: String){
         viewModelScope.launch(Dispatchers.Main) {
-            val state = repository.logInUser(email, password, _userID)
+            val state = repository.logInUser(email, password)
             _uiState.postValue(state)
         }
     }
@@ -53,10 +53,16 @@ class AuthViewModel: ViewModel() {
         }
     }
 
-    fun getUserMyProfile(userID: String){
+    fun getUserMyProfile(){
         viewModelScope.launch(Dispatchers.Main){
-            repository.getUserMyProfile(userID, _userMyProfile)
-            //_uiState.postValue(state)
+            repository.getUserMyProfile(_userMyProfile)
+        }
+    }
+
+    fun editUserMyProfile(name:String, surname:String, nickname:String, description:String, avatar: Uri){
+        viewModelScope.launch(Dispatchers.Main){
+            val state = repository.editUserMyProfile(name,surname,nickname,description, avatar)
+            _uiState.postValue(state)
         }
     }
 

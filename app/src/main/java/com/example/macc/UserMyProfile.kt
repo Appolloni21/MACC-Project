@@ -15,6 +15,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -64,6 +65,12 @@ class UserMyProfile : Fragment() {
         val logoutButton: Button = view.findViewById(R.id.logout_btn)
         logoutButton.setOnClickListener {
             sharedViewModel.logOutUser()
+        }
+
+        val editMyProfileButton: Button = view.findViewById(R.id.edit_myProfile_btn)
+        editMyProfileButton.setOnClickListener {
+            val action = UserMyProfileDirections.actionUserMyProfileToEditUserMyProfile()
+            view.findNavController().navigate(action)
         }
 
         sharedViewModel.uiState.observe(viewLifecycleOwner){

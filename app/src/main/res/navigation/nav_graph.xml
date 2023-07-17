@@ -23,7 +23,11 @@
         android:id="@+id/userMyProfile"
         android:name="com.example.macc.UserMyProfile"
         android:label="Profile"
-        tools:layout="@layout/user_my_profile_page"/>
+        tools:layout="@layout/user_my_profile_page">
+        <action
+            android:id="@+id/action_userMyProfile_to_editUserMyProfile"
+            app:destination="@id/editUserMyProfile" />
+    </fragment>
     <fragment
         android:id="@+id/expenseList"
         android:name="com.example.macc.ExpenseList"
@@ -89,4 +93,9 @@
             app:argType="string"
             android:defaultValue="travelID" />
     </fragment>
+    <fragment
+        android:id="@+id/editUserMyProfile"
+        android:name="com.example.macc.EditUserMyProfile"
+        android:label="EditUserMyProfile"
+        tools:layout="@layout/edit_user_my_profile_page"/>
 </navigation>

@@ -52,8 +52,8 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
 
-        val chooseTravelCoverButton = findViewById<Button>(R.id.chooseAvatarButton)
-        chooseTravelCoverButton.setOnClickListener{
+        val chooseAvatarButton = findViewById<Button>(R.id.chooseAvatarButton)
+        chooseAvatarButton.setOnClickListener{
             // Launch the photo picker and allow the user to choose only images.
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
@@ -109,7 +109,7 @@ class SignUpActivity : AppCompatActivity() {
                     Toast.makeText(this@SignUpActivity, "You signed up successfully", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this@SignUpActivity, MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    intent.putExtra("userID", sharedViewModel.userID.value)
+                    //intent.putExtra("userID", sharedViewModel.userID.value)
                     startActivity(intent)
                     finish()
                     sharedViewModel.resetUiState()

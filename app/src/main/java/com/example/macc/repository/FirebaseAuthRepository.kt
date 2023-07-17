@@ -31,7 +31,7 @@ class FirebaseAuthRepository {
 
 
     suspend fun signUpUser(name:String, surname:String, nickname:String, description: String, email:String, password:String,
-                    imgAvatar: Uri, userID: MutableLiveData<String?>): String =
+                    imgAvatar: Uri): String =
         withContext(Dispatchers.IO){
             try {
                 // Initialize Firebase Auth
@@ -40,13 +40,11 @@ class FirebaseAuthRepository {
                 //Sign up user with email and password in Firebase Auth
                 val result = auth.createUserWithEmailAndPassword(email, password).await()
                 val firebaseUser: FirebaseUser = result.user!!
-                userID.postValue(result.user?.uid)
+                //userID.postValue(result.user?.uid)
 
                 //Carichiamo l'avatar sul Firebase Cloud Storage
                 val userUid:String = firebaseUser.uid
                 storageReference = Firebase.storage.getReference("users/$userUid")
-
-                //Carichiamo l'avatar dell'utente nel Firebase storage
                 val task = storageReference.putFile(imgAvatar).await().storage.downloadUrl.await()
                 val avatar: String = task.toString()
 
@@ -66,15 +64,14 @@ class FirebaseAuthRepository {
         }
 
 
-    suspend fun logInUser(email: String, password: String, userID: MutableLiveData<String?>):String =
+    suspend fun logInUser(email: String, password: String):String =
         withContext(Dispatchers.IO){
             try {
                 // Initialize Firebase Auth
                 auth = Firebase.auth
 
                 //Log in user with email and password in Firebase Auth
-                val result = auth.signInWithEmailAndPassword(email, password).await()
-                userID.postValue(result.user?.uid)
+                auth.signInWithEmailAndPassword(email, password).await()
 
                 Log.d(TAG,"logInUser: success")
                 UIState.SUCCESS
@@ -110,7 +107,8 @@ class FirebaseAuthRepository {
             }
         }
 
-    fun getUserMyProfile(userID: String, userMyProfile: MutableLiveData<User?>){
+    fun getUserMyProfile(userMyProfile: MutableLiveData<User?>){
+        val userID = Firebase.auth.currentUser?.uid.toString()
         databaseReference = Firebase.database.getReference("users")
         databaseReference.child(userID).addValueEventListener(object:
             ValueEventListener {
@@ -129,4 +127,34 @@ class FirebaseAuthRepository {
             }
         })
     }
+
+    suspend fun editUserMyProfile(name:String, surname:String, nickname:String, description:String, avatar: Uri): String =
+        withContext(Dispatchers.IO){
+            try {
+                val userID = Firebase.auth.currentUser?.uid.toString()
+                databaseReference = Firebase.database.reference
+
+                val childUpdates = hashMapOf<String, Any?>()
+                childUpdates["users/$userID/name"] = name
+                childUpdates["users/$userID/surname"] = surname
+                childUpdates["users/$userID/nickname"] = nickname
+                childUpdates["users/$userID/description"] = description
+
+                if(avatar != Uri.EMPTY){
+                    //Carichiamo l'avatar sul Firebase Cloud Storage sostituendolo a quello vecchio
+                    storageReference = Firebase.storage.getReference("users/$userID")
+                    val task = storageReference.putFile(avatar).await().storage.downloadUrl.await()
+                    val avatarRef: String = task.toString()
+                    childUpdates["users/$userID/avatar"] = avatarRef
+                }
+
+                databaseReference.updateChildren(childUpdates).await()
+
+                Log.d(TAG, "editUserMyProfile: success")
+                UIState.SUCCESS
+            } catch(e: Exception){
+                Log.d(TAG, "editUserMyProfile: failure")
+                UIState.FAILURE
+            }
+        }
 }

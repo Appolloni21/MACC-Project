@@ -75,5 +75,11 @@
     <string name="choose_avatar">Choose Avatar</string>
     <string name="add_user">Add User</string>
     <string name="edit_profile">Edit profile</string>
+    <string name="save">Save</string>
+    <string name="name1">Name:</string>
+    <string name="surname1">Surname:</string>
+    <string name="nickname1">Nickname:</string>
+    <string name="description1">Description:</string>
+    <string name="change_avatar">change avatar</string>
 
 </resources>
