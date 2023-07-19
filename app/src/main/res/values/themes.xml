@@ -19,4 +19,9 @@
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:background">@color/black_primary_material</item>
     </style>
+    <style name="PreferenceScreen" parent="Theme.MACC">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorSecondary">@color/grey_description</item>
+    </style>
+
 </resources>

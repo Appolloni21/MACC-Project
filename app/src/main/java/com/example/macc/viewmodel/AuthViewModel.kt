@@ -66,6 +66,13 @@ class AuthViewModel: ViewModel() {
         }
     }
 
+    fun changePasswordUser(currentPassword: String, newPassword: String){
+        viewModelScope.launch(Dispatchers.Main){
+            val state = repository.changePasswordUser(currentPassword, newPassword)
+            _uiState.postValue(state)
+        }
+    }
+
     fun resetUiState(){
         _uiState.value = null
     }

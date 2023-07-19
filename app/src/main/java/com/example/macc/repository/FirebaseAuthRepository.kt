@@ -157,4 +157,25 @@ class FirebaseAuthRepository {
                 UIState.FAILURE
             }
         }
+
+    suspend fun changePasswordUser(currentPassword: String, newPassword: String): String =
+        withContext(Dispatchers.IO){
+            try {
+                val user = Firebase.auth.currentUser
+                val userEmail = user?.email.toString()
+
+                val reAuthentication = logInUser(userEmail, currentPassword)
+                if(reAuthentication == UIState.FAILURE){
+                    Log.d(TAG,"reautenticazione fallita")
+                    return@withContext UIState._105
+                }
+                user!!.updatePassword(newPassword).await()
+
+                Log.d(TAG, "changePasswordUser: success")
+                UIState.SUCCESS
+            } catch(e: Exception){
+                Log.d(TAG, "changePasswordUser: failure")
+                UIState.FAILURE
+            }
+        }
 }

@@ -58,8 +58,18 @@ class UserMyProfile : Fragment() {
         //Toolbar with nav component
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(setOf(R.id.homepage, R.id.userMyProfile))
-        view.findViewById<Toolbar>(R.id.toolbar)
-            .setupWithNavController(navController, appBarConfiguration)
+        val toolbar: Toolbar = view.findViewById(R.id.toolbar)
+        toolbar.setupWithNavController(navController, appBarConfiguration)
+
+        toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.action_settings -> {
+                    val action = UserMyProfileDirections.actionUserMyProfileToSettings()
+                    view.findNavController().navigate(action)
+                }
+            }
+            true
+        }
 
 
         val logoutButton: Button = view.findViewById(R.id.logout_btn)

@@ -27,6 +27,9 @@
         <action
             android:id="@+id/action_userMyProfile_to_editUserMyProfile"
             app:destination="@id/editUserMyProfile" />
+        <action
+            android:id="@+id/action_userMyProfile_to_settings"
+            app:destination="@id/settings" />
     </fragment>
     <fragment
         android:id="@+id/expenseList"
@@ -98,4 +101,18 @@
         android:name="com.example.macc.EditUserMyProfile"
         android:label="EditUserMyProfile"
         tools:layout="@layout/edit_user_my_profile_page"/>
+    <fragment
+        android:id="@+id/settings"
+        android:name="com.example.macc.Settings"
+        android:label="Settings"
+        tools:layout="@layout/settings_page">
+        <action
+            android:id="@+id/action_settings_to_changePassword"
+            app:destination="@id/changePassword" />
+    </fragment>
+    <fragment
+        android:id="@+id/changePassword"
+        android:name="com.example.macc.ChangePassword"
+        android:label="ChangePassword"
+        tools:layout="@layout/change_password_page"/>
 </navigation>
