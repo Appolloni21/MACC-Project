@@ -81,6 +81,16 @@ class ExpenseList : Fragment() {
         val toolbar: Toolbar = binding.toolbar.toolbar
         toolbar.setupWithNavController(navController, appBarConfiguration)
 
+        toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.action_edit -> {
+                    val action = ExpenseListDirections.actionExpenseListToEditTravel(travelPosition,travelID)
+                    view.findNavController().navigate(action)
+                }
+            }
+            true
+        }
+
         val usersListButton = binding.extendedFab
         usersListButton.setOnClickListener{
             val action = ExpenseListDirections.actionExpenseListToUsersList(travelID)

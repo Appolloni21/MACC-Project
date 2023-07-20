@@ -54,6 +54,13 @@ class HomepageViewModel : ViewModel() {
         }
     }
 
+    fun editTravel(travelID: String, travelName: String, destination: String, imgCover: Uri){
+        viewModelScope.launch(Dispatchers.Main){
+            val state = repository.editTravel(travelID,travelName,destination,imgCover)
+            _uiState.postValue(state)
+        }
+    }
+
     fun getExpenses(travelID: String){
         repository.getExpenses(travelID, _expenses)
     }

@@ -85,5 +85,9 @@
     <string name="new_password">New Password</string>
     <string name="repeat_password">Repeat Password</string>
     <string name="update_password">Update Password</string>
+    <string name="edit">Edit</string>
+    <string name="travel_name_1">Travel Name:</string>
+    <string name="destination_1">Destination:</string>
+    <string name="edit_travel">Edit Travel</string>
 
 </resources>

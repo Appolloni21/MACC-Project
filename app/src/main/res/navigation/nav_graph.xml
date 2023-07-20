@@ -50,6 +50,9 @@
             android:name="travelPosition"
             app:argType="integer"
             android:defaultValue="0" />
+        <action
+            android:id="@+id/action_expenseList_to_editTravel"
+            app:destination="@id/editTravel" />
     </fragment>
     <fragment
         android:id="@+id/insertExpense"
@@ -115,4 +118,18 @@
         android:name="com.example.macc.ChangePassword"
         android:label="ChangePassword"
         tools:layout="@layout/change_password_page"/>
+    <fragment
+        android:id="@+id/editTravel"
+        android:name="com.example.macc.EditTravel"
+        android:label="EditTravel"
+        tools:layout="@layout/edit_travel_page">
+        <argument
+            android:name="travelPosition"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="travelID"
+            app:argType="string"
+            android:defaultValue="travelID" />
+    </fragment>
 </navigation>

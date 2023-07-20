@@ -137,6 +137,34 @@ class FirebaseDatabaseRepository {
             }
         }
 
+    suspend fun editTravel(travelID: String, travelName: String, destination: String, imgCover: Uri): String =
+        withContext(Dispatchers.IO){
+            try {
+                databaseReference = Firebase.database.reference
+
+                val childUpdates = hashMapOf<String, Any?>()
+                childUpdates["travels/$travelID/name"] = travelName
+                childUpdates["travels/$travelID/destination"] = destination
+
+                if(imgCover != Uri.EMPTY){
+                    //Carichiamo la cover sul Firebase Cloud Storage sostituendola a quello vecchio
+                    storageReference = Firebase.storage.getReference("travels/$travelID")
+                    val task = storageReference.putFile(imgCover).await().storage.downloadUrl.await()
+                    val coverRef: String = task.toString()
+                    childUpdates["travels/$travelID/imgUrl"] = coverRef
+                }
+
+                databaseReference.updateChildren(childUpdates).await()
+
+                Log.d(TAG, "editTravel: success")
+                UIState.SUCCESS
+
+            } catch (e: Exception) {
+                Log.d(TAG, "editTravel: exception: $e")
+                UIState.FAILURE
+            }
+        }
+
 
     fun getExpenses(travelID: String, expenseArrayList: MutableLiveData<ArrayList<Expense>>){
         databaseReference = Firebase.database.getReference("expenses")
