@@ -14,6 +14,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.macc.adapter.TravelAdapter
+import com.example.macc.databinding.HomepageBinding
 import com.example.macc.viewmodel.HomepageViewModel
 import com.example.macc.model.Travel
 import com.example.macc.utility.UIState
@@ -23,19 +24,22 @@ private const val TAG = "Homepage Fragment"
 
 class Homepage : Fragment() {
 
+    private var _binding: HomepageBinding? = null
+    private val binding get() = _binding!!
     lateinit var adapter: TravelAdapter
     private lateinit var recyclerView : RecyclerView
     private val sharedViewModel: HomepageViewModel by activityViewModels()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        val view: View = inflater.inflate(R.layout.homepage, container,
-            false)
+        _binding = HomepageBinding.inflate(inflater, container, false)
+        val view: View = binding.root
 
-        recyclerView = view.findViewById(R.id.recycler_view)
+        recyclerView = binding.recyclerView
         adapter = TravelAdapter(::deleteTravel, ::actionToExpenseList)
         recyclerView.adapter = adapter
 
@@ -43,7 +47,6 @@ class Homepage : Fragment() {
         sharedViewModel.travelArrayList.observe(viewLifecycleOwner) {
             adapter.setTravelsList(it)
         }
-
 
         // Use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -56,7 +59,7 @@ class Homepage : Fragment() {
         //Toolbar with nav component
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
-        val toolbar: Toolbar = view.findViewById(R.id.toolbar)
+        val toolbar: Toolbar = binding.toolbar.toolbar
 
         toolbar.setupWithNavController(navController, appBarConfiguration)
 
@@ -85,6 +88,12 @@ class Homepage : Fragment() {
 
         Log.d(TAG, "Homepage")
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 
     private fun deleteTravel(travel: Travel) {
         sharedViewModel.deleteTravel(travel)

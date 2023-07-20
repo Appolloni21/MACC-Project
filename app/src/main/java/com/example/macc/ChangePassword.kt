@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -14,11 +13,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import com.example.macc.databinding.ChangePasswordPageBinding
 import com.example.macc.utility.UIState
 import com.example.macc.viewmodel.AuthViewModel
 
 class ChangePassword : Fragment() {
 
+    private var _binding: ChangePasswordPageBinding? = null
+    private val binding get() = _binding!!
     private val sharedViewModel: AuthViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -26,10 +28,10 @@ class ChangePassword : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view: View = inflater.inflate(R.layout.change_password_page, container,
-            false)
+        // Inflate the layout for this fragment
+        _binding = ChangePasswordPageBinding.inflate(inflater, container, false)
 
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,15 +40,15 @@ class ChangePassword : Fragment() {
         //Toolbar with nav component
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
-        val toolbar: Toolbar = view.findViewById(R.id.toolbar)
+        val toolbar: Toolbar = binding.toolbar.toolbar
 
         toolbar.setupWithNavController(navController, appBarConfiguration)
 
-        val updateButton: Button = view.findViewById(R.id.cp_updatePass_btn)
+        val updateButton: Button = binding.cpUpdatePassBtn
         updateButton.setOnClickListener {
-            val currentPassword: String = view.findViewById<TextView>(R.id.cp_current_password).text.toString().trim { it <= ' ' }
-            val newPassword: String = view.findViewById<TextView>(R.id.cp_new_password).text.toString().trim { it <= ' ' }
-            val repeatPassword: String = view.findViewById<TextView>(R.id.cp_repeat_password).text.toString().trim { it <= ' ' }
+            val currentPassword: String = binding.cpCurrentPassword.text.toString().trim { it <= ' ' }
+            val newPassword: String = binding.cpNewPassword.text.toString().trim { it <= ' ' }
+            val repeatPassword: String = binding.cpRepeatPassword.text.toString().trim { it <= ' ' }
 
             when {
                 TextUtils.isEmpty(currentPassword) -> {
@@ -82,11 +84,16 @@ class ChangePassword : Fragment() {
                     Toast.makeText(context, "Error in updating the password", Toast.LENGTH_SHORT).show()
                     sharedViewModel.resetUiState()
                 }
-                UIState._105 ->{
+                UIState.FAIL_103 ->{
                     Toast.makeText(context, "The current password is wrong, please re-enter it", Toast.LENGTH_SHORT).show()
                     sharedViewModel.resetUiState()
                 }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -10,8 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
@@ -20,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
+import com.example.macc.databinding.UserMyProfilePageBinding
 import com.example.macc.utility.UIState
 import com.example.macc.viewmodel.AuthViewModel
 
@@ -27,6 +26,8 @@ private const val TAG = "User My Profile Fragment"
 
 class UserMyProfile : Fragment() {
 
+    private var _binding: UserMyProfilePageBinding? = null
+    private val binding get() = _binding!!
     private val sharedViewModel: AuthViewModel by activityViewModels()
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -34,19 +35,19 @@ class UserMyProfile : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        val view: View = inflater.inflate(R.layout.user_my_profile_page, container,
-            false)
+        _binding = UserMyProfilePageBinding.inflate(inflater, container, false)
+        val view: View = binding.root
 
         sharedViewModel.userMyProfile.observe(viewLifecycleOwner){
             if(it?.equals(null) == false){
                 //Avatar
-                val userAvatar = view.findViewById<ImageView>(R.id.myUser_avatar)
-                Glide.with(view).load(it.avatar).into(userAvatar)
+                val myUserAvatar = binding.myUserAvatar
+                Glide.with(view).load(it.avatar).into(myUserAvatar)
 
                 //Altri campi
-                view.findViewById<TextView>(R.id.user_name_surname).text = it.name + " " + it.surname
-                view.findViewById<TextView>(R.id.user_nickname).text = it.nickname
-                view.findViewById<TextView>(R.id.user_description).text = it.description
+                binding.userNameSurname.text = it.name + " " + it.surname
+                binding.userNickname.text = it.nickname
+                binding.userDescription.text = it.description
             }
         }
 
@@ -58,7 +59,7 @@ class UserMyProfile : Fragment() {
         //Toolbar with nav component
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(setOf(R.id.homepage, R.id.userMyProfile))
-        val toolbar: Toolbar = view.findViewById(R.id.toolbar)
+        val toolbar: Toolbar = binding.toolbar.toolbar
         toolbar.setupWithNavController(navController, appBarConfiguration)
 
         toolbar.setOnMenuItemClickListener {
@@ -72,12 +73,12 @@ class UserMyProfile : Fragment() {
         }
 
 
-        val logoutButton: Button = view.findViewById(R.id.logout_btn)
+        val logoutButton: Button = binding.logoutBtn
         logoutButton.setOnClickListener {
             sharedViewModel.logOutUser()
         }
 
-        val editMyProfileButton: Button = view.findViewById(R.id.edit_myProfile_btn)
+        val editMyProfileButton: Button = binding.editMyProfileBtn
         editMyProfileButton.setOnClickListener {
             val action = UserMyProfileDirections.actionUserMyProfileToEditUserMyProfile()
             view.findNavController().navigate(action)
@@ -99,6 +100,11 @@ class UserMyProfile : Fragment() {
         }
 
         Log.d(TAG,"User My Profile Page")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

@@ -1,10 +1,10 @@
 package com.example.macc
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -15,14 +15,16 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.macc.adapter.ExpenseAdapter
+import com.example.macc.databinding.ExpenseListPageBinding
 import com.example.macc.viewmodel.HomepageViewModel
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+
 
 private const val TAG = "Expense List Fragment"
 
 class ExpenseList : Fragment() {
 
+    private var _binding: ExpenseListPageBinding? = null
+    private val binding get() = _binding!!
     private var travelID: String = "travelID"
     private var travelPosition: Int = 0
     private val sharedViewModel: HomepageViewModel by activityViewModels()
@@ -34,10 +36,10 @@ class ExpenseList : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        val view: View = inflater.inflate(R.layout.expense_list_page, container,
-            false)
+        _binding = ExpenseListPageBinding.inflate(inflater, container, false)
+        val view: View = binding.root
 
-        recyclerView = view.findViewById(R.id.recycler_view_expense)
+        recyclerView = binding.recyclerViewExpense
         adapter = ExpenseAdapter()
         recyclerView.adapter = adapter
 
@@ -50,10 +52,10 @@ class ExpenseList : Fragment() {
             if(it.isNotEmpty()){
                 //Ricaviamo il viaggio e applichiamo alla pagina il nome corretto del viaggio
                 val travel = it[travelPosition]
-                view.findViewById<TextView>(R.id.travelNameLabel).text = travel.name
+                binding.travelNameLabel.text = travel.name
 
                 //Carichiamo l'immagine
-                Glide.with(view).load(travel.imgUrl).into(view.findViewById(R.id.travelCoverImg))
+                Glide.with(view).load(travel.imgUrl).into(binding.travelCoverImg)
             }
         }
         sharedViewModel.getExpenses(travelID)
@@ -76,16 +78,16 @@ class ExpenseList : Fragment() {
         //Toolbar with nav component
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
-        view.findViewById<Toolbar>(R.id.toolbar)
-            .setupWithNavController(navController, appBarConfiguration)
+        val toolbar: Toolbar = binding.toolbar.toolbar
+        toolbar.setupWithNavController(navController, appBarConfiguration)
 
-        val usersListButton = view.findViewById<ExtendedFloatingActionButton>(R.id.extended_fab)
+        val usersListButton = binding.extendedFab
         usersListButton.setOnClickListener{
             val action = ExpenseListDirections.actionExpenseListToUsersList(travelID)
             view.findNavController().navigate(action)
         }
 
-        val addExpenseButton = view.findViewById<FloatingActionButton>(R.id.fab)
+        val addExpenseButton = binding.fab
         addExpenseButton.setOnClickListener{
             //Action from ExpenseList to InsertExpense
             val action = ExpenseListDirections.actionExpenseListToInsertExpense()
@@ -93,8 +95,11 @@ class ExpenseList : Fragment() {
         }
 
         //TODO: rendere l'icona dei tre puntini dentro la expense cliccabile e collegarla la funzione di edit della expense
-
+        Log.d(TAG,"Expense list")
     }
 
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

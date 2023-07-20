@@ -3,13 +3,12 @@ package com.example.macc.adapter
 import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.macc.R
+import com.example.macc.databinding.ItemUserBinding
 import com.example.macc.model.User
 
 private const val TAG = "User Adapter"
@@ -18,14 +17,14 @@ class UserAdapter(private val onActionCallback: (Int) -> Unit) : RecyclerView.Ad
 
     private val usersList : ArrayList<User> = arrayListOf()
 
-    class UserViewHolder(val view: View) : RecyclerView.ViewHolder(view){
-        val userNameSurname : TextView = view.findViewById(R.id.user_name_surname)
-        val userAvatar: ImageView = view.findViewById(R.id.user_avatar)
+    class UserViewHolder(val binding: ItemUserBinding) : RecyclerView.ViewHolder(binding.root){
+        val userNameSurname : TextView = binding.userNameSurname
+        val userAvatar: ImageView = binding.userAvatar
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_user, parent, false)
-        return UserViewHolder(itemView)
+        val binding = ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return UserViewHolder(binding)
     }
 
     @SuppressLint("SetTextI18n")
@@ -35,7 +34,7 @@ class UserAdapter(private val onActionCallback: (Int) -> Unit) : RecyclerView.Ad
         holder.userNameSurname.text = item.name
 
         //Loads the image from the url with Glide
-        Glide.with(holder.view)
+        Glide.with(holder.binding.root)
             .load(item.avatar)
             .into(holder.userAvatar)
 

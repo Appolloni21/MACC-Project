@@ -14,12 +14,15 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.macc.adapter.UserAdapter
+import com.example.macc.databinding.UsersListBinding
 import com.example.macc.viewmodel.HomepageViewModel
 
 private const val TAG = "Users List Fragment"
 
 class UsersList : Fragment() {
 
+    private var _binding: UsersListBinding? = null
+    private val binding get() = _binding!!
     private var travelID: String = "travelID"
     private val sharedViewModel: HomepageViewModel by activityViewModels()
     private lateinit var recyclerView : RecyclerView
@@ -30,10 +33,10 @@ class UsersList : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        val view: View = inflater.inflate(R.layout.users_list, container,
-            false)
+        _binding = UsersListBinding.inflate(inflater, container, false)
+        val view: View = binding.root
 
-        recyclerView = view.findViewById(R.id.recycler_view_user)
+        recyclerView = binding.recyclerViewUser
         adapter = UserAdapter(::actionToUserProfile)
         recyclerView.adapter = adapter
 
@@ -57,7 +60,7 @@ class UsersList : Fragment() {
         //Toolbar with nav component
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
-        val toolbar: Toolbar = view.findViewById(R.id.toolbar)
+        val toolbar: Toolbar = binding.toolbar.toolbar
         toolbar.setupWithNavController(navController, appBarConfiguration)
 
         toolbar.setOnMenuItemClickListener {

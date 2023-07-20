@@ -41,9 +41,10 @@ class Settings : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        val view: View = inflater.inflate(R.layout.settings_page, container,
-            false)
-        return view
+        return inflater.inflate(
+            R.layout.settings_page, container,
+            false
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -55,8 +56,6 @@ class Settings : Fragment() {
         val toolbar: Toolbar = view.findViewById(R.id.toolbar)
 
         toolbar.setupWithNavController(navController, appBarConfiguration)
-
-
     }
 }
 

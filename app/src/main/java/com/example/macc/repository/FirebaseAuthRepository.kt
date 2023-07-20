@@ -167,7 +167,7 @@ class FirebaseAuthRepository {
                 val reAuthentication = logInUser(userEmail, currentPassword)
                 if(reAuthentication == UIState.FAILURE){
                     Log.d(TAG,"reautenticazione fallita")
-                    return@withContext UIState._105
+                    return@withContext UIState.FAIL_103
                 }
                 user!!.updatePassword(newPassword).await()
 

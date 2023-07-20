@@ -196,7 +196,7 @@ class FirebaseDatabaseRepository {
 
                 if(!snapshot.exists()){
                     Log.d(TAG,"addUser: user not found")
-                    return@withContext UIState._104
+                    return@withContext UIState.FAIL_102
                 }
 
                 for (userSnapshot in snapshot.children) {
@@ -204,7 +204,7 @@ class FirebaseDatabaseRepository {
                     //Prima controlliamo che l' user non sia già stato aggiunto
                     if (!(user?.trips.isNullOrEmpty()) && user?.trips?.containsKey(travelID)!!) {
                         Log.d(TAG, "addUser: the user is already in this travel")
-                        UIState._103
+                        UIState.FAIL_101
                     } else {
                         val userID = userSnapshot.key.toString()
                         val childUpdates = hashMapOf<String, Any?>()

@@ -9,8 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,14 +19,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
+import com.example.macc.databinding.EditUserMyProfilePageBinding
 import com.example.macc.utility.UIState
 import com.example.macc.viewmodel.AuthViewModel
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 private const val TAG: String = "EditUserMyProfile Fragment"
 
 class EditUserMyProfile : Fragment() {
 
+    private var _binding: EditUserMyProfilePageBinding? = null
+    private val binding get() = _binding!!
     private val sharedViewModel: AuthViewModel by activityViewModels()
     private var imageAvatarURI: Uri = Uri.EMPTY
 
@@ -38,23 +38,22 @@ class EditUserMyProfile : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        val view: View = inflater.inflate(R.layout.edit_user_my_profile_page, container,
-            false)
+        _binding = EditUserMyProfilePageBinding.inflate(inflater, container, false)
+        val view: View = binding.root
 
         sharedViewModel.userMyProfile.observe(viewLifecycleOwner){
             if(it?.equals(null) == false){
                 //Avatar
-                val userAvatar = view.findViewById<ImageView>(R.id.edit_avatar)
+                val userAvatar = binding.editAvatar
                 Glide.with(view).load(it.avatar).into(userAvatar)
 
                 //Altri campi
-                view.findViewById<TextView>(R.id.edit_name).text = it.name
-                view.findViewById<TextView>(R.id.edit_surname).text = it.surname
-                view.findViewById<TextView>(R.id.edit_nickname).text = it.nickname
-                view.findViewById<TextView>(R.id.edit_description).text = it.description
+                binding.editName.setText(it.name)
+                binding.editSurname.setText(it.surname)
+                binding.editNickname.setText(it.nickname)
+                binding.editDescription.setText(it.description)
             }
         }
-
         return view
     }
 
@@ -63,8 +62,8 @@ class EditUserMyProfile : Fragment() {
         //Toolbar with nav component
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
-        view.findViewById<Toolbar>(R.id.toolbar)
-            .setupWithNavController(navController, appBarConfiguration)
+        val toolbar: Toolbar = binding.toolbar.toolbar
+        toolbar.setupWithNavController(navController, appBarConfiguration)
 
         val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             // Callback is invoked after the user selects a media item or closes the
@@ -72,25 +71,25 @@ class EditUserMyProfile : Fragment() {
             if (uri != null) {
                 Log.d(TAG, "Selected URI: $uri")
                 imageAvatarURI = uri
-                view.findViewById<ImageView>(R.id.edit_avatar)?.setImageURI(uri)
+                binding.editAvatar.setImageURI(uri)
             } else {
                 Log.d(TAG, "No media selected")
             }
         }
 
-        val editAvatarButton = view.findViewById<FloatingActionButton>(R.id.fab_edit_avatar)
+        val editAvatarButton = binding.fabEditAvatar
         editAvatarButton.setOnClickListener{
             // Launch the photo picker and allow the user to choose only images.
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
 
-        val saveButton: Button = view.findViewById(R.id.editMyProfile_save_btn)
+        val saveButton: Button = binding.editMyProfileSaveBtn
         saveButton.setOnClickListener {
-            val name: String = view.findViewById<TextView>(R.id.edit_name).text.toString().trim { it <= ' ' }
-            val surname: String = view.findViewById<TextView>(R.id.edit_surname).text.toString().trim { it <= ' ' }
-            val nickname: String = view.findViewById<TextView>(R.id.edit_nickname).text.toString().trim { it <= ' ' }
-            val description: String = view.findViewById<TextView>(R.id.edit_description).text.toString().trim { it <= ' ' }
+            val name: String = binding.editName.text.toString().trim { it <= ' ' }
+            val surname: String = binding.editSurname.text.toString().trim { it <= ' ' }
+            val nickname: String = binding.editNickname.text.toString().trim { it <= ' ' }
+            val description: String = binding.editDescription.text.toString().trim { it <= ' ' }
 
             when {
                 TextUtils.isEmpty(name) -> {
@@ -129,5 +128,10 @@ class EditUserMyProfile : Fragment() {
             }
         }
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

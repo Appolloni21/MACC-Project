@@ -3,11 +3,10 @@ package com.example.macc.adapter
 import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.macc.R
+import com.example.macc.databinding.ItemExpenseBinding
 import com.example.macc.model.Expense
 
 
@@ -17,16 +16,16 @@ class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() 
 
     private val expensesList : ArrayList<Expense> = arrayListOf()
 
-    class ExpenseViewHolder(val view: View) : RecyclerView.ViewHolder(view){
-        val expenseName : TextView = view.findViewById(R.id.expense_name)
-        val expenseAmount: TextView = view.findViewById(R.id.total)
-        val expensePlace: TextView = view.findViewById(R.id.place)
+    class ExpenseViewHolder(val binding: ItemExpenseBinding) : RecyclerView.ViewHolder(binding.root){
+        val expenseName : TextView = binding.expenseName
+        val expenseAmount: TextView = binding.total
+        val expensePlace: TextView = binding.place
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_expense, parent, false)
-        return ExpenseViewHolder(itemView)
+        val binding = ItemExpenseBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ExpenseViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
