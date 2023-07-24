@@ -99,9 +99,10 @@ class Homepage : Fragment() {
         sharedViewModel.deleteTravel(travel)
     }
 
-    private fun actionToExpenseList(travelID: String, position: Int){
+    private fun actionToExpenseList(travelID: String){
         //Action from homepage to expense list page
-        val action = HomepageDirections.actionHomepageToExpenseList(travelID, position)
+        sharedViewModel.selectTravel(travelID)
+        val action = HomepageDirections.actionHomepageToExpenseList()
         view?.findNavController()?.navigate(action)
     }
 }

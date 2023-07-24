@@ -25,8 +25,6 @@ class ExpenseList : Fragment() {
 
     private var _binding: ExpenseListPageBinding? = null
     private val binding get() = _binding!!
-    private var travelID: String = "travelID"
-    private var travelPosition: Int = 0
     private val sharedViewModel: HomepageViewModel by activityViewModels()
     private lateinit var recyclerView : RecyclerView
     lateinit var adapter: ExpenseAdapter
@@ -43,26 +41,19 @@ class ExpenseList : Fragment() {
         adapter = ExpenseAdapter()
         recyclerView.adapter = adapter
 
-        //Serve per sapere la posizione del Travel nella lista della homepage.
-        travelID = arguments?.getString("travelID")!!
-        travelPosition = arguments?.getInt("travelPosition")!!
-
-        //Prendiamo la lista dei viaggi che è contenuta nel ViewModel
-        sharedViewModel.travelArrayList.observe(viewLifecycleOwner) {
-            if(it.isNotEmpty()){
-                //Ricaviamo il viaggio e applichiamo alla pagina il nome corretto del viaggio
-                val travel = it[travelPosition]
-                binding.travelNameLabel.text = travel.name
+        sharedViewModel.travelSelected.observe(viewLifecycleOwner){
+            if(it != null){
+                binding.travelNameLabel.text = it.name
 
                 //Carichiamo l'immagine
-                Glide.with(view).load(travel.imgUrl).into(binding.travelCoverImg)
+                Glide.with(view).load(it.imgUrl).into(binding.travelCoverImg)
             }
         }
-        sharedViewModel.getExpenses(travelID)
-        sharedViewModel.expenses.observe(viewLifecycleOwner){ expenseList ->
-            if(expenseList != null){
+
+        sharedViewModel.expenses.observe(viewLifecycleOwner){ expenses ->
+            if(expenses != null){
                 //passare all'adapter la lista
-                adapter.setExpensesList(expenseList)
+                adapter.setExpensesList(expenses)
             }
         }
 
@@ -84,7 +75,7 @@ class ExpenseList : Fragment() {
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.action_edit -> {
-                    val action = ExpenseListDirections.actionExpenseListToEditTravel(travelPosition,travelID)
+                    val action = ExpenseListDirections.actionExpenseListToEditTravel()
                     view.findNavController().navigate(action)
                 }
             }
@@ -93,7 +84,7 @@ class ExpenseList : Fragment() {
 
         val usersListButton = binding.extendedFab
         usersListButton.setOnClickListener{
-            val action = ExpenseListDirections.actionExpenseListToUsersList(travelID)
+            val action = ExpenseListDirections.actionExpenseListToUsersList()
             view.findNavController().navigate(action)
         }
 

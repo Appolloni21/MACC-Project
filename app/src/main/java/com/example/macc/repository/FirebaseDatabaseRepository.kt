@@ -142,6 +142,11 @@ class FirebaseDatabaseRepository {
             try {
                 databaseReference = Firebase.database.reference
 
+                val travel = databaseReference.child("travels").child(travelID).get().await()
+                if(!travel.exists()){
+                    return@withContext UIState.FAILURE
+                }
+
                 val childUpdates = hashMapOf<String, Any?>()
                 childUpdates["travels/$travelID/name"] = travelName
                 childUpdates["travels/$travelID/destination"] = destination
@@ -164,6 +169,26 @@ class FirebaseDatabaseRepository {
                 UIState.FAILURE
             }
         }
+
+    fun getSelectedTravels(travelID: String, travelSelected: MutableLiveData<Travel>){
+        databaseReference = Firebase.database.getReference("travels/$travelID")
+        databaseReference.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                try{
+                    if(snapshot.exists()){
+                        val travel = snapshot.getValue(Travel::class.java)!!
+                        //postValue funziona correttamente insieme ai vari listener
+                        travelSelected.postValue(travel)
+                    }
+                }catch(e: Exception){
+                    Log.d(TAG,"getSelectedTravels Exception: $e")
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.w(TAG, "getSelectedTravels: onCancelled", databaseError.toException())
+            }
+        })
+    }
 
 
     fun getExpenses(travelID: String, expenseArrayList: MutableLiveData<ArrayList<Expense>>){

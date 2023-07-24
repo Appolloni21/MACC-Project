@@ -30,8 +30,6 @@ class EditTravel : Fragment() {
     private val binding get() = _binding!!
     private val sharedViewModel: HomepageViewModel by activityViewModels()
     private var imageCoverURI: Uri = Uri.EMPTY
-    private var travelPosition: Int = 0
-    private var travelID: String = "travelID"
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -42,20 +40,16 @@ class EditTravel : Fragment() {
         _binding = EditTravelPageBinding.inflate(inflater, container, false)
         val view: View = binding.root
 
-        travelPosition = arguments?.getInt("travelPosition")!!
-        travelID = arguments?.getString("travelID")!!
-
-        sharedViewModel.travelArrayList.observe(viewLifecycleOwner){
-            if(it.isNotEmpty()){
-                //Ricaviamo il viaggio e applichiamo alla pagina il nome corretto del viaggio
-                val travel = it[travelPosition]
-                binding.editTravelName.setText(travel.name)
-                binding.editDestination.setText(travel.destination)
+        sharedViewModel.travelSelected.observe(viewLifecycleOwner){
+            if(it != null){
+                binding.editTravelName.setText(it.name)
+                binding.editDestination.setText(it.destination)
 
                 //Carichiamo l'immagine
-                Glide.with(view).load(travel.imgUrl).into(binding.editTravelCover)
+                Glide.with(view).load(it.imgUrl).into(binding.editTravelCover)
             }
         }
+
         return view
     }
 
@@ -101,7 +95,7 @@ class EditTravel : Fragment() {
                 }
 
                 else -> {
-                    sharedViewModel.editTravel(travelID,travelName,travelDestination,imageCoverURI)
+                    sharedViewModel.editTravel(travelName,travelDestination,imageCoverURI)
                 }
             }
 

@@ -42,14 +42,6 @@
         <action
             android:id="@+id/action_expenseList_to_usersList"
             app:destination="@id/usersList" />
-        <argument
-            android:name="travelID"
-            app:argType="string"
-            android:defaultValue='"travelID"' />
-        <argument
-            android:name="travelPosition"
-            app:argType="integer"
-            android:defaultValue="0" />
         <action
             android:id="@+id/action_expenseList_to_editTravel"
             app:destination="@id/editTravel" />
@@ -67,9 +59,6 @@
         <action
             android:id="@+id/action_usersList_to_userProfile"
             app:destination="@id/userProfile" />
-        <argument
-            android:name="travelID"
-            app:argType="string" />
         <action
             android:id="@+id/action_usersList_to_addUser"
             app:destination="@id/addUser" />
@@ -93,12 +82,7 @@
         android:id="@+id/addUser"
         android:name="com.example.macc.AddUser"
         android:label="Add User"
-        tools:layout="@layout/add_user">
-        <argument
-            android:name="travelID"
-            app:argType="string"
-            android:defaultValue="travelID" />
-    </fragment>
+        tools:layout="@layout/add_user"/>
     <fragment
         android:id="@+id/editUserMyProfile"
         android:name="com.example.macc.EditUserMyProfile"
@@ -122,14 +106,5 @@
         android:id="@+id/editTravel"
         android:name="com.example.macc.EditTravel"
         android:label="EditTravel"
-        tools:layout="@layout/edit_travel_page">
-        <argument
-            android:name="travelPosition"
-            app:argType="integer"
-            android:defaultValue="0" />
-        <argument
-            android:name="travelID"
-            app:argType="string"
-            android:defaultValue="travelID" />
-    </fragment>
+        tools:layout="@layout/edit_travel_page"/>
 </navigation>

@@ -23,7 +23,6 @@ class AddUser : Fragment() {
 
     private var _binding: AddUserBinding? = null
     private val binding get() = _binding!!
-    private var travelID: String = "travelID"
     private val sharedViewModel: HomepageViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -33,8 +32,6 @@ class AddUser : Fragment() {
         // Inflate the layout for this fragment
         _binding = AddUserBinding.inflate(inflater, container, false)
         val view: View = binding.root
-
-        travelID = arguments?.getString("travelID")!!
 
         return view
     }
@@ -50,7 +47,7 @@ class AddUser : Fragment() {
         val addUserButton: Button = binding.addUserButton
         addUserButton.setOnClickListener {
             val userEmail: String = binding.addUserEmail.editText?.text.toString().trim { it <= ' ' }
-            sharedViewModel.addUser(userEmail, travelID)
+            sharedViewModel.addUser(userEmail)
         }
 
         sharedViewModel.uiState.observe(viewLifecycleOwner){

@@ -23,7 +23,6 @@ class UsersList : Fragment() {
 
     private var _binding: UsersListBinding? = null
     private val binding get() = _binding!!
-    private var travelID: String = "travelID"
     private val sharedViewModel: HomepageViewModel by activityViewModels()
     private lateinit var recyclerView : RecyclerView
     lateinit var adapter: UserAdapter
@@ -40,8 +39,6 @@ class UsersList : Fragment() {
         adapter = UserAdapter(::actionToUserProfile)
         recyclerView.adapter = adapter
 
-        travelID = arguments?.getString("travelID")!!
-        sharedViewModel.getUsers(travelID)
         sharedViewModel.users.observe(viewLifecycleOwner){
             if(it.isNotEmpty()){
                 adapter.setUsersList(it)
@@ -66,8 +63,8 @@ class UsersList : Fragment() {
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.action_addUser -> {
-                    Log.d(TAG, "log")
-                    val action = UsersListDirections.actionUsersListToAddUser(travelID)
+                    Log.d(TAG, "action add user")
+                    val action = UsersListDirections.actionUsersListToAddUser()
                     view.findNavController().navigate(action)
                 }
             }

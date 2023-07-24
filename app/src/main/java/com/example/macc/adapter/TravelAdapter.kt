@@ -14,7 +14,7 @@ import com.example.macc.model.Travel
 private const val TAG = "Travel Adapter"
 
 class TravelAdapter(private val onDeleteCallback: (Travel) -> Unit,
-                    private val onActionCallback: (String, Int) -> Unit) : RecyclerView.Adapter<TravelAdapter.TravelViewHolder>() {
+                    private val onActionCallback: (String) -> Unit) : RecyclerView.Adapter<TravelAdapter.TravelViewHolder>() {
 
     private val travelsList : ArrayList<Travel> = arrayListOf()
     class TravelViewHolder(val binding: ItemTravelBinding) : RecyclerView.ViewHolder(binding.root){
@@ -47,7 +47,7 @@ class TravelAdapter(private val onDeleteCallback: (Travel) -> Unit,
 
         holder.travelImage.setOnClickListener{
             val travelID = item.travelID.toString()
-            onActionCallback(travelID, position)
+            onActionCallback(travelID)
         }
 
         holder.deleteIcon.setOnClickListener{
