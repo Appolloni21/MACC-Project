@@ -282,13 +282,65 @@ class FirebaseDatabaseRepository {
             }
         }
 
-    //TODO: addExpense
-    /*fun addExpense(){
-        databaseReference = Firebase.database.getReference("expenses")
-        val key = databaseReference.push().key.toString()
-        Log.d(TAG, key)
-    }*/
+    //TODO: aggiungere campi alla funzione
+    suspend fun addExpense(travelID:String, expenseName:String, expensePlace:String): String=
+        withContext(Dispatchers.IO){
+            try {
+                databaseReference = Firebase.database.getReference("expenses")
+                val expenseID = databaseReference.push().key.toString()
 
-    //TODO: deleteExpense
+                //Aggiungiamo l'expense nell'elenco principale sul Realtime db
+                databaseReference = Firebase.database.reference
+                val childUpdates = hashMapOf<String, Any?>()
+                val name: String = expenseName
+                val place: String = expensePlace
+                val expense = Expense(name,null, place, null, null, userUid, travelID, expenseID)
+                childUpdates["expenses/$expenseID"] = expense
+
+
+                //Aggiungiamo il riferimento della expense anche nella lista "expenses" del viaggio
+                childUpdates["travels/$travelID/expenses/$expenseID"] = true
+                //Aggiungiamo il riferimento della expense anche nella lista "expenses" dell'utente corrente
+                childUpdates["users/$userUid/expenses/$expenseID"] = true
+                //Eseguiamo tutto
+                databaseReference.updateChildren(childUpdates).await()
+
+                Log.d(TAG, "addExpense: success")
+                UIState.SUCCESS
+
+            } catch (e: Exception) {
+                Log.d(TAG, "addExpense failure exception: $e")
+                UIState.FAILURE
+            }
+
+        }
+
+    suspend fun deleteExpense(expenseID:String, travelID: String): String =
+        withContext(Dispatchers.IO){
+            try {
+                databaseReference = Firebase.database.reference
+                val childUpdates = hashMapOf<String, Any?>()
+
+                //Cancelliamo l'expense dall'elenco principale sul Realtime db
+                childUpdates["expenses/$expenseID"] = null
+
+
+                //Cancelliamo il riferimento della expense anche nella lista "expenses" del viaggio
+                childUpdates["travels/$travelID/expenses/$expenseID"] = null
+                //Cancelliamo il riferimento della expense anche nella lista "expenses" dell'utente corrente
+                childUpdates["users/$userUid/expenses/$expenseID"] = null
+                //Eseguiamo tutto
+                databaseReference.updateChildren(childUpdates).await()
+
+                Log.d(TAG, "addExpense: success")
+                UIState.SUCCESS
+
+            } catch (e: Exception) {
+                Log.d(TAG, "addExpense failure exception: $e")
+                UIState.FAILURE
+            }
+
+        }
+
 
 }

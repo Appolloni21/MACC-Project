@@ -49,7 +49,7 @@ class FirebaseAuthRepository {
                 val avatar: String = task.toString()
 
                 //register the user of Firebase Authenticator also on the Realtime Database
-                val user = User(name,surname,nickname,description,email,avatar,null)
+                val user = User(name,surname,nickname,description,email,avatar,null,null)
                 databaseReference = Firebase.database.getReference("users")
                 databaseReference.child(userUid).setValue(user).await()
 
@@ -166,7 +166,7 @@ class FirebaseAuthRepository {
 
                 val reAuthentication = logInUser(userEmail, currentPassword)
                 if(reAuthentication == UIState.FAILURE){
-                    Log.d(TAG,"reautenticazione fallita")
+                    Log.d(TAG,"re-autenticazione fallita")
                     return@withContext UIState.FAIL_103
                 }
                 user!!.updatePassword(newPassword).await()

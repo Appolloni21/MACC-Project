@@ -1,26 +1,32 @@
 package com.example.macc
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-
-import androidx.appcompat.widget.Toolbar
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import com.example.macc.databinding.InsertExpenseBinding
+import com.example.macc.utility.UIState
+import com.example.macc.viewmodel.HomepageViewModel
 
 class InsertExpense : Fragment() {
+
+    private var _binding: InsertExpenseBinding? = null
+    private val binding get() = _binding!!
+    private val sharedViewModel: HomepageViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        val view: View = inflater.inflate(R.layout.insert_expense, container,
-            false)
-        return view
+        _binding = InsertExpenseBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -28,13 +34,46 @@ class InsertExpense : Fragment() {
         //Toolbar with nav component
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
-        view.findViewById<Toolbar>(R.id.toolbar)
-            .setupWithNavController(navController, appBarConfiguration)
+        val toolbar = binding.toolbar.toolbar
+        toolbar.setupWithNavController(navController, appBarConfiguration)
 
-        val addExpenseButton = view.findViewById<Button>(R.id.addExpenseButton)
+        val addExpenseButton = binding.addExpenseButton
         addExpenseButton.setOnClickListener{
-            navController.navigateUp()
+            val expenseName: String = binding.expenseName.editText?.text.toString().trim { it <= ' ' }
+            val expensePlace: String = binding.place.editText?.text.toString().trim { it <= ' ' }
+
+            when{
+                TextUtils.isEmpty(expenseName) -> {
+                    Toast.makeText(context, "Please enter expense name", Toast.LENGTH_SHORT).show()
+                }
+                TextUtils.isEmpty(expensePlace) -> {
+                    Toast.makeText(context, "Please enter expense place", Toast.LENGTH_SHORT).show()
+                }
+                else -> {
+                    sharedViewModel.addExpense(expenseName,expensePlace)
+                }
+            }
         }
 
+        sharedViewModel.uiState.observe(viewLifecycleOwner){
+            when(it){
+                UIState.SUCCESS -> {
+                    //Il viaggio è stato aggiunto correttamente, facciamo ritornare l'utente alla homepage
+                    Toast.makeText(context, "Expense added", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
+                    navController.navigateUp()
+                }
+                UIState.FAILURE -> {
+                    Toast.makeText(context, "Error in adding expense", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
+                }
+            }
+        }
+
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

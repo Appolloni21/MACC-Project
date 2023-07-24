@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.macc.adapter.ExpenseAdapter
 import com.example.macc.databinding.ExpenseListPageBinding
+import com.example.macc.utility.UIState
 import com.example.macc.viewmodel.HomepageViewModel
 
 
@@ -38,7 +40,7 @@ class ExpenseList : Fragment() {
         val view: View = binding.root
 
         recyclerView = binding.recyclerViewExpense
-        adapter = ExpenseAdapter()
+        adapter = ExpenseAdapter(::deleteExpense)
         recyclerView.adapter = adapter
 
         sharedViewModel.travelSelected.observe(viewLifecycleOwner){
@@ -95,8 +97,25 @@ class ExpenseList : Fragment() {
             view.findNavController().navigate(action)
         }
 
+        sharedViewModel.uiState.observe(viewLifecycleOwner){
+            when(it){
+                UIState.SUCCESS -> {
+                    Toast.makeText(context,"The expense has been deleted", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
+                }
+                UIState.FAILURE -> {
+                    Toast.makeText(context,"Error, the expense has not been deleted", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
+                }
+            }
+        }
+
         //TODO: rendere l'icona dei tre puntini dentro la expense cliccabile e collegarla la funzione di edit della expense
         Log.d(TAG,"Expense list")
+    }
+
+    private fun deleteExpense(expenseID: String, travelID: String) {
+        sharedViewModel.deleteExpense(expenseID,travelID)
     }
 
     override fun onDestroyView() {

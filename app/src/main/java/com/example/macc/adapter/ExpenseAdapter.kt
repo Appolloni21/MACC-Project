@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.macc.databinding.ItemExpenseBinding
@@ -12,7 +13,7 @@ import com.example.macc.model.Expense
 
 private const val TAG = "Expense Adapter"
 
-class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() {
+class ExpenseAdapter(private val onDeleteCallback: (String,String) -> Unit) : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() {
 
     private val expensesList : ArrayList<Expense> = arrayListOf()
 
@@ -20,6 +21,7 @@ class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() 
         val expenseName : TextView = binding.expenseName
         val expenseAmount: TextView = binding.total
         val expensePlace: TextView = binding.place
+        val deleteIcon: ImageView = binding.imageView4
 
     }
 
@@ -40,6 +42,11 @@ class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() 
         holder.expenseName.text = item.name
         holder.expenseAmount.text = "Tot: $" + item.amount.toString()
         holder.expensePlace.text = item.place
+        val expenseID = item.expenseID.toString()
+        val travelID = item.travelID.toString()
+        holder.deleteIcon.setOnClickListener{
+            onDeleteCallback(expenseID,travelID)
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
