@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -78,11 +79,13 @@ class InsertExpense : Fragment() {
         val takeAPhotoBtn = binding.buttonTakePhoto
         val activityContext = requireActivity()
         takeAPhotoBtn.setOnClickListener {
-            val intent = Intent(activityContext,TextRecognition::class.java)
-            startActivity(intent)
+            //val intent = Intent(activityContext,TextRecognition::class.java)
+            //startActivity(intent)
+            val action = InsertExpenseDirections.actionInsertExpenseToTextRecognition()
+            view.findNavController().navigate(action)
         }
         val priceField = binding.priceText
-        val loadThePhotoBtn = view.findViewById<MaterialButton>(R.id.loadPhotoBtn)
+        val loadThePhotoBtn = binding.loadPhotoBtn
             loadThePhotoBtn.setOnClickListener {
                 var Item = "5"
                 priceField.setText(Item)

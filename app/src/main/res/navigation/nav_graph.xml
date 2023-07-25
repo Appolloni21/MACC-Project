@@ -50,7 +50,11 @@
         android:id="@+id/insertExpense"
         android:name="com.example.macc.InsertExpense"
         android:label="InsertExpense"
-        tools:layout="@layout/insert_expense"/>
+        tools:layout="@layout/insert_expense">
+        <action
+            android:id="@+id/action_insertExpense_to_textRecognition"
+            app:destination="@id/textRecognition" />
+    </fragment>
     <fragment
         android:id="@+id/usersList"
         android:name="com.example.macc.UsersList"
@@ -107,4 +111,9 @@
         android:name="com.example.macc.EditTravel"
         android:label="EditTravel"
         tools:layout="@layout/edit_travel_page"/>
+    <fragment
+        android:id="@+id/textRecognition"
+        android:name="com.example.macc.TextRecognition"
+        android:label="TextRecognition"
+        tools:layout="@layout/text_recognition"/>
 </navigation>

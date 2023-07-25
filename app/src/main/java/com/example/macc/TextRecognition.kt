@@ -22,6 +22,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.example.macc.databinding.TextRecognitionBinding
 import com.example.macc.viewmodel.PriceViewModel
 import com.google.android.material.button.MaterialButton
@@ -69,6 +70,8 @@ class TextRecognition : Fragment() {
         return binding.root
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        val navController = findNavController()
         //init UI views
         inputImageBtn = binding.inputImageBtn
         recognizeTextBtn = binding.recognizeTextBtn
@@ -96,7 +99,7 @@ class TextRecognition : Fragment() {
             else{
                 viewModel.selectedItem(textImport)
                 showToast("The price has been saved, now you can load it")
-
+                navController.navigateUp()
             }
         }
         //handle click, show input image dialog
