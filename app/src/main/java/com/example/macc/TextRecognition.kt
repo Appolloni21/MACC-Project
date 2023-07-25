@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
@@ -105,10 +106,14 @@ class TextRecognition : Fragment() {
         //handle click, show input image dialog
         inputImageBtn.setOnClickListener{
             //showInputImageDialog()
+
+
             if (checkCameraPermissions()){
-                //pickImageCamera()
+
+                pickImageCamera()
             }
             else{
+                showToast("sono qui")
                 requestCameraPermissions()
             }
         }
@@ -123,61 +128,7 @@ class TextRecognition : Fragment() {
             }
         }
     }
-    /*override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.text_recognition)
 
-        //init UI views
-        inputImageBtn = findViewById(R.id.inputImageBtn)
-        recognizeTextBtn = findViewById(R.id.recognizeTextBtn)
-        imageIv = findViewById(R.id.imageIv)
-        recognizedTextEt = findViewById(R.id.recognizedTextEt)
-        takeThePriceBtn = findViewById(R.id.takeThePrice)
-
-        //init arrays of permissions required for camera, Gallery
-        cameraPermissions= arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        storagePermissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
-        //init setup the progress dialog, show while text from image is being recognized
-        progressDialog = ProgressDialog(this)
-        progressDialog.setTitle("Please wait")
-        progressDialog.setCanceledOnTouchOutside(false)
-
-        //init textrecognizer
-        textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
-
-
-        takeThePriceBtn.setOnClickListener {
-            if(textImport == "0"){
-                showToast("Recognize the test from image first...")
-            }
-            else{
-                viewModel.selectedItem(textImport)
-                showToast("The price has been saved, now you can load it")
-
-            }
-        }
-        //handle click, show input image dialog
-        inputImageBtn.setOnClickListener{
-            //showInputImageDialog()
-            if (checkCameraPermissions()){
-                //pickImageCamera()
-            }
-            else{
-                requestCameraPermissions()
-            }
-        }
-
-        recognizeTextBtn.setOnClickListener {
-
-            if(imageUri == null){
-                showToast("Pick image first...")
-            }
-            else{
-                recognizeTextFromImage()
-            }
-        }
-    }*/
 
     private fun recognizeTextFromImage() {
         progressDialog.setMessage("preparing image...")
@@ -211,47 +162,6 @@ class TextRecognition : Fragment() {
 
     }
 
-    private fun showInputImageDialog() {
-        //init popup menu param 1 is context, param 2 is UI view where you want to show popup menu
-        val popupMenu = PopupMenu(requireContext(), inputImageBtn)
-
-        //Add items camera, gallery to popup menu, parm2 is menu id, param 3 is position of this menu item in menu items list, param 4 is title of the menu
-        popupMenu.menu.add(Menu.NONE, 1,1,"CAMERA")
-        popupMenu.menu.add(Menu.NONE, 2, 2, "GALLERY")
-
-        //show pop up menu
-        popupMenu.show()
-
-        //handle popupmenu item clicks
-        popupMenu.setOnMenuItemClickListener {menuItem ->
-            //get item id that is clicked from popupmenu
-            val id = menuItem.itemId
-            if( id == 1){
-                //pickImageCamera()
-                //camera is clicked
-                if (checkCameraPermissions()){
-                    //pickImageCamera()
-                }
-                else{
-                    requestCameraPermissions()
-                }
-            }
-            else if(id == 2){
-                //pickImageGallery()
-                //gallery is clicked
-                if(checkStoragePermission()){
-                    pickImageGallery()
-                }
-                else{
-                    requestStoragePermission()
-                }
-            }
-
-            return@setOnMenuItemClickListener true
-
-        }
-
-    }
 
     private fun pickImageGallery(){
         val intent = Intent(Intent.ACTION_PICK)
@@ -303,23 +213,23 @@ class TextRecognition : Fragment() {
         }
 
 
-    private fun checkStoragePermission() : Boolean{
+    /*private fun checkStoragePermission() : Boolean{
         //check if storage permission is allowed or not: return true if allowed, false if it is not
         return ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-    }
+    }*/
 
     private fun checkCameraPermissions() : Boolean{
         //check uf camera and storage permission are allowed
-        val cameraResult = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-        val storageResult = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-
-        return cameraResult && storageResult
+        val cameraResult = ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+        //val storageResult = ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        Log.d("TextRecognition", "$cameraResult")
+        return cameraResult// && storageResult
     }
 
-    private fun requestStoragePermission(){
+    /*private fun requestStoragePermission(){
         //request storage permission for gallery image pick
         ActivityCompat.requestPermissions(requireContext() as Activity, storagePermissions, STORAGE_REQUEST_CODE)
-    }
+    }*/
 
     private fun requestCameraPermissions(){
         //request camera permissions for camera intent

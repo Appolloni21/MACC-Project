@@ -86,19 +86,18 @@ class InsertExpense : Fragment() {
         }
         val priceField = binding.priceText
         val loadThePhotoBtn = binding.loadPhotoBtn
-            loadThePhotoBtn.setOnClickListener {
-                var Item = "5"
-                priceField.setText(Item)
-                viewModel.selected.observe(viewLifecycleOwner) { item ->
-                    if(item.isNotEmpty()){
-                        priceField.setText(Item)
-                    }
-                    else{
-                        showToast("COGLIONEEEEEEEEEEEEEEEE")
-                    }
+        loadThePhotoBtn.setOnClickListener {
 
+            viewModel.selected.observe(viewLifecycleOwner) { item ->
+                if(item.isNotEmpty()){
+                    priceField.setText(item)
                 }
+                else{
+                    showToast("COGLIONEEEEEEEEEEEEEEEE")
+                }
+
             }
+        }
 
 
     }
