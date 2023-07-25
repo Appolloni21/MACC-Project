@@ -23,6 +23,9 @@ class HomepageViewModel : ViewModel() {
     private val _travelArrayList: MutableLiveData<ArrayList<Travel>> = MutableLiveData()
     val travelArrayList: LiveData<ArrayList<Travel>> = _travelArrayList
 
+    private val _travelSelected: MutableLiveData<Travel> = MutableLiveData()
+    val travelSelected: LiveData<Travel> = _travelSelected
+
     private val _expenses: MutableLiveData<ArrayList<Expense>> = MutableLiveData()
     val expenses: LiveData<ArrayList<Expense>> = _expenses
 
@@ -54,16 +57,32 @@ class HomepageViewModel : ViewModel() {
         }
     }
 
-    fun getExpenses(travelID: String){
+    fun editTravel(travelName: String, destination: String, imgCover: Uri){
+        viewModelScope.launch(Dispatchers.Main){
+            val travelID = _travelSelected.value?.travelID.toString()
+            val state = repository.editTravel(travelID,travelName,destination,imgCover)
+            _uiState.postValue(state)
+        }
+    }
+
+    fun selectTravel(travelID:String){
+        repository.getSelectedTravels(travelID,_travelSelected)
+        getExpenses(travelID)
+        getUsers(travelID)
+
+    }
+
+    private fun getExpenses(travelID:String){
         repository.getExpenses(travelID, _expenses)
     }
 
-    fun getUsers(travelID: String){
+    private fun getUsers(travelID:String){
         repository.getUsers(travelID, _users)
     }
 
-    fun addUser(userEmail: String, travelID: String){
+    fun addUser(userEmail: String){
         viewModelScope.launch(Dispatchers.Main) {
+            val travelID = _travelSelected.value?.travelID.toString()
             val state = repository.addUser(userEmail, travelID)
             _uiState.postValue(state)
         }
@@ -73,8 +92,18 @@ class HomepageViewModel : ViewModel() {
         _uiState.value = null
     }
 
-    //Temp
-    /*fun addExpense(){
-        repository.addExpense()
-    }*/
+    fun addExpense(expenseName:String, expensePlace:String){
+        viewModelScope.launch(Dispatchers.Main) {
+            val travelID = _travelSelected.value?.travelID.toString()
+            val state = repository.addExpense(travelID, expenseName, expensePlace)
+            _uiState.postValue(state)
+        }
+    }
+
+    fun deleteExpense(expenseID: String, travelID: String){
+        viewModelScope.launch(Dispatchers.Main) {
+            val state = repository.deleteExpense(expenseID,travelID)
+            _uiState.postValue(state)
+        }
+    }
 }

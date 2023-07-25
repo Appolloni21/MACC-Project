@@ -137,6 +137,59 @@ class FirebaseDatabaseRepository {
             }
         }
 
+    suspend fun editTravel(travelID: String, travelName: String, destination: String, imgCover: Uri): String =
+        withContext(Dispatchers.IO){
+            try {
+                databaseReference = Firebase.database.reference
+
+                val travel = databaseReference.child("travels").child(travelID).get().await()
+                if(!travel.exists()){
+                    return@withContext UIState.FAILURE
+                }
+
+                val childUpdates = hashMapOf<String, Any?>()
+                childUpdates["travels/$travelID/name"] = travelName
+                childUpdates["travels/$travelID/destination"] = destination
+
+                if(imgCover != Uri.EMPTY){
+                    //Carichiamo la cover sul Firebase Cloud Storage sostituendola a quello vecchio
+                    storageReference = Firebase.storage.getReference("travels/$travelID")
+                    val task = storageReference.putFile(imgCover).await().storage.downloadUrl.await()
+                    val coverRef: String = task.toString()
+                    childUpdates["travels/$travelID/imgUrl"] = coverRef
+                }
+
+                databaseReference.updateChildren(childUpdates).await()
+
+                Log.d(TAG, "editTravel: success")
+                UIState.SUCCESS
+
+            } catch (e: Exception) {
+                Log.d(TAG, "editTravel: exception: $e")
+                UIState.FAILURE
+            }
+        }
+
+    fun getSelectedTravels(travelID: String, travelSelected: MutableLiveData<Travel>){
+        databaseReference = Firebase.database.getReference("travels/$travelID")
+        databaseReference.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                try{
+                    if(snapshot.exists()){
+                        val travel = snapshot.getValue(Travel::class.java)!!
+                        //postValue funziona correttamente insieme ai vari listener
+                        travelSelected.postValue(travel)
+                    }
+                }catch(e: Exception){
+                    Log.d(TAG,"getSelectedTravels Exception: $e")
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.w(TAG, "getSelectedTravels: onCancelled", databaseError.toException())
+            }
+        })
+    }
+
 
     fun getExpenses(travelID: String, expenseArrayList: MutableLiveData<ArrayList<Expense>>){
         databaseReference = Firebase.database.getReference("expenses")
@@ -196,7 +249,7 @@ class FirebaseDatabaseRepository {
 
                 if(!snapshot.exists()){
                     Log.d(TAG,"addUser: user not found")
-                    return@withContext UIState._104
+                    return@withContext UIState.FAIL_102
                 }
 
                 for (userSnapshot in snapshot.children) {
@@ -204,7 +257,7 @@ class FirebaseDatabaseRepository {
                     //Prima controlliamo che l' user non sia già stato aggiunto
                     if (!(user?.trips.isNullOrEmpty()) && user?.trips?.containsKey(travelID)!!) {
                         Log.d(TAG, "addUser: the user is already in this travel")
-                        UIState._103
+                        UIState.FAIL_101
                     } else {
                         val userID = userSnapshot.key.toString()
                         val childUpdates = hashMapOf<String, Any?>()
@@ -229,13 +282,65 @@ class FirebaseDatabaseRepository {
             }
         }
 
-    //TODO: addExpense
-    /*fun addExpense(){
-        databaseReference = Firebase.database.getReference("expenses")
-        val key = databaseReference.push().key.toString()
-        Log.d(TAG, key)
-    }*/
+    //TODO: aggiungere campi alla funzione
+    suspend fun addExpense(travelID:String, expenseName:String, expensePlace:String): String=
+        withContext(Dispatchers.IO){
+            try {
+                databaseReference = Firebase.database.getReference("expenses")
+                val expenseID = databaseReference.push().key.toString()
 
-    //TODO: deleteExpense
+                //Aggiungiamo l'expense nell'elenco principale sul Realtime db
+                databaseReference = Firebase.database.reference
+                val childUpdates = hashMapOf<String, Any?>()
+                val name: String = expenseName
+                val place: String = expensePlace
+                val expense = Expense(name,null, place, null, null, userUid, travelID, expenseID)
+                childUpdates["expenses/$expenseID"] = expense
+
+
+                //Aggiungiamo il riferimento della expense anche nella lista "expenses" del viaggio
+                childUpdates["travels/$travelID/expenses/$expenseID"] = true
+                //Aggiungiamo il riferimento della expense anche nella lista "expenses" dell'utente corrente
+                childUpdates["users/$userUid/expenses/$expenseID"] = true
+                //Eseguiamo tutto
+                databaseReference.updateChildren(childUpdates).await()
+
+                Log.d(TAG, "addExpense: success")
+                UIState.SUCCESS
+
+            } catch (e: Exception) {
+                Log.d(TAG, "addExpense failure exception: $e")
+                UIState.FAILURE
+            }
+
+        }
+
+    suspend fun deleteExpense(expenseID:String, travelID: String): String =
+        withContext(Dispatchers.IO){
+            try {
+                databaseReference = Firebase.database.reference
+                val childUpdates = hashMapOf<String, Any?>()
+
+                //Cancelliamo l'expense dall'elenco principale sul Realtime db
+                childUpdates["expenses/$expenseID"] = null
+
+
+                //Cancelliamo il riferimento della expense anche nella lista "expenses" del viaggio
+                childUpdates["travels/$travelID/expenses/$expenseID"] = null
+                //Cancelliamo il riferimento della expense anche nella lista "expenses" dell'utente corrente
+                childUpdates["users/$userUid/expenses/$expenseID"] = null
+                //Eseguiamo tutto
+                databaseReference.updateChildren(childUpdates).await()
+
+                Log.d(TAG, "addExpense: success")
+                UIState.SUCCESS
+
+            } catch (e: Exception) {
+                Log.d(TAG, "addExpense failure exception: $e")
+                UIState.FAILURE
+            }
+
+        }
+
 
 }

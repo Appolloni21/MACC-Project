@@ -3,32 +3,30 @@ package com.example.macc.adapter
 import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.macc.R
+import com.example.macc.databinding.ItemTravelBinding
 import com.example.macc.model.Travel
 
 private const val TAG = "Travel Adapter"
 
 class TravelAdapter(private val onDeleteCallback: (Travel) -> Unit,
-                    private val onActionCallback: (String, Int) -> Unit) : RecyclerView.Adapter<TravelAdapter.TravelViewHolder>() {
+                    private val onActionCallback: (String) -> Unit) : RecyclerView.Adapter<TravelAdapter.TravelViewHolder>() {
 
     private val travelsList : ArrayList<Travel> = arrayListOf()
-
-    class TravelViewHolder(val view: View) : RecyclerView.ViewHolder(view){
-        val travelName : TextView = view.findViewById(R.id.travel_name)
-        val travelImage : ImageView = view.findViewById(R.id.travelCover)
-        val travelMembers : TextView = view.findViewById(R.id.group_number)
-        val deleteIcon : ImageView = view.findViewById(R.id.delete_icon)
+    class TravelViewHolder(val binding: ItemTravelBinding) : RecyclerView.ViewHolder(binding.root){
+        val travelName : TextView = binding.travelName
+        val travelImage : ImageView = binding.travelCover
+        val travelMembers : TextView = binding.groupNumber
+        val deleteIcon : ImageView = binding.deleteIcon
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TravelViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_travel, parent, false)
-        return TravelViewHolder(itemView)
+        val binding = ItemTravelBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return TravelViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
@@ -43,13 +41,13 @@ class TravelAdapter(private val onDeleteCallback: (Travel) -> Unit,
         holder.travelMembers.text = item.members?.size.toString()
 
         //Loads the image from the url with Glide
-        Glide.with(holder.view)
+        Glide.with(holder.binding.root)
             .load(item.imgUrl)
             .into(holder.travelImage)
 
         holder.travelImage.setOnClickListener{
             val travelID = item.travelID.toString()
-            onActionCallback(travelID, position)
+            onActionCallback(travelID)
         }
 
         holder.deleteIcon.setOnClickListener{

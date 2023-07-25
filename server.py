@@ -3,15 +3,21 @@
 from flask import Flask, jsonify, request
 from firebase_admin import db
 import firebase_admin
+import json
 
-cred_obj = firebase_admin.credentials.Certificate('serviceAccountKey.json')
-print(cred_obj)
+#DB initialization
 databaseURL = 'https://macc-project-1acfb-default-rtdb.europe-west1.firebasedatabase.app/'
+cred_obj = firebase_admin.credentials.Certificate('serviceAccountKey.json')
 default_app = firebase_admin.initialize_app(cred_obj, {
 	'databaseURL':databaseURL
 	})
+
+###
+
 ref = db.reference("/users/")
-print(ref.order_by_child("email").get())
+#print(ref.order_by_child("email").get())
+###
+
 print(ref)
 
 app = Flask(__name__)
@@ -28,17 +34,18 @@ get_response = [
 def update_position():
     data = request.get_json()
     user_id= data['user']['id']
-    #TODO
+    ### Update db
     #find user id in the db and update position
     return get_response
 
 @app.route('/get_position', methods=['POST'])
 def get_position():
     data = request.get_json()
-    user_id= data['user']['id']
-    #TODO
-    #find user id in the db and return position
-    return get_response
+    prov_uid=data['user_id']
+    ref = db.reference("/positions/")
+    db_data = ref.order_by_child("user_id").get()
+    user_data = (db_data['uid_'+ prov_uid])
+    return user_data
 
 @app.route("/")
 def hello_world():

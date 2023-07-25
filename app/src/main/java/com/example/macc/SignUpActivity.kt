@@ -15,6 +15,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.example.macc.databinding.SignupPageBinding
 import com.example.macc.utility.UIState
 import com.example.macc.viewmodel.AuthViewModel
 
@@ -32,10 +33,11 @@ class SignUpActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.signup_page)
+        val binding = SignupPageBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         //back navigation
-        val backIcon: ImageView = findViewById(R.id.back_icon)
+        val backIcon: ImageView = binding.backIcon
         backIcon.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
@@ -46,28 +48,28 @@ class SignUpActivity : AppCompatActivity() {
             if (uri != null) {
                 Log.d(TAG, "Selected URI: $uri")
                 imageAvatarURI = uri
-                findViewById<ImageView>(R.id.avatarImg)?.setImageURI(uri)
+                binding.avatarImg.setImageURI(uri)
             } else {
                 Log.d(TAG, "No media selected")
             }
         }
 
-        val chooseTravelCoverButton = findViewById<Button>(R.id.chooseAvatarButton)
-        chooseTravelCoverButton.setOnClickListener{
+        val chooseAvatarButton = binding.chooseAvatarButton
+        chooseAvatarButton.setOnClickListener{
             // Launch the photo picker and allow the user to choose only images.
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
 
-        val signupButton: Button = findViewById(R.id.signup_btn)
+        val signupButton: Button = binding.signupBtn
         signupButton.setOnClickListener {
 
-            val name: String = findViewById<EditText>(R.id.name).text.toString().trim { it <= ' ' }
-            val surname: String = findViewById<EditText>(R.id.surname).text.toString().trim { it <= ' ' }
-            val nickname: String = findViewById<EditText>(R.id.nickname).text.toString().trim { it <= ' ' }
+            val name: String = binding.name.toString().trim { it <= ' ' }
+            val surname: String = binding.surname.toString().trim { it <= ' ' }
+            val nickname: String = binding.nickname.text.toString().trim { it <= ' ' }
             val description = ""
-            val email: String = findViewById<EditText>(R.id.email).text.toString().trim { it <= ' ' }
-            val password: String = findViewById<EditText>(R.id.password).text.toString().trim { it <= ' ' }
+            val email: String = binding.email.text.toString().trim { it <= ' ' }
+            val password: String = binding.password.text.toString().trim { it <= ' ' }
             //val trips:Map<String,Boolean> = mapOf("null" to false)
 
 
@@ -109,6 +111,7 @@ class SignUpActivity : AppCompatActivity() {
                     Toast.makeText(this@SignUpActivity, "You signed up successfully", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this@SignUpActivity, MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    //intent.putExtra("userID", sharedViewModel.userID.value)
                     startActivity(intent)
                     finish()
                     sharedViewModel.resetUiState()

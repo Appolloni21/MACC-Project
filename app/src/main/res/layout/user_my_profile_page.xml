@@ -16,21 +16,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/user_avatar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/user_avatar"
-        android:scaleType="fitXY"
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/myUser_avatar"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/average_guy"
+        app:civ_border_color="#FF000000"
+        app:civ_border_width="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/average_guy"
-        tools:ignore="ImageContrastCheck" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/user_name_surname"
@@ -46,7 +46,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_avatar" />
+        app:layout_constraintTop_toBottomOf="@+id/myUser_avatar" />
 
     <TextView
         android:id="@+id/user_nickname"
@@ -77,33 +77,31 @@
         app:layout_constraintTop_toBottomOf="@+id/user_nickname"
         tools:ignore="TextContrastCheck" />
 
-    <TextView
-        android:id="@+id/modify_pass"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/edit_personal_data"
-        android:textColor="#0000FF"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_description"
-        tools:ignore="TextContrastCheck,TextSizeCheck" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/logout_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="32dp"
         android:layout_marginBottom="16dp"
         android:text="@string/logout"
         app:icon="@drawable/ic_baseline_logout_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/modify_pass" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_myProfile_btn" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/edit_myProfile_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/edit_profile"
+        app:backgroundTint="@color/sky_blue_add"
+        app:icon="@drawable/baseline_edit_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user_description" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

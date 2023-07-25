@@ -1,6 +1,8 @@
 package com.example.macc
 
 
+
+import android.app.DatePickerDialog
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
@@ -8,9 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,15 +20,20 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import com.example.macc.databinding.AddTravelPageBinding
 import com.example.macc.viewmodel.HomepageViewModel
 import com.example.macc.utility.UIState
-import com.google.android.material.textfield.TextInputLayout
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 
 private const val TAG: String = "AddTravel Fragment"
 
 class AddTravel : Fragment() {
 
+    private var _binding: AddTravelPageBinding? = null
+    private val binding get() = _binding!!
     private var imageCoverURI: Uri = Uri.EMPTY
     private val sharedViewModel: HomepageViewModel by activityViewModels()
 
@@ -37,9 +42,8 @@ class AddTravel : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        val view: View = inflater.inflate(R.layout.add_travel_page, container,
-            false)
-        return view
+        _binding = AddTravelPageBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,9 +51,9 @@ class AddTravel : Fragment() {
         //Toolbar with nav component
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
+        val toolbar: Toolbar = binding.toolbar.toolbar
 
-        view.findViewById<Toolbar>(R.id.toolbar)
-            .setupWithNavController(navController, appBarConfiguration)
+       toolbar.setupWithNavController(navController, appBarConfiguration)
 
         val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             // Callback is invoked after the user selects a media item or closes the
@@ -57,27 +61,39 @@ class AddTravel : Fragment() {
             if (uri != null) {
                 Log.d(TAG, "Selected URI: $uri")
                 imageCoverURI = uri
-                view.findViewById<ImageView>(R.id.travel_cover)?.setImageURI(uri)
+                binding.travelCover.setImageURI(uri)
             } else {
                 Log.d(TAG, "No media selected")
             }
         }
 
-        val chooseTravelCoverButton = view.findViewById<Button>(R.id.chooseTravelCoverButton)
+        val chooseTravelCoverButton = binding.chooseTravelCoverButton
         chooseTravelCoverButton.setOnClickListener{
             // Launch the photo picker and allow the user to choose only images.
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
+        val startDate = binding.startDate
+        val endDate = binding.endDate
+        val myCalendar = Calendar.getInstance()
 
-        val addTravelButton = view.findViewById<Button>(R.id.addTravelButton)
+
+        //Date picker per data di inizio e fine viaggio
+        startDate.setOnClickListener {
+            DatePickerDialog(requireContext(), picker(startDate,myCalendar), myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show()
+        }
+
+        endDate.setOnClickListener{
+            DatePickerDialog(requireContext(), picker(endDate,myCalendar), myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show()
+        }
+
+
+        val addTravelButton = binding.addTravelButton
         addTravelButton.setOnClickListener{
-            val travelName: String = view.findViewById<TextInputLayout>(R.id.travelName)?.editText?.text.toString().trim { it <= ' ' }
-            val destination: String = view.findViewById<TextInputLayout>(R.id.destination)?.editText?.text.toString().trim { it <= ' ' }
-            val startDate: String = view.findViewById<EditText>(R.id.startDate)?.text.toString().trim { it <= ' ' }
-            val endDate: String = view.findViewById<EditText>(R.id.endDate)?.text.toString().trim { it <= ' ' }
-
-            //TODO: migliorare input date
+            val travelName: String = binding.travelName.editText?.text.toString().trim { it <= ' ' }
+            val destination: String = binding.destination.editText?.text.toString().trim { it <= ' ' }
+            val startDateT: String = startDate.text.toString().trim { it <= ' ' }
+            val endDateT: String = endDate.text.toString().trim { it <= ' ' }
 
             when{
                 TextUtils.isEmpty(imageCoverURI.toString()) -> {
@@ -92,16 +108,16 @@ class AddTravel : Fragment() {
                     makeToast("Please enter destination")
                 }
 
-                TextUtils.isEmpty(startDate) -> {
+                TextUtils.isEmpty(startDateT) -> {
                     makeToast("Please enter start date")
                 }
 
-                TextUtils.isEmpty(endDate) -> {
+                TextUtils.isEmpty(endDateT) -> {
                     makeToast("Please enter end date")
                 }
 
                 else -> {
-                    sharedViewModel.addTravel(travelName,destination,startDate,endDate,imageCoverURI)
+                    sharedViewModel.addTravel(travelName,destination,startDateT,endDateT,imageCoverURI)
                 }
             }
         }
@@ -120,6 +136,27 @@ class AddTravel : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+
+    private fun picker(editText: EditText, myCalendar: Calendar):  DatePickerDialog.OnDateSetListener{
+        val picker = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+            myCalendar.set(Calendar.YEAR, year)
+            myCalendar.set(Calendar.MONTH, month)
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            editText.setText(updateFormat(myCalendar))
+        }
+        return picker
+    }
+
+    private fun updateFormat(myCalendar: Calendar): String {
+        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.ITALY)
+        return sdf.format(myCalendar.time)
     }
 
     private fun makeToast(msg:String){

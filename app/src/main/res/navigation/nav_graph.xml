@@ -23,7 +23,14 @@
         android:id="@+id/userMyProfile"
         android:name="com.example.macc.UserMyProfile"
         android:label="Profile"
-        tools:layout="@layout/user_my_profile_page"/>
+        tools:layout="@layout/user_my_profile_page">
+        <action
+            android:id="@+id/action_userMyProfile_to_editUserMyProfile"
+            app:destination="@id/editUserMyProfile" />
+        <action
+            android:id="@+id/action_userMyProfile_to_settings"
+            app:destination="@id/settings" />
+    </fragment>
     <fragment
         android:id="@+id/expenseList"
         android:name="com.example.macc.ExpenseList"
@@ -35,14 +42,9 @@
         <action
             android:id="@+id/action_expenseList_to_usersList"
             app:destination="@id/usersList" />
-        <argument
-            android:name="travelID"
-            app:argType="string"
-            android:defaultValue='"travelID"' />
-        <argument
-            android:name="travelPosition"
-            app:argType="integer"
-            android:defaultValue="0" />
+        <action
+            android:id="@+id/action_expenseList_to_editTravel"
+            app:destination="@id/editTravel" />
     </fragment>
     <fragment
         android:id="@+id/insertExpense"
@@ -57,9 +59,6 @@
         <action
             android:id="@+id/action_usersList_to_userProfile"
             app:destination="@id/userProfile" />
-        <argument
-            android:name="travelID"
-            app:argType="string" />
         <action
             android:id="@+id/action_usersList_to_addUser"
             app:destination="@id/addUser" />
@@ -83,10 +82,29 @@
         android:id="@+id/addUser"
         android:name="com.example.macc.AddUser"
         android:label="Add User"
-        tools:layout="@layout/add_user">
-        <argument
-            android:name="travelID"
-            app:argType="string"
-            android:defaultValue="travelID" />
+        tools:layout="@layout/add_user"/>
+    <fragment
+        android:id="@+id/editUserMyProfile"
+        android:name="com.example.macc.EditUserMyProfile"
+        android:label="EditUserMyProfile"
+        tools:layout="@layout/edit_user_my_profile_page"/>
+    <fragment
+        android:id="@+id/settings"
+        android:name="com.example.macc.Settings"
+        android:label="Settings"
+        tools:layout="@layout/settings_page">
+        <action
+            android:id="@+id/action_settings_to_changePassword"
+            app:destination="@id/changePassword" />
     </fragment>
+    <fragment
+        android:id="@+id/changePassword"
+        android:name="com.example.macc.ChangePassword"
+        android:label="ChangePassword"
+        tools:layout="@layout/change_password_page"/>
+    <fragment
+        android:id="@+id/editTravel"
+        android:name="com.example.macc.EditTravel"
+        android:label="EditTravel"
+        tools:layout="@layout/edit_travel_page"/>
 </navigation>

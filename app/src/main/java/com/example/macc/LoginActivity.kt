@@ -4,11 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.example.macc.databinding.LoginPageBinding
 import com.example.macc.utility.UIState
 import com.example.macc.viewmodel.AuthViewModel
 
@@ -20,13 +20,14 @@ class LoginActivity : AppCompatActivity(){
         supportActionBar?.hide()
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.login_page)
+        val binding = LoginPageBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val loginButton: Button = findViewById(R.id.login_btn)
+        val loginButton: Button = binding.loginBtn
         loginButton.setOnClickListener {
 
-            val email: String = findViewById<EditText>(R.id.email_text).text.toString().trim { it <= ' ' }
-            val password: String = findViewById<EditText>(R.id.password_text).text.toString().trim { it <= ' ' }
+            val email: String = binding.emailText.text.toString().trim { it <= ' ' }
+            val password: String = binding.passwordText.text.toString().trim { it <= ' ' }
 
             when {
                 TextUtils.isEmpty(email) -> {
@@ -36,7 +37,6 @@ class LoginActivity : AppCompatActivity(){
                     makeToast("password")
                 }
                 else -> {
-
                     //Login user with email and password
                     sharedViewModel.logInUser(email,password)
                 }
@@ -53,6 +53,7 @@ class LoginActivity : AppCompatActivity(){
                         MainActivity::class.java
                     )
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    //intent.putExtra("userID", sharedViewModel.userID.value)
                     startActivity(intent)
                     finish()
                     sharedViewModel.resetUiState()
@@ -64,13 +65,13 @@ class LoginActivity : AppCompatActivity(){
             }
         }
 
-        val signupButton:Button = findViewById(R.id.sign_up_btn)
+        val signupButton:Button = binding.signUpBtn
         signupButton.setOnClickListener {
             val intent = Intent(this@LoginActivity, SignUpActivity::class.java)
             startActivity(intent)
         }
 
-        val forgotPswTv: TextView = findViewById(R.id.forgot_password)
+        val forgotPswTv: TextView = binding.forgotPassword
         forgotPswTv.setOnClickListener {
             val intent = Intent(this@LoginActivity, ForgotPasswordActivity::class.java)
             startActivity(intent)

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.macc.model.User
 import com.example.macc.repository.FirebaseAuthRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,6 +16,12 @@ class AuthViewModel: ViewModel() {
 
     private val _uiState: MutableLiveData<String?> = MutableLiveData()
     val uiState: LiveData<String?> = _uiState
+
+    private val _userMyProfile: MutableLiveData<User?> = MutableLiveData()
+    val userMyProfile: LiveData<User?> = _userMyProfile
+
+    //private val _userID: MutableLiveData<String?> = MutableLiveData()
+    //val userID: LiveData<String?> = _userID
 
     fun signUpUser(name:String, surname:String, nickname:String, description: String, email:String,
                    password:String, imgAvatar: Uri){
@@ -42,6 +49,26 @@ class AuthViewModel: ViewModel() {
     fun forgotPassword(email:String){
         viewModelScope.launch(Dispatchers.Main){
             val state = repository.forgotPassword(email)
+            _uiState.postValue(state)
+        }
+    }
+
+    fun getUserMyProfile(){
+        viewModelScope.launch(Dispatchers.Main){
+            repository.getUserMyProfile(_userMyProfile)
+        }
+    }
+
+    fun editUserMyProfile(name:String, surname:String, nickname:String, description:String, avatar: Uri){
+        viewModelScope.launch(Dispatchers.Main){
+            val state = repository.editUserMyProfile(name,surname,nickname,description, avatar)
+            _uiState.postValue(state)
+        }
+    }
+
+    fun changePasswordUser(currentPassword: String, newPassword: String){
+        viewModelScope.launch(Dispatchers.Main){
+            val state = repository.changePasswordUser(currentPassword, newPassword)
             _uiState.postValue(state)
         }
     }

@@ -2,6 +2,7 @@ package com.example.macc
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,17 +12,27 @@ import android.widget.TextView
 import android.widget.Toast
 
 import androidx.appcompat.widget.Toolbar
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import com.example.macc.databinding.InsertExpenseBinding
+import com.example.macc.utility.UIState
+import com.example.macc.viewmodel.HomepageViewModel
 import com.example.macc.viewmodel.PriceViewModel
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputLayout
 
+class InsertExpense : Fragment() {
+
+    private var _binding: InsertExpenseBinding? = null
+    private val binding get() = _binding!!
+    private val sharedViewModel: HomepageViewModel by activityViewModels()
 public class InsertExpense : Fragment() {
 
      private val viewModel: PriceViewModel by activityViewModels()
@@ -30,9 +41,8 @@ public class InsertExpense : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        val view: View = inflater.inflate(R.layout.insert_expense, container,
-            false)
-        return view
+        _binding = InsertExpenseBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,12 +50,40 @@ public class InsertExpense : Fragment() {
         //Toolbar with nav component
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
-        view.findViewById<Toolbar>(R.id.toolbar)
-            .setupWithNavController(navController, appBarConfiguration)
+        val toolbar = binding.toolbar.toolbar
+        toolbar.setupWithNavController(navController, appBarConfiguration)
 
-        val addExpenseButton = view.findViewById<Button>(R.id.addExpenseButton)
+        val addExpenseButton = binding.addExpenseButton
         addExpenseButton.setOnClickListener{
-            navController.navigateUp()
+            val expenseName: String = binding.expenseName.editText?.text.toString().trim { it <= ' ' }
+            val expensePlace: String = binding.place.editText?.text.toString().trim { it <= ' ' }
+
+            when{
+                TextUtils.isEmpty(expenseName) -> {
+                    Toast.makeText(context, "Please enter expense name", Toast.LENGTH_SHORT).show()
+                }
+                TextUtils.isEmpty(expensePlace) -> {
+                    Toast.makeText(context, "Please enter expense place", Toast.LENGTH_SHORT).show()
+                }
+                else -> {
+                    sharedViewModel.addExpense(expenseName,expensePlace)
+                }
+            }
+        }
+
+        sharedViewModel.uiState.observe(viewLifecycleOwner){
+            when(it){
+                UIState.SUCCESS -> {
+                    //Il viaggio è stato aggiunto correttamente, facciamo ritornare l'utente alla homepage
+                    Toast.makeText(context, "Expense added", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
+                    navController.navigateUp()
+                }
+                UIState.FAILURE -> {
+                    Toast.makeText(context, "Error in adding expense", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
+                }
+            }
         }
 
         /*val takeAPhotoBtn = view.findViewById<MaterialButton>(R.id.button_take_photo)
@@ -72,6 +110,11 @@ public class InsertExpense : Fragment() {
             }
 
 */
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 
