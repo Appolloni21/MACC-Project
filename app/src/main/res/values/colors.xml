@@ -14,4 +14,7 @@
     <color name="sky_blue">#64b5f6</color>
     <color name="sky_blue_add">#1976d2</color>
     <color name="dark_grey">#121212</color>
+
+    <color name='black_shade_1'>#292D36</color>
+    <color name='yellow'>#ffa500</color>
 </resources>
