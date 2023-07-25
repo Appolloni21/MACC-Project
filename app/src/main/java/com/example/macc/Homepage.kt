@@ -1,9 +1,12 @@
 package com.example.macc
 
 
+import android.app.SearchManager
+import android.content.Context.SEARCH_SERVICE
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -15,14 +18,14 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.macc.adapter.TravelAdapter
 import com.example.macc.databinding.HomepageBinding
-import com.example.macc.viewmodel.HomepageViewModel
 import com.example.macc.model.Travel
 import com.example.macc.utility.UIState
+import com.example.macc.viewmodel.HomepageViewModel
 
 
 private const val TAG = "Homepage Fragment"
 
-class Homepage : Fragment() {
+class Homepage : Fragment(), SearchView.OnQueryTextListener {
 
     private var _binding: HomepageBinding? = null
     private val binding get() = _binding!!
@@ -55,7 +58,8 @@ class Homepage : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        @Suppress("DEPRECATION")
+        setHasOptionsMenu(true)
         //Toolbar with nav component
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
@@ -89,6 +93,63 @@ class Homepage : Fragment() {
         Log.d(TAG, "Homepage")
     }
 
+    @Deprecated("Deprecated in Java")
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        // Inflate the options menu from XML
+        /*inflater.inflate(R.menu.homepage_toolbar, menu)
+        val item = menu.findItem(R.id.app_bar_search)
+        val searchView = item.actionView as SearchView
+        searchView.setOnQueryTextListener(this)
+        super.onCreateOptionsMenu(menu, inflater)*/
+
+        //val menuItem : MenuItem = menu.findItem(R.id.app_bar_search)
+        //val searchView = menuItem.actionView as? SearchView
+        //searchView?.isSubmitButtonEnabled = true
+        //searchView?.setOnQueryTextListener(this)
+
+        // Get the SearchView and set the searchable configuration
+        /*val searchManager = activity?.getSystemService(SEARCH_SERVICE) as SearchManager
+        (menu.findItem(R.id.app_bar_search).actionView as SearchView).apply {
+            // Assumes current activity is the searchable activity
+            setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(text: String): Boolean {
+                    Log.d(TAG,"onQueryTextSubmit p0: $text")
+                    filterHomepage(text)
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    Log.d(TAG,"onQueryTextChange p0: $newText")
+                    filterHomepage(newText)
+                    return false
+                }
+            })
+            //isIconifiedByDefault = false // Do not iconify the widget; expand it by default
+
+        }*/
+        /*val searchManager = activity?.getSystemService(SEARCH_SERVICE) as SearchManager
+        searchView?.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
+        searchView?.setOnQueryTextListener(SearchView.OnQueryTextListener(){
+
+        })*/
+
+        /*searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                adapter.getFilter().filter(newText)
+                return false
+            }
+        })*/
+
+        Log.d(TAG,"onCreateOptionsMenu")
+
+    }
+
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -104,5 +165,25 @@ class Homepage : Fragment() {
         sharedViewModel.selectTravel(travelID)
         val action = HomepageDirections.actionHomepageToExpenseList()
         view?.findNavController()?.navigate(action)
+    }
+
+    private fun filterHomepage(p0: String?){
+        sharedViewModel.travelArrayList.observe(viewLifecycleOwner) {
+            Log.d(TAG,"filterHomepage")
+            val travelsFiltered = it.filter { travel -> travel.name!!.contains(p0!!) }
+            adapter.setTravelsList(travelsFiltered)
+        }
+    }
+
+    override fun onQueryTextSubmit(p0: String?): Boolean {
+        Log.d(TAG,"onQueryTextSubmit p0: $p0")
+        filterHomepage(p0)
+        return true
+    }
+
+    override fun onQueryTextChange(p0: String?): Boolean {
+        Log.d(TAG,"onQueryTextChange p0: $p0")
+        filterHomepage(p0)
+        return true
     }
 }

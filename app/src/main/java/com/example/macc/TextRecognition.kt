@@ -9,17 +9,20 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.LayoutInflater
 import android.view.Menu
+import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModel
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import com.example.macc.databinding.TextRecognitionBinding
 import com.example.macc.viewmodel.PriceViewModel
 import com.google.android.material.button.MaterialButton
 import com.google.mlkit.vision.common.InputImage
@@ -29,7 +32,7 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.lang.Exception
 
 
-class TextRecognition : AppCompatActivity() {
+class TextRecognition : Fragment() {
 
     // UI views
     private lateinit var inputImageBtn: MaterialButton
@@ -38,7 +41,7 @@ class TextRecognition : AppCompatActivity() {
     private lateinit var recognizedTextEt: EditText
     private lateinit var takeThePriceBtn : MaterialButton
     var textImport = "0"
-    private val viewModel: PriceViewModel by viewModels()
+    private val viewModel: PriceViewModel by activityViewModels()
 
 
     private companion object{
@@ -51,15 +54,73 @@ class TextRecognition : AppCompatActivity() {
     //arrays of permission required to pick image from Camera/gallery
     private lateinit var cameraPermissions : Array<String>
     private lateinit var storagePermissions: Array<String>
-
-
     private lateinit var progressDialog: ProgressDialog
-
     private lateinit var textRecognizer: TextRecognizer
 
+    private var _binding: TextRecognitionBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        // Inflate the layout for this fragment
+        _binding = TextRecognitionBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        //init UI views
+        inputImageBtn = binding.inputImageBtn
+        recognizeTextBtn = binding.recognizeTextBtn
+        imageIv = binding.imageIv
+        recognizedTextEt = binding.recognizedTextEt
+        takeThePriceBtn = binding.takeThePrice
+
+        //init arrays of permissions required for camera, Gallery
+        cameraPermissions= arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        storagePermissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
+        //init setup the progress dialog, show while text from image is being recognized
+        progressDialog = ProgressDialog(requireContext())
+        progressDialog.setTitle("Please wait")
+        progressDialog.setCanceledOnTouchOutside(false)
+
+        //init textrecognizer
+        textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+        takeThePriceBtn.setOnClickListener {
+            if(textImport == "0"){
+                showToast("Recognize the test from image first...")
+            }
+            else{
+                viewModel.selectedItem(textImport)
+                showToast("The price has been saved, now you can load it")
+
+            }
+        }
+        //handle click, show input image dialog
+        inputImageBtn.setOnClickListener{
+            //showInputImageDialog()
+            if (checkCameraPermissions()){
+                //pickImageCamera()
+            }
+            else{
+                requestCameraPermissions()
+            }
+        }
+
+        recognizeTextBtn.setOnClickListener {
+
+            if(imageUri == null){
+                showToast("Pick image first...")
+            }
+            else{
+                recognizeTextFromImage()
+            }
+        }
+    }
+    /*override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.text_recognition)
 
@@ -113,14 +174,14 @@ class TextRecognition : AppCompatActivity() {
                 recognizeTextFromImage()
             }
         }
-    }
+    }*/
 
     private fun recognizeTextFromImage() {
         progressDialog.setMessage("preparing image...")
         progressDialog.show()
 
         try {
-            val inputImage = InputImage.fromFilePath(this, imageUri!!)
+            val inputImage = InputImage.fromFilePath(requireContext(), imageUri!!)
 
             progressDialog.setMessage("Recognizing test...")
 
@@ -149,7 +210,7 @@ class TextRecognition : AppCompatActivity() {
 
     private fun showInputImageDialog() {
         //init popup menu param 1 is context, param 2 is UI view where you want to show popup menu
-        val popupMenu = PopupMenu(this, inputImageBtn)
+        val popupMenu = PopupMenu(requireContext(), inputImageBtn)
 
         //Add items camera, gallery to popup menu, parm2 is menu id, param 3 is position of this menu item in menu items list, param 4 is title of the menu
         popupMenu.menu.add(Menu.NONE, 1,1,"CAMERA")
@@ -216,7 +277,7 @@ class TextRecognition : AppCompatActivity() {
         values.put(MediaStore.Images.Media.TITLE, "Sample Title")
         values.put(MediaStore.Images.Media.DESCRIPTION, "Sample Description")
         //image uri
-        imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        imageUri = requireActivity().contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
         //intent to launch camera
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
@@ -241,25 +302,25 @@ class TextRecognition : AppCompatActivity() {
 
     private fun checkStoragePermission() : Boolean{
         //check if storage permission is allowed or not: return true if allowed, false if it is not
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        return ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun checkCameraPermissions() : Boolean{
         //check uf camera and storage permission are allowed
-        val cameraResult = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-        val storageResult = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        val cameraResult = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+        val storageResult = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
 
         return cameraResult && storageResult
     }
 
     private fun requestStoragePermission(){
         //request storage permission for gallery image pick
-        ActivityCompat.requestPermissions(this, storagePermissions, STORAGE_REQUEST_CODE)
+        ActivityCompat.requestPermissions(requireContext() as Activity, storagePermissions, STORAGE_REQUEST_CODE)
     }
 
     private fun requestCameraPermissions(){
         //request camera permissions for camera intent
-        ActivityCompat.requestPermissions(this, cameraPermissions, CAMERA_REQUEST_CODE)
+        ActivityCompat.requestPermissions(requireContext() as Activity, cameraPermissions, CAMERA_REQUEST_CODE)
     }
 
     override fun onRequestPermissionsResult(
@@ -307,6 +368,6 @@ class TextRecognition : AppCompatActivity() {
     }
 
     private fun showToast(message: String){
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 }
