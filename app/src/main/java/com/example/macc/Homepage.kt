@@ -6,7 +6,8 @@ import android.content.Context.SEARCH_SERVICE
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.SearchView
+/*import android.widget.SearchView*/
+import androidx.appcompat.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -46,7 +47,6 @@ class Homepage : Fragment(), SearchView.OnQueryTextListener {
         adapter = TravelAdapter(::deleteTravel, ::actionToExpenseList)
         recyclerView.adapter = adapter
 
-        //sharedViewModel = ViewModelProvider(this).get(HomepageViewModel::class.java)
         sharedViewModel.travelArrayList.observe(viewLifecycleOwner) {
             adapter.setTravelsList(it)
         }
@@ -54,17 +54,17 @@ class Homepage : Fragment(), SearchView.OnQueryTextListener {
         // Use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         recyclerView.setHasFixedSize(true)
+        //@Suppress("DEPRECATION")
+        //setHasOptionsMenu(true)
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        @Suppress("DEPRECATION")
-        setHasOptionsMenu(true)
+
         //Toolbar with nav component
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         val toolbar: Toolbar = binding.toolbar.toolbar
-
         toolbar.setupWithNavController(navController, appBarConfiguration)
 
         toolbar.setOnMenuItemClickListener {
@@ -93,10 +93,17 @@ class Homepage : Fragment(), SearchView.OnQueryTextListener {
         Log.d(TAG, "Homepage")
     }
 
+    /*override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        @Suppress("DEPRECATION")
+        setHasOptionsMenu(true)
+    }*/
+
     @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         // Inflate the options menu from XML
-        /*inflater.inflate(R.menu.homepage_toolbar, menu)
+        /*menu.clear()
+        inflater.inflate(R.menu.homepage_toolbar, menu)
         val item = menu.findItem(R.id.app_bar_search)
         val searchView = item.actionView as SearchView
         searchView.setOnQueryTextListener(this)
@@ -116,13 +123,13 @@ class Homepage : Fragment(), SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(text: String): Boolean {
                     Log.d(TAG,"onQueryTextSubmit p0: $text")
                     filterHomepage(text)
-                    return false
+                    return true
                 }
 
                 override fun onQueryTextChange(newText: String): Boolean {
                     Log.d(TAG,"onQueryTextChange p0: $newText")
                     filterHomepage(newText)
-                    return false
+                    return true
                 }
             })
             //isIconifiedByDefault = false // Do not iconify the widget; expand it by default
