@@ -17,6 +17,8 @@
 
     <color name='black_shade_1'>#292D36</color>
     <color name='yellow'>#ffa500</color>
+    <color name='yellow_group'>#fbc02d</color>
+    <color name='red_personal'>#FFF44336</color>
     <color name="light_green_A700">#64DD17</color>
     <color name="green_800">#2E7D32</color>
 </resources>

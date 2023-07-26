@@ -25,21 +25,21 @@ class FirebaseDatabaseRepository {
 
     private lateinit var databaseReference: DatabaseReference
     private lateinit var storageReference: StorageReference
-    private val userUid = Firebase.auth.currentUser?.uid.toString()
+    private val userUID = Firebase.auth.currentUser?.uid.toString()
 
-    @Volatile private var ISTANCE: FirebaseDatabaseRepository ?= null
+    @Volatile private var istance: FirebaseDatabaseRepository ?= null
 
     fun getIstance() : FirebaseDatabaseRepository{
-        return ISTANCE ?: synchronized(this){
+        return istance ?: synchronized(this){
             val istance = FirebaseDatabaseRepository()
-            ISTANCE = istance
+            this.istance = istance
             istance
         }
     }
 
     fun getTravels(travelArrayList: MutableLiveData<ArrayList<Travel>>){
         databaseReference = Firebase.database.getReference("travels")
-        databaseReference.orderByChild("members/$userUid").equalTo(true).addValueEventListener(object: ValueEventListener{
+        databaseReference.orderByChild("members/$userUID").equalTo(true).addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 try{
                     val travelsList : ArrayList<Travel> = arrayListOf()
@@ -80,13 +80,13 @@ class FirebaseDatabaseRepository {
                 //Aggiungiamo il viaggio nell'elenco principale sul Realtime db
                 databaseReference = Firebase.database.reference
                 val childUpdates = hashMapOf<String, Any?>()
-                val members: Map<String,Boolean> = mapOf(userUid to true)
-                val owner: String = userUid
+                val members: Map<String,Boolean> = mapOf(userUID to true)
+                val owner: String = userUID
                 val travel = Travel(travelName,destination,startDate,endDate,imgUrl,members,null,travelID,owner)
                 childUpdates["travels/$travelID"] = travel
 
                 //Aggiungiamo il riferimento del viaggio anche nella lista "trips" dell'utente corrente
-                childUpdates["users/$userUid/trips/$travelID"] = true
+                childUpdates["users/$userUID/trips/$travelID"] = true
                 databaseReference.updateChildren(childUpdates).await()
 
                 Log.d(TAG, "addTravel: success")
@@ -201,7 +201,9 @@ class FirebaseDatabaseRepository {
                     if(snapshot.exists()){
                         for(expenseSnapshot in snapshot.children){
                             val expense = expenseSnapshot.getValue(Expense::class.java)!!
-                            expenseList.add(expense)
+                            if(expense.owner.equals(userUID) || expense.owner.equals("Group")){
+                                expenseList.add(expense)
+                            }
                         }
                     }
                     //postValue funziona correttamente insieme ai vari listener
@@ -283,7 +285,7 @@ class FirebaseDatabaseRepository {
         }
 
     //TODO: aggiungere campi alla funzione
-    suspend fun addExpense(travelID:String, expenseName:String, expensePlace:String): String=
+    suspend fun addExpense(travelID:String, expenseName:String, expenseAmount: String , expenseDate: String, expensePlace:String, expenseNote: String, expenseCheck: Boolean): String=
         withContext(Dispatchers.IO){
             try {
                 databaseReference = Firebase.database.getReference("expenses")
@@ -293,15 +295,24 @@ class FirebaseDatabaseRepository {
                 databaseReference = Firebase.database.reference
                 val childUpdates = hashMapOf<String, Any?>()
                 val name: String = expenseName
+                val amount: String = expenseAmount
+                val date: String = expenseDate
                 val place: String = expensePlace
-                val expense = Expense(name,null, place, null, null, userUid, travelID, expenseID)
-                childUpdates["expenses/$expenseID"] = expense
+                var owner = "Group"
+                val notes: String = expenseNote
 
+                if(expenseCheck){
+                    owner = userUID
+                    //Aggiungiamo il riferimento della expense anche nella lista "expenses" dell'utente corrente
+                    childUpdates["users/$owner/expenses/$expenseID"] = true
+                }
+
+                val expense = Expense(name, amount, date, place, owner, notes, travelID, expenseID)
+                childUpdates["expenses/$expenseID"] = expense
 
                 //Aggiungiamo il riferimento della expense anche nella lista "expenses" del viaggio
                 childUpdates["travels/$travelID/expenses/$expenseID"] = true
-                //Aggiungiamo il riferimento della expense anche nella lista "expenses" dell'utente corrente
-                childUpdates["users/$userUid/expenses/$expenseID"] = true
+
                 //Eseguiamo tutto
                 databaseReference.updateChildren(childUpdates).await()
 
@@ -315,9 +326,12 @@ class FirebaseDatabaseRepository {
 
         }
 
-    suspend fun deleteExpense(expenseID:String, travelID: String): String =
+    suspend fun deleteExpense(expense: Expense): String =
         withContext(Dispatchers.IO){
             try {
+                val expenseID = expense.expenseID
+                val travelID = expense.travelID
+
                 databaseReference = Firebase.database.reference
                 val childUpdates = hashMapOf<String, Any?>()
 
@@ -327,8 +341,12 @@ class FirebaseDatabaseRepository {
 
                 //Cancelliamo il riferimento della expense anche nella lista "expenses" del viaggio
                 childUpdates["travels/$travelID/expenses/$expenseID"] = null
-                //Cancelliamo il riferimento della expense anche nella lista "expenses" dell'utente corrente
-                childUpdates["users/$userUid/expenses/$expenseID"] = null
+
+                if(expense.owner.equals(userUID)){
+                    //Cancelliamo il riferimento della expense anche nella lista "expenses" dell'utente corrente
+                    childUpdates["users/$userUID/expenses/$expenseID"] = null
+                }
+
                 //Eseguiamo tutto
                 databaseReference.updateChildren(childUpdates).await()
 

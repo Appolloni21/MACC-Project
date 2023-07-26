@@ -1,6 +1,5 @@
 package com.example.macc
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -17,7 +16,6 @@ import com.example.macc.databinding.InsertExpenseBinding
 import com.example.macc.utility.UIState
 import com.example.macc.viewmodel.HomepageViewModel
 import com.example.macc.viewmodel.PriceViewModel
-import com.google.android.material.button.MaterialButton
 
 class InsertExpense : Fragment() {
 
@@ -45,8 +43,12 @@ class InsertExpense : Fragment() {
 
         val addExpenseButton = binding.addExpenseButton
         addExpenseButton.setOnClickListener{
-            val expenseName: String = binding.expenseName.text.toString().trim { it <= ' ' }
+            val expenseName: String = binding.expensenametxt.text.toString().trim { it <= ' ' }
+            val expenseAmount: String = binding.priceText.text.toString().trim { it <= ' ' }
+            val expenseDate: String = binding.expenseDate.text.toString().trim{it <= ' ' }
             val expensePlace: String = binding.expensePlace.text.toString().trim { it <= ' ' }
+            val expenseNotes: String = binding.expenseNotes.text.toString().trim{it <= ' ' }
+            val expenseCheck: Boolean = binding.checkboxPersonalExpense.isChecked
 
             when{
                 TextUtils.isEmpty(expenseName) -> {
@@ -56,7 +58,7 @@ class InsertExpense : Fragment() {
                     Toast.makeText(context, "Please enter expense place", Toast.LENGTH_SHORT).show()
                 }
                 else -> {
-                    sharedViewModel.addExpense(expenseName,expensePlace)
+                    sharedViewModel.addExpense(expenseName,expenseAmount, expenseDate, expensePlace, expenseNotes, expenseCheck)
                 }
             }
         }
@@ -77,13 +79,11 @@ class InsertExpense : Fragment() {
         }
 
         val takeAPhotoBtn = binding.buttonTakePhoto
-        val activityContext = requireActivity()
         takeAPhotoBtn.setOnClickListener {
-            //val intent = Intent(activityContext,TextRecognition::class.java)
-            //startActivity(intent)
             val action = InsertExpenseDirections.actionInsertExpenseToTextRecognition()
             view.findNavController().navigate(action)
         }
+
         val priceField = binding.priceText
         val loadThePhotoBtn = binding.loadPhotoBtn
         loadThePhotoBtn.setOnClickListener {
@@ -92,10 +92,6 @@ class InsertExpense : Fragment() {
                 if(item.isNotEmpty()){
                     priceField.setText(item)
                 }
-                else{
-                    showToast("COGLIONEEEEEEEEEEEEEEEE")
-                }
-
             }
         }
 
@@ -108,9 +104,9 @@ class InsertExpense : Fragment() {
     }
 
 
-    private fun showToast(message: String){
+    /*private fun showToast(message: String){
         val activityContext = requireActivity()
         Toast.makeText(activityContext, message, Toast.LENGTH_SHORT).show()
-    }
+    }*/
 
 }

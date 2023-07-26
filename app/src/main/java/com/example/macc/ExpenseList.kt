@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.macc.adapter.ExpenseAdapter
 import com.example.macc.databinding.ExpenseListPageBinding
+import com.example.macc.model.Expense
 import com.example.macc.utility.UIState
 import com.example.macc.viewmodel.HomepageViewModel
 
@@ -114,8 +115,8 @@ class ExpenseList : Fragment() {
         Log.d(TAG,"Expense list")
     }
 
-    private fun deleteExpense(expenseID: String, travelID: String) {
-        sharedViewModel.deleteExpense(expenseID,travelID)
+    private fun deleteExpense(expense: Expense) {
+        sharedViewModel.deleteExpense(expense)
     }
 
     override fun onDestroyView() {

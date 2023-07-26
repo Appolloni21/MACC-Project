@@ -92,17 +92,17 @@ class HomepageViewModel : ViewModel() {
         _uiState.value = null
     }
 
-    fun addExpense(expenseName:String, expensePlace:String){
+    fun addExpense(expenseName:String, expenseAmount: String , expenseDate: String, expensePlace:String, expenseNote: String, expenseCheck: Boolean){
         viewModelScope.launch(Dispatchers.Main) {
             val travelID = _travelSelected.value?.travelID.toString()
-            val state = repository.addExpense(travelID, expenseName, expensePlace)
+            val state = repository.addExpense(travelID, expenseName, expenseAmount, expenseDate, expensePlace, expenseNote, expenseCheck)
             _uiState.postValue(state)
         }
     }
 
-    fun deleteExpense(expenseID: String, travelID: String){
+    fun deleteExpense(expense: Expense){
         viewModelScope.launch(Dispatchers.Main) {
-            val state = repository.deleteExpense(expenseID,travelID)
+            val state = repository.deleteExpense(expense)
             _uiState.postValue(state)
         }
     }

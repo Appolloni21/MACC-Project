@@ -1,6 +1,7 @@
 package com.example.macc.adapter
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -13,7 +14,7 @@ import com.example.macc.model.Expense
 
 private const val TAG = "Expense Adapter"
 
-class ExpenseAdapter(private val onDeleteCallback: (String,String) -> Unit) : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() {
+class ExpenseAdapter(private val onDeleteCallback: (Expense) -> Unit) : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() {
 
     private val expensesList : ArrayList<Expense> = arrayListOf()
 
@@ -21,8 +22,8 @@ class ExpenseAdapter(private val onDeleteCallback: (String,String) -> Unit) : Re
         val expenseName : TextView = binding.expenseName
         val expenseAmount: TextView = binding.total
         val expensePlace: TextView = binding.place
+        val expenseOwner: TextView = binding.tagExpense
         val deleteIcon: ImageView = binding.imageView4
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
@@ -42,10 +43,14 @@ class ExpenseAdapter(private val onDeleteCallback: (String,String) -> Unit) : Re
         holder.expenseName.text = item.name
         holder.expenseAmount.text = "Tot: $" + item.amount.toString()
         holder.expensePlace.text = item.place
-        val expenseID = item.expenseID.toString()
-        val travelID = item.travelID.toString()
+
+        if(!item.owner.equals("Group")){
+            holder.expenseOwner.text = "Pers"
+            holder.expenseOwner.setBackgroundColor(Color.parseColor("#FFF44336"))
+        }
+
         holder.deleteIcon.setOnClickListener{
-            onDeleteCallback(expenseID,travelID)
+            onDeleteCallback(item)
         }
     }
 
