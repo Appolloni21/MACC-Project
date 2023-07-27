@@ -89,5 +89,18 @@
     <string name="travel_name_1">Travel Name:</string>
     <string name="destination_1">Destination:</string>
     <string name="edit_travel">Edit Travel</string>
+    <string name="expense_name_1">Expense Name:</string>
+    <string name="type_expense_name">Type expense name</string>
+    <string name="type_amount">Type amount</string>
+    <string name="amount">Amount</string>
+    <string name="amount_1">Amount:</string>
+    <string name="date_1">Date:</string>
+    <string name="type_date">Type date</string>
+    <string name="place_1">Place:</string>
+    <string name="type_place">Type place</string>
+    <string name="notes_1">Notes:</string>
+    <string name="type_notes">Type notes</string>
+    <string name="expense_delete_icon">Expense delete icon</string>
+    <string name="expense_edit_icon">Expense edit icon</string>
 
 </resources>

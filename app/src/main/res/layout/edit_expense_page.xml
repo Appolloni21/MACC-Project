@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black_light_material">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_settings"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
+
+    <TextView
+        android:id="@+id/edit_expenseName_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/expense_name_1"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/edit_expenseName"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/edit_expenseName"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <EditText
+        android:id="@+id/edit_expenseName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:autofillHints=""
+        android:background="#30ffffff"
+        android:drawablePadding="20dp"
+        android:hint="@string/type_expense_name"
+        android:inputType="text"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_expenseName_label" />
+
+    <TextView
+        android:id="@+id/edit_expenseAmount_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/amount_1"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/edit_expenseAmount"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/edit_expenseAmount"
+        app:layout_constraintTop_toBottomOf="@+id/edit_expenseName" />
+
+    <EditText
+        android:id="@+id/edit_expenseAmount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:background="#30ffffff"
+        android:drawablePadding="20dp"
+        android:hint="@string/type_amount"
+        android:inputType="text"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        app:layout_constraintEnd_toEndOf="@+id/edit_expenseName"
+        app:layout_constraintStart_toStartOf="@+id/edit_expenseName"
+        app:layout_constraintTop_toBottomOf="@+id/edit_expenseAmount_label" />
+
+    <TextView
+        android:id="@+id/edit_expenseDate_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/date_1"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/edit_expenseAmount"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/edit_expenseAmount"
+        app:layout_constraintTop_toBottomOf="@+id/edit_expenseAmount" />
+
+    <EditText
+        android:id="@+id/edit_expenseDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:background="#30ffffff"
+        android:drawablePadding="20dp"
+        android:hint="@string/type_date"
+        android:inputType="date"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:focusable="false"
+        app:layout_constraintEnd_toEndOf="@+id/edit_expenseAmount"
+        app:layout_constraintStart_toStartOf="@+id/edit_expenseAmount"
+        app:layout_constraintTop_toBottomOf="@+id/edit_expenseDate_label" />
+
+    <TextView
+        android:id="@+id/edit_expensePlace_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/place_1"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/edit_expenseDate"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/edit_expenseDate"
+        app:layout_constraintTop_toBottomOf="@+id/edit_expenseDate" />
+
+    <EditText
+        android:id="@+id/edit_expensePlace"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:background="#30ffffff"
+        android:drawablePadding="20dp"
+        android:hint="@string/type_place"
+        android:inputType="date"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        app:layout_constraintEnd_toEndOf="@+id/edit_expenseDate"
+        app:layout_constraintStart_toStartOf="@+id/edit_expenseDate"
+        app:layout_constraintTop_toBottomOf="@+id/edit_expensePlace_label" />
+
+    <TextView
+        android:id="@+id/edit_expenseNotes_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/notes_1"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/edit_expensePlace"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/edit_expensePlace"
+        app:layout_constraintTop_toBottomOf="@+id/edit_expensePlace" />
+
+    <EditText
+        android:id="@+id/edit_expenseNotes"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:background="#30ffffff"
+        android:drawablePadding="20dp"
+        android:hint="@string/type_notes"
+        android:inputType="date"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        app:layout_constraintEnd_toEndOf="@+id/edit_expensePlace"
+        app:layout_constraintStart_toStartOf="@+id/edit_expensePlace"
+        app:layout_constraintTop_toBottomOf="@+id/edit_expenseNotes_label" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/editExpense_save_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/save"
+        app:backgroundTint="@color/green_800"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_expenseNotes" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

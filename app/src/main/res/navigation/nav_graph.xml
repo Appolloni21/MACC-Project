@@ -45,6 +45,9 @@
         <action
             android:id="@+id/action_expenseList_to_editTravel"
             app:destination="@id/editTravel" />
+        <action
+            android:id="@+id/action_expenseList_to_editExpense"
+            app:destination="@id/editExpense" />
     </fragment>
     <fragment
         android:id="@+id/insertExpense"
@@ -116,4 +119,9 @@
         android:name="com.example.macc.TextRecognition"
         android:label="TextRecognition"
         tools:layout="@layout/text_recognition"/>
+    <fragment
+        android:id="@+id/editExpense"
+        android:name="com.example.macc.EditExpense"
+        android:label="EditExpense"
+        tools:layout="@layout/edit_expense_page"/>
 </navigation>

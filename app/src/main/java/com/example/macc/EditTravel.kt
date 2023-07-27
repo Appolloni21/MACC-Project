@@ -98,7 +98,6 @@ class EditTravel : Fragment() {
                     sharedViewModel.editTravel(travelName,travelDestination,imageCoverURI)
                 }
             }
-
         }
 
         sharedViewModel.uiState.observe(viewLifecycleOwner){
@@ -114,7 +113,6 @@ class EditTravel : Fragment() {
                 }
             }
         }
-
     }
 
     override fun onDestroyView() {

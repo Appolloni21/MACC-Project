@@ -41,7 +41,7 @@ class ExpenseList : Fragment() {
         val view: View = binding.root
 
         recyclerView = binding.recyclerViewExpense
-        adapter = ExpenseAdapter(::deleteExpense)
+        adapter = ExpenseAdapter(::deleteExpense, ::editExpense)
         recyclerView.adapter = adapter
 
         sharedViewModel.travelSelected.observe(viewLifecycleOwner){
@@ -111,12 +111,17 @@ class ExpenseList : Fragment() {
             }
         }
 
-        //TODO: rendere l'icona dei tre puntini dentro la expense cliccabile e collegarla la funzione di edit della expense
         Log.d(TAG,"Expense list")
     }
 
     private fun deleteExpense(expense: Expense) {
         sharedViewModel.deleteExpense(expense)
+    }
+
+    private fun editExpense(expenseID: String){
+        sharedViewModel.selectExpense(expenseID)
+        val action = ExpenseListDirections.actionExpenseListToEditExpense()
+        view?.findNavController()?.navigate(action)
     }
 
     override fun onDestroyView() {

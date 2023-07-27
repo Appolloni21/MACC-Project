@@ -29,6 +29,9 @@ class HomepageViewModel : ViewModel() {
     private val _expenses: MutableLiveData<ArrayList<Expense>> = MutableLiveData()
     val expenses: LiveData<ArrayList<Expense>> = _expenses
 
+    private val _expenseSelected: MutableLiveData<Expense> = MutableLiveData()
+    val expenseSelected: LiveData<Expense> = _expenseSelected
+
     private val _users: MutableLiveData<ArrayList<User>> = MutableLiveData()
     val users: LiveData<ArrayList<User>> = _users
 
@@ -69,7 +72,6 @@ class HomepageViewModel : ViewModel() {
         repository.getSelectedTravels(travelID,_travelSelected)
         getExpenses(travelID)
         getUsers(travelID)
-
     }
 
     private fun getExpenses(travelID:String){
@@ -92,6 +94,10 @@ class HomepageViewModel : ViewModel() {
         _uiState.value = null
     }
 
+    fun selectExpense(expenseID:String){
+        repository.getSelectedExpense(expenseID,_expenseSelected)
+    }
+
     fun addExpense(expenseName:String, expenseAmount: String , expenseDate: String, expensePlace:String, expenseNote: String, expenseCheck: Boolean){
         viewModelScope.launch(Dispatchers.Main) {
             val travelID = _travelSelected.value?.travelID.toString()
@@ -103,6 +109,14 @@ class HomepageViewModel : ViewModel() {
     fun deleteExpense(expense: Expense){
         viewModelScope.launch(Dispatchers.Main) {
             val state = repository.deleteExpense(expense)
+            _uiState.postValue(state)
+        }
+    }
+
+    fun editExpense(expenseName:String, expenseAmount: String , expenseDate: String, expensePlace:String, expenseNotes: String){
+        viewModelScope.launch(Dispatchers.Main) {
+            val expenseID = _expenseSelected.value?.expenseID.toString()
+            val state = repository.editExpense(expenseID, expenseName, expenseAmount, expenseDate, expensePlace, expenseNotes)
             _uiState.postValue(state)
         }
     }

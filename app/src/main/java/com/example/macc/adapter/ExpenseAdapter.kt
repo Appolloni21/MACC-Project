@@ -14,7 +14,8 @@ import com.example.macc.model.Expense
 
 private const val TAG = "Expense Adapter"
 
-class ExpenseAdapter(private val onDeleteCallback: (Expense) -> Unit) : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() {
+class ExpenseAdapter(private val onDeleteCallback: (Expense) -> Unit,
+                     private val onEditeCallback: (String) -> Unit) : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() {
 
     private val expensesList : ArrayList<Expense> = arrayListOf()
 
@@ -24,6 +25,7 @@ class ExpenseAdapter(private val onDeleteCallback: (Expense) -> Unit) : Recycler
         val expensePlace: TextView = binding.place
         val expenseOwner: TextView = binding.tagExpense
         val deleteIcon: ImageView = binding.imageView4
+        val editIcon: ImageView = binding.expenseEditIcon
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
@@ -51,6 +53,10 @@ class ExpenseAdapter(private val onDeleteCallback: (Expense) -> Unit) : Recycler
 
         holder.deleteIcon.setOnClickListener{
             onDeleteCallback(item)
+        }
+
+        holder.editIcon.setOnClickListener {
+            onEditeCallback(item.expenseID!!)
         }
     }
 

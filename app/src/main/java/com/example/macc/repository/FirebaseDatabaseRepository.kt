@@ -284,7 +284,7 @@ class FirebaseDatabaseRepository {
             }
         }
 
-    //TODO: aggiungere campi alla funzione
+
     suspend fun addExpense(travelID:String, expenseName:String, expenseAmount: String , expenseDate: String, expensePlace:String, expenseNote: String, expenseCheck: Boolean): String=
         withContext(Dispatchers.IO){
             try {
@@ -359,6 +359,54 @@ class FirebaseDatabaseRepository {
             }
 
         }
+
+    suspend fun editExpense(expenseID: String, expenseName:String, expenseAmount: String , expenseDate: String, expensePlace:String, expenseNotes: String): String =
+        withContext(Dispatchers.IO){
+            try {
+                databaseReference = Firebase.database.reference
+
+                val expense = databaseReference.child("expenses").child(expenseID).get().await()
+                if(!expense.exists()){
+                    return@withContext UIState.FAILURE
+                }
+
+                val childUpdates = hashMapOf<String, Any?>()
+                childUpdates["expenses/$expenseID/name"] = expenseName
+                childUpdates["expenses/$expenseID/amount"] = expenseAmount
+                childUpdates["expenses/$expenseID/date"] = expenseDate
+                childUpdates["expenses/$expenseID/place"] = expensePlace
+                childUpdates["expenses/$expenseID/notes"] = expenseNotes
+
+                databaseReference.updateChildren(childUpdates).await()
+
+                Log.d(TAG, "editExpense: success")
+                UIState.SUCCESS
+
+            } catch (e: Exception) {
+                Log.d(TAG, "editExpense: exception: $e")
+                UIState.FAILURE
+            }
+        }
+
+    fun getSelectedExpense(expenseID: String, expenseSelected: MutableLiveData<Expense>){
+        databaseReference = Firebase.database.getReference("expenses/$expenseID")
+        databaseReference.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                try{
+                    if(snapshot.exists()){
+                        val expense = snapshot.getValue(Expense::class.java)!!
+                        //postValue funziona correttamente insieme ai vari listener
+                        expenseSelected.postValue(expense)
+                    }
+                }catch(e: Exception){
+                    Log.d(TAG,"getSelectedExpense Exception: $e")
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.w(TAG, "getSelectedExpense: onCancelled", databaseError.toException())
+            }
+        })
+    }
 
 
 }
