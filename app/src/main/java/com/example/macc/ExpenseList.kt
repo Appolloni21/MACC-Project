@@ -1,11 +1,17 @@
 package com.example.macc
 
+import android.app.SearchManager
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -63,6 +69,11 @@ class ExpenseList : Fragment() {
         // Use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         recyclerView.setHasFixedSize(true)
+
+        //For the Search Widget
+        (activity as AppCompatActivity).setSupportActionBar(binding.toolbar.toolbar)
+        @Suppress("DEPRECATION")
+        setHasOptionsMenu(true)
 
         return view
     }
@@ -122,6 +133,46 @@ class ExpenseList : Fragment() {
         sharedViewModel.selectExpense(expenseID)
         val action = ExpenseListDirections.actionExpenseListToEditExpense()
         view?.findNavController()?.navigate(action)
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        Log.d(TAG,"onCreateOptionsMenu")
+
+        // Inflate the options menu from XML
+        inflater.inflate(R.menu.expense_list_toolbar, menu)
+
+        // Get the SearchView and set the searchable configuration
+        val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        (menu.findItem(R.id.app_bar_search_expense).actionView as SearchView).apply {
+            // Assumes current activity is the searchable activity
+            setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
+            setIconifiedByDefault(true) // Do not iconify the widget; expand it by default
+            isSubmitButtonEnabled = true
+            queryHint = "Search expense..."
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(text: String): Boolean {
+                    Log.d(TAG,"onQueryTextSubmit p0: $text")
+                    filter(text)
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    Log.d(TAG,"onQueryTextChange p0: $newText")
+                    filter(newText)
+                    return true
+                }
+            })
+        }
+    }
+
+    private fun filter(text: String?){
+        sharedViewModel.expenses.observe(viewLifecycleOwner) {
+            Log.d(TAG,"filter")
+            val expensesFiltered = it.filter { expense -> expense.name!!.startsWith(text.toString()) }
+            adapter.setExpensesList(expensesFiltered)
+        }
     }
 
     override fun onDestroyView() {
