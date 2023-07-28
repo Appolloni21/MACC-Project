@@ -96,7 +96,7 @@
             android:id="@+id/expenseEdit_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="55dp"
             android:layout_marginEnd="8dp"
             android:contentDescription="@string/expense_edit_icon"
             app:layout_constraintEnd_toEndOf="@+id/box"
@@ -149,6 +149,20 @@
             app:layout_constraintBottom_toBottomOf="@+id/box"
             app:layout_constraintStart_toEndOf="@+id/circle"
             app:layout_constraintTop_toBottomOf="@+id/tag_expense" />
+
+        <TextView
+            android:id="@+id/eachAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:text="@string/each"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/box"
+            app:layout_constraintStart_toEndOf="@+id/total"
+            app:layout_constraintTop_toBottomOf="@+id/tag_expense" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

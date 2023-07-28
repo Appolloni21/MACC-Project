@@ -66,7 +66,7 @@ class EditExpense : Fragment() {
         val myCalendar = Calendar.getInstance()
 
 
-        //Date picker per data di inizio e fine viaggio
+        //Date picker
         expenseDateShow.setOnClickListener {
             DatePickerDialog(requireContext(), picker(expenseDateShow,myCalendar), myCalendar.get(Calendar.YEAR), myCalendar.get(
                 Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show()

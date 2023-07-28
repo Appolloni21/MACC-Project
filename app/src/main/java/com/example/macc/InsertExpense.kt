@@ -1,5 +1,6 @@
 package com.example.macc
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -16,6 +17,10 @@ import com.example.macc.databinding.InsertExpenseBinding
 import com.example.macc.utility.UIState
 import com.example.macc.viewmodel.HomepageViewModel
 import com.example.macc.viewmodel.PriceViewModel
+import com.google.android.material.textfield.TextInputEditText
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class InsertExpense : Fragment() {
 
@@ -41,13 +46,22 @@ class InsertExpense : Fragment() {
         val toolbar = binding.toolbar.toolbar
         toolbar.setupWithNavController(navController, appBarConfiguration)
 
-        val addExpenseButton = binding.addExpenseButton
+        val expenseDateShow = binding.expenseDateInput
+        val myCalendar = Calendar.getInstance()
+
+        //Date picker
+        expenseDateShow.setOnClickListener {
+            DatePickerDialog(requireContext(), picker(expenseDateShow,myCalendar), myCalendar.get(Calendar.YEAR), myCalendar.get(
+                Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show()
+        }
+
+        val addExpenseButton = binding.addExpenseBtn
         addExpenseButton.setOnClickListener{
-            val expenseName: String = binding.expensenametxt.text.toString().trim { it <= ' ' }
-            val expenseAmount: String = binding.priceText.text.toString().trim { it <= ' ' }
-            val expenseDate: String = binding.expenseDate.text.toString().trim{it <= ' ' }
-            val expensePlace: String = binding.expensePlace.text.toString().trim { it <= ' ' }
-            val expenseNotes: String = binding.expenseNotes.text.toString().trim{it <= ' ' }
+            val expenseName: String = binding.expenseName.editText?.text.toString().trim { it <= ' ' }
+            val expenseAmount: String = binding.expenseAmount.editText?.text.toString().trim { it <= ' ' }
+            val expenseDate: String = binding.expenseDate.editText?.text.toString().trim{it <= ' ' }
+            val expensePlace: String = binding.expensePlace.editText?.text.toString().trim { it <= ' ' }
+            val expenseNotes: String = binding.expenseNotes.editText?.text.toString().trim{it <= ' ' }
             val expenseCheck: Boolean = binding.checkboxPersonalExpense.isChecked
 
             when{
@@ -66,7 +80,7 @@ class InsertExpense : Fragment() {
         sharedViewModel.uiState.observe(viewLifecycleOwner){
             when(it){
                 UIState.SUCCESS -> {
-                    //Il viaggio è stato aggiunto correttamente, facciamo ritornare l'utente alla homepage
+                    //La spesa è stata aggiunta correttamente, facciamo ritornare l'utente alla homepage
                     Toast.makeText(context, "Expense added", Toast.LENGTH_SHORT).show()
                     sharedViewModel.resetUiState()
                     navController.navigateUp()
@@ -78,19 +92,19 @@ class InsertExpense : Fragment() {
             }
         }
 
-        val takeAPhotoBtn = binding.buttonTakePhoto
+        val takeAPhotoBtn = binding.takePhotoBtn
         takeAPhotoBtn.setOnClickListener {
             val action = InsertExpenseDirections.actionInsertExpenseToTextRecognition()
             view.findNavController().navigate(action)
         }
 
-        val priceField = binding.priceText
-        val loadThePhotoBtn = binding.loadPhotoBtn
+        val priceField = binding.expenseAmount
+        val loadThePhotoBtn = binding.loadAmountBtn
         loadThePhotoBtn.setOnClickListener {
 
             viewModel.selected.observe(viewLifecycleOwner) { item ->
                 if(item.isNotEmpty()){
-                    priceField.setText(item)
+                    priceField.editText?.setText(item)
                 }
             }
         }
@@ -101,6 +115,21 @@ class InsertExpense : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun picker(textInputEditText: TextInputEditText, myCalendar: Calendar):  DatePickerDialog.OnDateSetListener{
+        val picker = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+            myCalendar.set(Calendar.YEAR, year)
+            myCalendar.set(Calendar.MONTH, month)
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            textInputEditText.setText(updateFormat(myCalendar))
+        }
+        return picker
+    }
+
+    private fun updateFormat(myCalendar: Calendar): String {
+        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.ITALY)
+        return sdf.format(myCalendar.time)
     }
 
 

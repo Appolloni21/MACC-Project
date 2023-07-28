@@ -102,5 +102,14 @@
     <string name="type_notes">Type notes</string>
     <string name="expense_delete_icon">Expense delete icon</string>
     <string name="expense_edit_icon">Expense edit icon</string>
+    <string name="expense_amount">Expense Amount</string>
+    <string name="take_photo">Take photo</string>
+    <string name="load_photo">Load Photo</string>
+    <string name="personal_expense">Personal Expense</string>
+    <string name="load_amount">Load Amount</string>
+    <string name="recognize_amount">Recognize amount</string>
+    <string name="recognized_amount_1">Recognized amount:</string>
+    <string name="take_the_amount">Take the amount</string>
+    <string name="each">Each:</string>
 
 </resources>

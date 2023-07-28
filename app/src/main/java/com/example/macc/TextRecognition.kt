@@ -13,18 +13,21 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import com.example.macc.databinding.TextRecognitionBinding
 import com.example.macc.viewmodel.PriceViewModel
-import com.google.android.material.button.MaterialButton
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizer
@@ -35,11 +38,11 @@ import java.lang.Exception
 class TextRecognition : Fragment() {
 
     // UI views
-    private lateinit var inputImageBtn: MaterialButton
-    private lateinit var recognizeTextBtn: MaterialButton
+    private lateinit var takePhotoBtn: Button
+    private lateinit var recognizeAmountBtn: Button
     private lateinit var imageIv: ImageView
     private lateinit var recognizedTextEt: EditText
-    private lateinit var takeThePriceBtn : MaterialButton
+    private lateinit var takeAmountBtn : Button
     var textImport = "0"
     private val viewModel: PriceViewModel by activityViewModels()
 
@@ -70,13 +73,19 @@ class TextRecognition : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        //Toolbar with nav component
         val navController = findNavController()
+        val appBarConfiguration = AppBarConfiguration(navController.graph)
+        val toolbar: Toolbar = binding.toolbar.toolbar
+        toolbar.setupWithNavController(navController, appBarConfiguration)
+
+
         //init UI views
-        inputImageBtn = binding.inputImageBtn
-        recognizeTextBtn = binding.recognizeTextBtn
+        takePhotoBtn = binding.takePhotoBtn
+        recognizeAmountBtn = binding.recognizeAmountBtn
         imageIv = binding.imageIv
         recognizedTextEt = binding.recognizedTextEt
-        takeThePriceBtn = binding.takeThePrice
+        takeAmountBtn = binding.takeAmountBtn
 
         //init arrays of permissions required for camera, Gallery
         cameraPermissions= arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -91,7 +100,7 @@ class TextRecognition : Fragment() {
         textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
 
-        takeThePriceBtn.setOnClickListener {
+        takeAmountBtn.setOnClickListener {
             if(textImport == "0"){
                 showToast("Recognize the test from image first...")
             }
@@ -102,7 +111,7 @@ class TextRecognition : Fragment() {
             }
         }
         //handle click, show input image dialog
-        inputImageBtn.setOnClickListener{
+        takePhotoBtn.setOnClickListener{
             //showInputImageDialog()
 
 
@@ -116,7 +125,7 @@ class TextRecognition : Fragment() {
             }
         }
 
-        recognizeTextBtn.setOnClickListener {
+        recognizeAmountBtn.setOnClickListener {
 
             if(imageUri == null){
                 showToast("Pick image first...")

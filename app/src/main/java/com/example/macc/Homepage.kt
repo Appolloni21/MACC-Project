@@ -11,8 +11,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -57,8 +60,6 @@ class Homepage : Fragment() {
 
         //For the Search Widget
         (activity as AppCompatActivity).setSupportActionBar(binding.toolbar.toolbar)
-        @Suppress("DEPRECATION")
-        setHasOptionsMenu(true)
 
         return view
     }
@@ -94,42 +95,61 @@ class Homepage : Fragment() {
             }
         }
 
+        //Search View widget
+        // The usage of an interface lets you inject your own implementation
+        val menuHost: MenuHost = requireActivity()
+
+        // Add menu items without using the Fragment Menu APIs
+        // Note how we can tie the MenuProvider to the viewLifecycleOwner
+        // and an optional Lifecycle.State (here, RESUMED) to indicate when
+        // the menu should be visible
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                // Add menu items here
+                menuInflater.inflate(R.menu.homepage_toolbar, menu)
+                // Get the SearchView and set the searchable configuration
+                val searchManager = activity?.getSystemService(SEARCH_SERVICE) as SearchManager
+                (menu.findItem(R.id.app_bar_search).actionView as SearchView).apply {
+                    // Assumes current activity is the searchable activity
+                    setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
+                    setIconifiedByDefault(true) // Do not iconify the widget; expand it by default
+                    isSubmitButtonEnabled = true
+                    queryHint = "Search travel..."
+                    setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(text: String): Boolean {
+                            Log.d(TAG,"onQueryTextSubmit p0: $text")
+                            filter(text)
+                            return true
+                        }
+
+                        override fun onQueryTextChange(newText: String): Boolean {
+                            Log.d(TAG,"onQueryTextChange p0: $newText")
+                            filter(newText)
+                            return true
+                        }
+                    })
+                }
+
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                // Handle the menu selection
+                return when (menuItem.itemId) {
+                    /*R.id.menu_clear -> {
+                        // clearCompletedTasks()
+                        true
+                    }
+                    R.id.menu_refresh -> {
+                        // loadTasks(true)
+                        true
+                    }*/
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
         Log.d(TAG, "Homepage")
     }
-
-    @Deprecated("Deprecated in Java")
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        Log.d(TAG,"onCreateOptionsMenu")
-
-        // Inflate the options menu from XML
-        inflater.inflate(R.menu.homepage_toolbar, menu)
-
-        // Get the SearchView and set the searchable configuration
-        val searchManager = activity?.getSystemService(SEARCH_SERVICE) as SearchManager
-        (menu.findItem(R.id.app_bar_search).actionView as SearchView).apply {
-            // Assumes current activity is the searchable activity
-            setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
-            setIconifiedByDefault(true) // Do not iconify the widget; expand it by default
-            isSubmitButtonEnabled = true
-            queryHint = "Search travel..."
-            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(text: String): Boolean {
-                    Log.d(TAG,"onQueryTextSubmit p0: $text")
-                    filter(text)
-                    return true
-                }
-
-                override fun onQueryTextChange(newText: String): Boolean {
-                    Log.d(TAG,"onQueryTextChange p0: $newText")
-                    filter(newText)
-                    return true
-                }
-            })
-        }
-    }
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()

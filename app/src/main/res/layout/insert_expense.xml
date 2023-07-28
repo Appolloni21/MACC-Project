@@ -1,149 +1,212 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--TODO: migliorare frontend-->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/black_light_material">
+    android:fillViewport="true">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar_my_profile"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@color/black_light_material">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar_settings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/expense_name"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/expenseName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:hint="@string/expense_name"
+            app:hintTextColor="@color/black_primary_material"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+            <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Expense name:"
-                />
+                android:background="@color/white"
+                android:textColorHint="#757575"
+                tools:ignore="TextContrastCheck" />
 
-            <EditText
-                app:layout_constraintTop_toBottomOf="@+id/expense_name"
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/expenseAmount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:hint="@string/amount"
+            app:hintTextColor="@color/black_primary_material"
+            app:layout_constraintEnd_toEndOf="@+id/expenseName"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/expenseName"
+            app:layout_constraintTop_toBottomOf="@+id/expenseName">
+
+            <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/expensenametxt"
-                android:textSize="12sp"/>
+                android:background="@color/white"
+                android:textColorHint="#757575"
+                tools:ignore="TextContrastCheck" />
 
-            <TextView
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/takePhotoBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="210dp"
+            android:contentDescription="@string/take_photo"
+            android:text="@string/take_photo"
+            app:layout_constraintEnd_toEndOf="@+id/expenseAmount"
+            app:layout_constraintStart_toStartOf="@+id/expenseAmount"
+            app:layout_constraintTop_toBottomOf="@+id/expenseAmount"
+            tools:ignore="DuplicateSpeakableTextCheck" />
+
+        <Button
+            android:id="@+id/loadAmountBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="210dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/load_photo"
+            android:text="@string/load_amount"
+            app:layout_constraintEnd_toEndOf="@+id/expenseAmount"
+            app:layout_constraintStart_toStartOf="@+id/expenseAmount"
+            app:layout_constraintTop_toBottomOf="@+id/expenseAmount"
+            tools:ignore="DuplicateSpeakableTextCheck" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/expenseDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:hint="@string/date"
+            android:focusable="false"
+            app:hintTextColor="@color/black_primary_material"
+            app:layout_constraintEnd_toEndOf="@+id/expenseAmount"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/expenseAmount"
+            app:layout_constraintTop_toBottomOf="@+id/takePhotoBtn">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/expenseDateInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/expensenametxt"
-                android:layout_marginTop="30dp"
-                android:text="Total price:"
-                />
+                android:background="@color/white"
+                android:textColorHint="#757575"
+                android:focusable="false"
+                tools:ignore="TextContrastCheck" />
 
-            <EditText
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--
+        <EditText
+            android:id="@+id/expenseDate"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:autofillHints=""
+            android:background="@color/white"
+            android:focusable="false"
+            android:hint="@string/date"
+            android:inputType="date"
+            android:minHeight="48dp"
+            app:layout_constraintEnd_toEndOf="@+id/expenseAmount"
+            app:layout_constraintStart_toStartOf="@+id/expenseAmount"
+            app:layout_constraintTop_toBottomOf="@+id/takePhotoBtn" />
+        -->
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/expensePlace"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:hint="@string/place"
+            app:hintTextColor="@color/black_primary_material"
+            app:layout_constraintEnd_toEndOf="@+id/expenseDate"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/expenseDate"
+            app:layout_constraintTop_toBottomOf="@+id/expenseDate">
+
+            <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/priceText"
-                android:textSize="12sp"/>
+                android:background="@color/white"
+                android:textColorHint="#757575"
+                tools:ignore="TextContrastCheck" />
 
-            <LinearLayout
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/expenseNotes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:hint="@string/notes"
+            app:hintTextColor="@color/black_primary_material"
+            app:layout_constraintEnd_toEndOf="@+id/expensePlace"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/expensePlace"
+            app:layout_constraintTop_toBottomOf="@+id/expensePlace">
+
+            <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:background="@color/white"
+                android:textColorHint="#757575"
+                tools:ignore="TextContrastCheck" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/button_take_photo"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="5dp"
-                    android:text="Take a photo"
-                    />
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/loadPhotoBtn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="5dp"
-                    android:text="Load the price"
-                    />
-            </LinearLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:text="Date:"
-                />
+        <CheckBox
+            android:id="@+id/checkbox_personal_expense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/personal_expense"
+            android:textColor="@color/grey_description"
+            app:layout_constraintStart_toStartOf="@+id/expenseNotes"
+            app:layout_constraintTop_toBottomOf="@+id/expenseNotes" />
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/expenseDate"
-                android:textSize="12sp"/>
+        <Button
+            android:id="@+id/addExpenseBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="128dp"
+            android:layout_marginTop="8dp"
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:text="Place:"
-                />
+            android:layout_marginEnd="128dp"
+            android:layout_marginBottom="24dp"
+            android:contentDescription="@string/load_photo"
+            android:text="@string/add_expense"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/expenseNotes"
+            app:layout_constraintStart_toStartOf="@+id/expenseNotes"
+            app:layout_constraintTop_toBottomOf="@+id/checkbox_personal_expense"
+            tools:ignore="DuplicateSpeakableTextCheck" />
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/expensePlace"
-                android:textSize="12sp"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:text="Notes:"
-                />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/expenseNotes"
-                android:textSize="12sp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <CheckBox
-                    android:id="@+id/checkbox_personal_expense"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Personal Expense" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/addExpenseButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="5dp"
-                    android:text="Add expense"
-
-                    />
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
 
 
 
