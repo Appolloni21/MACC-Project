@@ -128,6 +128,36 @@ class ExpenseList : Fragment() {
         }
 
         //Search View widget
+        searchWidget()
+
+        Log.d(TAG,"Expense list")
+    }
+
+    private fun deleteExpense(expense: Expense) {
+        sharedViewModel.deleteExpense(expense)
+    }
+
+    private fun editExpense(expenseID: String){
+        sharedViewModel.selectExpense(expenseID)
+        val action = ExpenseListDirections.actionExpenseListToEditExpense()
+        view?.findNavController()?.navigate(action)
+    }
+
+
+    private fun filter(text: String?){
+        sharedViewModel.expenses.observe(viewLifecycleOwner) {
+            Log.d(TAG,"filter")
+            val expensesFiltered = it.filter { expense -> expense.name!!.startsWith(text.toString()) }
+            adapter.setExpensesList(expensesFiltered)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun searchWidget(){
         // The usage of an interface lets you inject your own implementation
         val menuHost: MenuHost = requireActivity()
 
@@ -175,31 +205,5 @@ class ExpenseList : Fragment() {
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-
-        Log.d(TAG,"Expense list")
-    }
-
-    private fun deleteExpense(expense: Expense) {
-        sharedViewModel.deleteExpense(expense)
-    }
-
-    private fun editExpense(expenseID: String){
-        sharedViewModel.selectExpense(expenseID)
-        val action = ExpenseListDirections.actionExpenseListToEditExpense()
-        view?.findNavController()?.navigate(action)
-    }
-
-
-    private fun filter(text: String?){
-        sharedViewModel.expenses.observe(viewLifecycleOwner) {
-            Log.d(TAG,"filter")
-            val expensesFiltered = it.filter { expense -> expense.name!!.startsWith(text.toString()) }
-            adapter.setExpensesList(expensesFiltered)
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

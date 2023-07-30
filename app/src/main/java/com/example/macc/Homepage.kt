@@ -24,13 +24,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.macc.adapter.TravelAdapter
 import com.example.macc.databinding.HomepageBinding
 import com.example.macc.model.Travel
+import com.example.macc.utility.UIDialogFragment
 import com.example.macc.utility.UIState
 import com.example.macc.viewmodel.HomepageViewModel
 
 
 private const val TAG = "Homepage Fragment"
 
-class Homepage : Fragment() {
+class Homepage : Fragment(){
 
     private var _binding: HomepageBinding? = null
     private val binding get() = _binding!!
@@ -96,6 +97,40 @@ class Homepage : Fragment() {
         }
 
         //Search View widget
+        searchWidget()
+
+        Log.d(TAG, "Homepage")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+
+    private fun deleteTravel(travel: Travel) {
+        val newFragment = UIDialogFragment(travel.name!!)
+        newFragment.show(requireActivity().supportFragmentManager, "UIDialog")
+        //sharedViewModel.deleteTravel(travel)
+        sharedViewModel.selectTravelToDelete(travel)
+    }
+
+    private fun actionToExpenseList(travelID: String){
+        //Action from homepage to expense list page
+        sharedViewModel.selectTravel(travelID)
+        val action = HomepageDirections.actionHomepageToExpenseList()
+        view?.findNavController()?.navigate(action)
+    }
+
+    private fun filter(text: String?){
+        sharedViewModel.travelArrayList.observe(viewLifecycleOwner) {
+            Log.d(TAG,"filter")
+            val travelsFiltered = it.filter { travel -> travel.name!!.startsWith(text.toString()) }
+            adapter.setTravelsList(travelsFiltered)
+        }
+    }
+
+    private fun searchWidget(){
         // The usage of an interface lets you inject your own implementation
         val menuHost: MenuHost = requireActivity()
 
@@ -147,32 +182,5 @@ class Homepage : Fragment() {
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-
-        Log.d(TAG, "Homepage")
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-
-    private fun deleteTravel(travel: Travel) {
-        sharedViewModel.deleteTravel(travel)
-    }
-
-    private fun actionToExpenseList(travelID: String){
-        //Action from homepage to expense list page
-        sharedViewModel.selectTravel(travelID)
-        val action = HomepageDirections.actionHomepageToExpenseList()
-        view?.findNavController()?.navigate(action)
-    }
-
-    private fun filter(text: String?){
-        sharedViewModel.travelArrayList.observe(viewLifecycleOwner) {
-            Log.d(TAG,"filter")
-            val travelsFiltered = it.filter { travel -> travel.name!!.startsWith(text.toString()) }
-            adapter.setTravelsList(travelsFiltered)
-        }
     }
 }

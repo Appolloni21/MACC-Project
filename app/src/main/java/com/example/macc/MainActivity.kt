@@ -3,17 +3,21 @@ package com.example.macc
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.macc.databinding.ActivityMainBinding
+import com.example.macc.utility.UIDialogFragment
 import com.example.macc.viewmodel.AuthViewModel
+import com.example.macc.viewmodel.HomepageViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), UIDialogFragment.NoticeDialogListener {
     private lateinit var navController: NavController
 
-    private val sharedViewModel: AuthViewModel by viewModels()
+    private val sharedViewModelAuth: AuthViewModel by viewModels()
+    private val sharedViewModelHomepage: HomepageViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -31,6 +35,19 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setupWithNavController(navController)
 
         //val userID = intent.getStringExtra("userID")
-        sharedViewModel.getUserMyProfile()
+        sharedViewModelAuth.getUserMyProfile()
+    }
+
+    // The dialog fragment receives a reference to this Activity through the
+    // Fragment.onAttach() callback, which it uses to call the following methods
+    // defined by the NoticeDialogFragment.NoticeDialogListener interface
+    override fun onDialogPositiveClick(dialog: DialogFragment) {
+        // User touched the dialog's positive button
+        //Toast.makeText(applicationContext, "dialog", Toast.LENGTH_SHORT).show()
+        sharedViewModelHomepage.deleteTravel()
+    }
+
+    override fun onDialogNegativeClick(dialog: DialogFragment) {
+        // User touched the dialog's negative button
     }
 }
