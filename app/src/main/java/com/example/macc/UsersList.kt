@@ -1,5 +1,6 @@
 package com.example.macc
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.macc.LocationService.LocationService
 import com.example.macc.adapter.UserAdapter
 import com.example.macc.databinding.UsersListBinding
 import com.example.macc.viewmodel.HomepageViewModel
@@ -70,7 +72,25 @@ class UsersList : Fragment() {
             }
             true
         }
-    }
+
+        val startbutton = binding.startBtn
+        val stopbutton = binding.stopBtn
+        startbutton.setOnClickListener{
+            Log.d(TAG, "In start")
+            Intent(context, LocationService::class.java).apply {
+                action = LocationService.ACTION_START
+                context?.startService(this)
+            }
+        }
+        stopbutton.setOnClickListener{
+
+            Intent(context, LocationService::class.java).apply {
+                action = LocationService.ACTION_STOP
+                context?.startService(this)
+
+
+        }
+    }}
 
     private fun actionToUserProfile(position: Int){
         val action = UsersListDirections.actionUsersListToUserProfile(position)
