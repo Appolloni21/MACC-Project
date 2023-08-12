@@ -111,5 +111,7 @@
     <string name="recognized_amount_1">Recognized amount:</string>
     <string name="take_the_amount">Take the amount</string>
     <string name="each">Each:</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
 
 </resources>
