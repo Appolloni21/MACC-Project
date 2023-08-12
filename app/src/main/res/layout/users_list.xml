@@ -58,4 +58,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/startBtn"
         app:layout_constraintTop_toBottomOf="@+id/frameLayout_user" />
+
+    <Button
+        android:id="@+id/userpos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="55dp"
+        android:text="UserPos"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/stopBtn"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout_user" />
 </androidx.constraintlayout.widget.ConstraintLayout>
