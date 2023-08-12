@@ -27,7 +27,7 @@ class UsersList : Fragment() {
     private val binding get() = _binding!!
     private val sharedViewModel: HomepageViewModel by activityViewModels()
     private lateinit var recyclerView : RecyclerView
-    lateinit var adapter: UserAdapter
+    private lateinit var adapter: UserAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,24 +73,32 @@ class UsersList : Fragment() {
             true
         }
 
-        val startbutton = binding.startBtn
-        val stopbutton = binding.stopBtn
-        startbutton.setOnClickListener{
+        val startBtn = binding.startBtn
+        val stopBtn = binding.stopBtn
+        startBtn.setOnClickListener{
             Log.d(TAG, "In start")
             Intent(context, LocationService::class.java).apply {
                 action = LocationService.ACTION_START
                 context?.startService(this)
             }
         }
-        stopbutton.setOnClickListener{
+        stopBtn.setOnClickListener{
 
             Intent(context, LocationService::class.java).apply {
                 action = LocationService.ACTION_STOP
                 context?.startService(this)
 
 
+            }
         }
-    }}
+
+        val userPositions = binding.userpos
+        userPositions.setOnClickListener {
+            val action = UsersListDirections.actionUsersListToUserLocations()
+            view.findNavController().navigate(action)
+        }
+
+    }
 
     private fun actionToUserProfile(position: Int){
         val action = UsersListDirections.actionUsersListToUserProfile(position)

@@ -69,6 +69,9 @@
         <action
             android:id="@+id/action_usersList_to_addUser"
             app:destination="@id/addUser" />
+        <action
+            android:id="@+id/action_usersList_to_userLocations"
+            app:destination="@id/userLocations" />
     </fragment>
     <fragment
         android:id="@+id/addTravel"
@@ -124,4 +127,8 @@
         android:name="com.example.macc.EditExpense"
         android:label="EditExpense"
         tools:layout="@layout/edit_expense_page"/>
+    <fragment
+        android:id="@+id/userLocations"
+        android:name="com.example.macc.UserLocations"
+        android:label="UserLocations" />
 </navigation>

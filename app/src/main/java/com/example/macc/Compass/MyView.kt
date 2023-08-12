@@ -1,8 +1,8 @@
 package com.example.macc.Compass
-import android.os.Handler
+//import android.os.Handler
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+//import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.hardware.GeomagneticField
@@ -12,19 +12,19 @@ import android.hardware.SensorEventListener2
 import android.hardware.SensorManager
 import android.location.Location
 import android.util.Log
-import android.view.Display
+//import android.view.Display
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.withRotation
 import com.example.macc.R
-import com.google.gson.Gson
+//import com.google.gson.Gson
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.toRequestBody
+//import okhttp3.OkHttpClient
+//import okhttp3.Request
+//import okhttp3.MediaType.Companion.toMediaType
+//import okhttp3.RequestBody.Companion.toRequestBody
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlinx.coroutines.Dispatchers
@@ -159,7 +159,7 @@ class MyView(context: Context?) : View(context), SensorEventListener2 {
     }
 
     private fun getPositionFromServer(token: String, user_email: String) {
-        GlobalScope.launch {
+        /*GlobalScope.launch {
             val url = "https://androidproject.pythonanywhere.com/get_position"
             val json = """
                 {
@@ -198,7 +198,7 @@ class MyView(context: Context?) : View(context), SensorEventListener2 {
 
 
             //println("Response Body: $responseBody")
-        }
+        }*/
     }
 
 
