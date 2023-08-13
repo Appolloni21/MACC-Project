@@ -18,6 +18,7 @@ import com.example.macc.LocationService.LocationService
 import com.example.macc.adapter.UserAdapter
 import com.example.macc.databinding.UsersListBinding
 import com.example.macc.viewmodel.HomepageViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 private const val TAG = "Users List Fragment"
 

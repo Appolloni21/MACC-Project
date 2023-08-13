@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import android.util.Log
 import com.example.macc.R
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -24,11 +25,16 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 
 class LocationService: Service() {
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private lateinit var locationClient: LocationClient
+
+    var user_email = ""
+    var user_token = ""
+    var user_id = ""
 
     override fun onBind(p0: Intent?): IBinder? {
         return null
@@ -40,6 +46,23 @@ class LocationService: Service() {
             applicationContext,
             LocationServices.getFusedLocationProviderClient(applicationContext)
         )
+        //TODO add handling request to server if fails to get the token
+        //GET TOKEN FROM USER SESSION
+        val mUser = FirebaseAuth.getInstance().currentUser
+        Log.d("USERLOG", mUser.toString())
+        user_email = mUser?.email.toString()
+        user_id=mUser?.uid.toString()
+        mUser!!.getIdToken(true)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    user_token= task.result.token.toString()
+                    if (user_token != null) {
+                        Log.d("TOKENPRINT", user_token)
+                    }
+                } else {
+                    // Handle error -> task.getException();
+                }
+            }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -64,10 +87,17 @@ class LocationService: Service() {
             .catch { e -> e.printStackTrace() }
             .onEach { location ->
                 // here is what happens when a new location is produced
-                //performNetworkRequest("prova", "prova_email.com")
-                val lat = location.latitude.toString()
-                val long = location.longitude.toString()
-                val alt = location.altitude.toString()
+                val lat = location.latitude
+                val long = location.longitude
+                val alt = location.altitude
+                try {
+                    // Call the function that might throw an exception
+                    performNetworkRequest(user_id, user_token, user_email, lat.toFloat(), long.toFloat(), alt.toFloat())
+                } catch (e: Exception) {
+                    // Handle the exception here
+                    println("Unable to contact network: ${e.message}")
+                }
+
                 val updatedNotification = notification.setContentText(
                     "Location: ($lat, $long, $alt)"
                 )
@@ -88,20 +118,19 @@ class LocationService: Service() {
         serviceScope.cancel()
     }
 
-    fun performNetworkRequest(token: String, user_email: String) {
+    fun performNetworkRequest (user_id: String, token: String, user_email: String, latitude : Float , longitude : Float, altitude : Float) {
         GlobalScope.launch {
-            val url = "https://androidProject.pythonanywhere.com/update_position" // Replace with your desired URL
-            val json = """
-                {
-                    "token": "$token",
-                    "user_id": "value2",
-                    "position": "value_pos",
-                    "user_email": "$user_email"
-                }
-            """.trimIndent()
+            val url = "https://androidproject.pythonanywhere.com/update_position"
+            val json = JSONObject()
+            json.put("user_id", "$user_id")
+            json.put("token", "$token")
+            json.put("user_email", "$user_email")
+            json.put("latitude", "$latitude")
+            json.put("longitude", "$longitude")
+            json.put("altitude", "$altitude")
 
             val mediaType = "application/json; charset=utf-8".toMediaType()
-            val requestBody = json.toRequestBody(mediaType)
+            val requestBody = json.toString().toRequestBody(mediaType)
 
             val client = OkHttpClient()
 
