@@ -21,8 +21,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.example.macc.databinding.AddTravelPageBinding
-import com.example.macc.viewmodel.HomepageViewModel
 import com.example.macc.utility.UIState
+import com.example.macc.viewmodel.HomepageViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -80,11 +80,17 @@ class AddTravel : Fragment() {
 
         //Date picker per data di inizio e fine viaggio
         startDate.setOnClickListener {
-            DatePickerDialog(requireContext(), picker(startDate,myCalendar), myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show()
+            val dpdStart = DatePickerDialog(requireContext(), picker(startDate,myCalendar),
+                myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH))
+            dpdStart.datePicker.minDate = myCalendar.timeInMillis
+            dpdStart.show()
         }
 
         endDate.setOnClickListener{
-            DatePickerDialog(requireContext(), picker(endDate,myCalendar), myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show()
+            val dpdEnd = DatePickerDialog(requireContext(), picker(endDate,myCalendar),
+                myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH))
+            //dpdEnd.datePicker.minDate = updateFormatMillis(startDate.text.toString())
+            dpdEnd.show()
         }
 
 
