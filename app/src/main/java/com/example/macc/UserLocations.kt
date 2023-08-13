@@ -1,11 +1,12 @@
 package com.example.macc
 
-import android.content.Context
 import android.content.Context.SENSOR_SERVICE
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.os.Bundle
-import androidx.core.content.ContextCompat.getSystemService
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.macc.Compass.MyView
 
@@ -14,16 +15,24 @@ class UserLocations : Fragment() {
 
     lateinit var view : MyView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        //view = MyView(this)
-        //context.setContentView(view)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        view = MyView(context)
+        return view
     }
+
+    /*override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        view = MyView(context)
+        //setContentView(view)
+    }*/
 
     override fun onResume() {
         super.onResume()
         //Register the rotation vector sensor to the listener
-        val sm = context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        val sm = context?.getSystemService(SENSOR_SERVICE) as SensorManager
         sm.registerListener(
             view,
             sm.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
