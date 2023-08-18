@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.macc.LocationService.LocationService
 import com.example.macc.adapter.UserAdapter
 import com.example.macc.databinding.UsersListBinding
+import com.example.macc.utility.OnActivityStateChanged
 import com.example.macc.viewmodel.HomepageViewModel
-import com.google.firebase.auth.FirebaseAuth
 
 private const val TAG = "Users List Fragment"
 
@@ -30,6 +30,8 @@ class UsersList : Fragment() {
     private lateinit var recyclerView : RecyclerView
     private lateinit var adapter: UserAdapter
 
+    var onActivityStateChanged: OnActivityStateChanged? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,12 +41,13 @@ class UsersList : Fragment() {
         val view: View = binding.root
 
         recyclerView = binding.recyclerViewUser
-        adapter = UserAdapter(::actionToUserProfile)
+        adapter = UserAdapter(::actionToUserProfile, requireContext())
         recyclerView.adapter = adapter
 
         sharedViewModel.users.observe(viewLifecycleOwner){
             if(it.isNotEmpty()){
                 adapter.setUsersList(it)
+                onActivityStateChanged  = adapter.registerActivityState()
             }
         }
 
@@ -88,8 +91,6 @@ class UsersList : Fragment() {
             Intent(context, LocationService::class.java).apply {
                 action = LocationService.ACTION_STOP
                 context?.startService(this)
-
-
             }
         }
 
@@ -99,6 +100,22 @@ class UsersList : Fragment() {
             view.findNavController().navigate(action)
         }
 
+    }
+
+    override fun onPause() {
+        if(onActivityStateChanged != null){
+            Log.d(TAG,"onPause")
+            //onActivityStateChanged?.onPaused()
+        }
+        super.onPause()
+    }
+
+    override fun onResume() {
+        if(onActivityStateChanged != null){
+            Log.d(TAG,"onResume")
+        //onActivityStateChanged?.onResumed()
+        }
+        super.onResume()
     }
 
     private fun actionToUserProfile(position: Int){

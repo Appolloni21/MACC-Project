@@ -9,27 +9,34 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import com.example.macc.Compass.MyView
+import com.example.macc.databinding.UserLocationsBinding
 
 
 class UserLocations : Fragment() {
 
-    //lateinit var view : MyView
-     lateinit var view2: View
-     lateinit var customView : MyView
+
+    lateinit var customView : MyView
+
+    private var _binding: UserLocationsBinding? = null
+    private val binding get() = _binding!!
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        //view = MyView(context)
-        //return view
+        _binding = UserLocationsBinding.inflate(inflater, container, false)
+        val view: View = binding.root
 
-        view2 = inflater.inflate(R.layout.user_locations, container, false)
+        customView = binding.drawingView
 
-        return view2
+        return view
     }
 
     /*override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,10 +47,15 @@ class UserLocations : Fragment() {
     @SuppressLint("ResourceType")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        customView = view2.findViewById<MyView>(R.id.drawingView)
-        if (customView == null) { Log.d("FAIL", "fail"); }
-        activity?.setContentView(R.id.drawingView)
 
+        if (customView == null) { Log.d("FAIL", "fail"); }
+        //activity?.setContentView(R.id.drawingView)
+
+        //Toolbar with nav component
+        val navController = findNavController()
+        val appBarConfiguration = AppBarConfiguration(navController.graph)
+        val toolbar: Toolbar = binding.toolbarUserLocation.toolbar
+        toolbar.setupWithNavController(navController, appBarConfiguration)
     }
 
 

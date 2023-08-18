@@ -119,8 +119,20 @@
         app:layout_constraintStart_toStartOf="@+id/sign_up_btn"
         app:layout_constraintTop_toBottomOf="@+id/sign_up_btn" />
 
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button_google"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="120dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sign_in_with" />
 
-    <LinearLayout
+
+
+    <!--<LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="80dp"
@@ -159,7 +171,7 @@
             android:layout_weight="1"
             android:contentDescription="@string/twitter_logo"
             app:srcCompat="@drawable/twitter" />
-    </LinearLayout>
+    </LinearLayout>-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

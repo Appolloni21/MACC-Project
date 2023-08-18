@@ -113,7 +113,7 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
         with(canvas) {
             drawColor(Color.YELLOW)
             val originalImageSize = size // assuming size is the size of the bitmap
-            val numberOfBitmaps = 8
+            val numberOfBitmaps = 1
             val scaleFactor = 0.5f // Adjust this scaling factor as needed
             val imageSize = originalImageSize * scaleFactor
             val bitmapsPerRow = 2 // Number of bitmaps per row
