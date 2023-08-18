@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -18,6 +19,10 @@ import com.example.macc.utility.UIDialogFragment
 import com.example.macc.viewmodel.AuthViewModel
 import com.example.macc.viewmodel.HomepageViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+
+private const val TAG = "Main Activity"
 
 class MainActivity : AppCompatActivity(), UIDialogFragment.NoticeDialogListener {
     private lateinit var navController: NavController
@@ -51,6 +56,8 @@ class MainActivity : AppCompatActivity(), UIDialogFragment.NoticeDialogListener 
             ),
             0
         )
+
+        Log.d(TAG,"${Firebase.auth.currentUser}")
 
 
         //NOTIFICATION

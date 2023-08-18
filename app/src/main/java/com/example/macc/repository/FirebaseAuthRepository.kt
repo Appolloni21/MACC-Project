@@ -6,8 +6,11 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.macc.model.User
 import com.example.macc.utility.UIState
+import com.google.android.gms.auth.api.identity.SignInCredential
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -63,6 +66,41 @@ class FirebaseAuthRepository {
             }
         }
 
+    suspend fun signUpUserWithGoogle(credential: SignInCredential): String =
+        withContext(Dispatchers.IO){
+            try {
+                val idToken = credential.googleIdToken
+                val name = credential.givenName
+                val surname = credential.familyName
+                val nickname = credential.displayName
+                val email = credential.id
+                val avatar = credential.profilePictureUri!!.toString()
+                val description = ""
+                val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
+
+                // Initialize Firebase Auth
+                auth = Firebase.auth
+
+                //Prima lo facciamo loggare altrimenti non abbiamo i permessi per scrivere e leggere sul RealtimeDB
+                val result = auth.signInWithCredential(firebaseCredential).await()
+                val firebaseUser: FirebaseUser = result.user!!
+                val userUid:String = firebaseUser.uid
+
+                //register the user of Firebase Authenticator also on the Realtime Database
+                val user = User(name,surname,nickname,description,email,avatar,null,null)
+                databaseReference = Firebase.database.getReference("users")
+                databaseReference.child(userUid).setValue(user).await()
+
+                Log.d(TAG, "signUpUserWithGoogle: success")
+                UIState.SUCCESS
+
+            } catch(e: Exception){
+                Log.d(TAG,"signUpUserWithGoogle exception: $e")
+                UIState.FAILURE
+
+            }
+        }
+
 
     suspend fun logInUser(email: String, password: String):String =
         withContext(Dispatchers.IO){
@@ -81,6 +119,26 @@ class FirebaseAuthRepository {
                 UIState.FAILURE
             }
         }
+
+    suspend fun logInUserWithGoogle(firebaseCredential: AuthCredential):String =
+        withContext(Dispatchers.IO){
+            try {
+                // Initialize Firebase Auth
+                auth = Firebase.auth
+
+                //Log in with google credentials
+                auth.signInWithCredential(firebaseCredential).await()
+
+                Log.d(TAG,"logInUserWithGoogle: success")
+                UIState.SUCCESS
+
+            } catch(e: Exception){
+                Log.d(TAG,"logInUserWithGoogle exception: $e")
+                UIState.FAILURE
+            }
+        }
+
+
 
     suspend fun logOutUser():String =
         withContext(Dispatchers.IO){
@@ -176,6 +234,37 @@ class FirebaseAuthRepository {
             } catch(e: Exception){
                 Log.d(TAG, "changePasswordUser: failure")
                 UIState.FAILURE
+            }
+        }
+
+    suspend fun checkGoogleUser(email: String): String =
+        withContext(Dispatchers.IO){
+            try {
+                // Initialize Firebase Auth
+                auth = Firebase.auth
+
+                val signInMethods = auth.fetchSignInMethodsForEmail(email).await()
+
+                val findGoogleMethod = signInMethods.signInMethods?.find {
+                    it.equals("google.com")
+                }
+
+                if(signInMethods.signInMethods!!.isNotEmpty() && findGoogleMethod?.isNotEmpty() == true){
+                    Log.d(TAG,"checkGoogleUser: success")
+                    return@withContext UIState.WARN_101
+                }
+
+                if(signInMethods.signInMethods!!.isNotEmpty()){
+                    Log.d(TAG,"checkGoogleUser: success")
+                    return@withContext UIState.WARN_103
+                }
+
+                Log.d(TAG,"checkGoogleUser: success")
+                UIState.WARN_102
+
+            } catch(e: Exception){
+                Log.d(TAG,"checkGoogleUser exception: $e")
+                UIState.FAIL_104
             }
         }
 }

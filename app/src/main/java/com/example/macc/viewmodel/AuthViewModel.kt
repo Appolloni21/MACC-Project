@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.macc.model.User
 import com.example.macc.repository.FirebaseAuthRepository
+import com.google.android.gms.auth.api.identity.SignInCredential
+import com.google.firebase.auth.AuthCredential
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -32,9 +34,23 @@ class AuthViewModel: ViewModel() {
         }
     }
 
+    fun signUpUserWithGoogle(credential: SignInCredential){
+        viewModelScope.launch(Dispatchers.Main) {
+            val state = repository.signUpUserWithGoogle(credential)
+            _uiState.postValue(state)
+        }
+    }
+
     fun logInUser(email: String, password: String){
         viewModelScope.launch(Dispatchers.Main) {
             val state = repository.logInUser(email, password)
+            _uiState.postValue(state)
+        }
+    }
+
+    fun logInUserWithGoogle(firebaseCredential: AuthCredential){
+        viewModelScope.launch(Dispatchers.Main) {
+            val state = repository.logInUserWithGoogle(firebaseCredential)
             _uiState.postValue(state)
         }
     }
@@ -69,6 +85,13 @@ class AuthViewModel: ViewModel() {
     fun changePasswordUser(currentPassword: String, newPassword: String){
         viewModelScope.launch(Dispatchers.Main){
             val state = repository.changePasswordUser(currentPassword, newPassword)
+            _uiState.postValue(state)
+        }
+    }
+
+    fun checkGoogleUser(email: String) {
+        viewModelScope.launch(Dispatchers.Main){
+            val state = repository.checkGoogleUser(email)
             _uiState.postValue(state)
         }
     }
