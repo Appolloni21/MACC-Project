@@ -11,6 +11,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener2
 import android.hardware.SensorManager
 import android.location.Location
+import android.util.AttributeSet
 import android.util.Log
 //import android.view.Display
 import android.view.View
@@ -30,6 +31,9 @@ import kotlin.math.atan2
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlin.math.ceil
+import kotlin.math.cos
+import kotlin.math.sin
 
 data class ResponseData(val altitude: Double, val email: String, val latitude: Double, val longitude: Double, val value: Double) {}
 
@@ -37,7 +41,7 @@ data class ResponseData(val altitude: Double, val email: String, val latitude: D
 
 const val TAG = "MYDEBUG"
 const val TAG2 = "POST"
-class MyView(context: Context?) : View(context), SensorEventListener2 {
+class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), SensorEventListener2 {
 
     var size = 2f  //Absolute size of the compass in inches
     val a = 0.5f //Low-pass filter parameter, higher is smoother
@@ -61,6 +65,7 @@ class MyView(context: Context?) : View(context), SensorEventListener2 {
 
     init {
         // GET TARGET LOCATION FROM THE SERVER
+        Log.i("VIEWWW", "provalog")
 
         targetLocation = Location("target-location") // provider name is unnecessary
 
@@ -98,13 +103,43 @@ class MyView(context: Context?) : View(context), SensorEventListener2 {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         Log.i(TAG,"drawing"+System.currentTimeMillis())
-        with(canvas) {
+        /*with(canvas) {
             drawColor(Color.YELLOW)
             withRotation (-rotationangle,width/2f,height/2f) {
-                //draw bitmap instead of compass
                 drawBitmap(compass, (width - size) / 2f, (height - size) / 2f, null)
             }
+        }*/
+
+        with(canvas) {
+            drawColor(Color.YELLOW)
+            val originalImageSize = size // assuming size is the size of the bitmap
+            val numberOfBitmaps = 8
+            val scaleFactor = 0.5f // Adjust this scaling factor as needed
+            val imageSize = originalImageSize * scaleFactor
+            val bitmapsPerRow = 2 // Number of bitmaps per row
+            val numberOfRows = ceil(numberOfBitmaps.toFloat() / bitmapsPerRow).toInt()
+            val horizontalSpacing = width / (bitmapsPerRow + 1)
+
+            for (row in 0 until numberOfRows) {
+                for (col in 0 until bitmapsPerRow) {
+                    val totalIndex = row * bitmapsPerRow + col
+                    if (totalIndex >= numberOfBitmaps) {
+                        break
+                    }
+
+                    val x = horizontalSpacing * (col + 1) - imageSize / 2
+                    val y = row * imageSize
+                    val centerX = x + (imageSize / 2)
+                    val centerY = y + (imageSize / 2)
+                    withRotation(-rotationangle, centerX.toFloat(), centerY.toFloat()) {
+                        drawBitmap(compass, x.toFloat(), y.toFloat(), null)
+                    }
+                }
+            }
         }
+
+
+
     }
 
 
