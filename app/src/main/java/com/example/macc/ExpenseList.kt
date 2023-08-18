@@ -78,7 +78,7 @@ class ExpenseList : Fragment() {
         recyclerView.setHasFixedSize(true)
 
         //For the Search Widget
-        (activity as AppCompatActivity).setSupportActionBar(binding.toolbar.toolbar)
+        (activity as AppCompatActivity).setSupportActionBar(binding.toolbarExpListPage.toolbar)
 
         return view
     }
@@ -88,7 +88,7 @@ class ExpenseList : Fragment() {
         //Toolbar with nav component
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
-        val toolbar: Toolbar = binding.toolbar.toolbar
+        val toolbar: Toolbar = binding.toolbarExpListPage.toolbar
         toolbar.setupWithNavController(navController, appBarConfiguration)
 
         toolbar.setOnMenuItemClickListener {
@@ -168,15 +168,15 @@ class ExpenseList : Fragment() {
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 // Add menu items here
-                menuInflater.inflate(R.menu.homepage_toolbar, menu)
+                menuInflater.inflate(R.menu.expense_list_toolbar, menu)
                 // Get the SearchView and set the searchable configuration
                 val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager
-                (menu.findItem(R.id.app_bar_search).actionView as SearchView).apply {
+                (menu.findItem(R.id.app_bar_search_expense).actionView as SearchView).apply {
                     // Assumes current activity is the searchable activity
                     setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
                     setIconifiedByDefault(true) // Do not iconify the widget; expand it by default
                     isSubmitButtonEnabled = true
-                    queryHint = "Search travel..."
+                    queryHint = "Search expense..."
                     setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                         override fun onQueryTextSubmit(text: String): Boolean {
                             Log.d(TAG,"onQueryTextSubmit p0: $text")
