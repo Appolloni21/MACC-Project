@@ -35,6 +35,9 @@ class HomepageViewModel : ViewModel() {
     private val _expenseSelected: MutableLiveData<Expense> = MutableLiveData()
     val expenseSelected: LiveData<Expense> = _expenseSelected
 
+    private val _expenseToDelete: MutableLiveData<Expense> = MutableLiveData()
+    val expenseToDelete: LiveData<Expense> = _expenseToDelete
+
     private val _users: MutableLiveData<ArrayList<User>> = MutableLiveData()
     val users: LiveData<ArrayList<User>> = _users
 
@@ -105,6 +108,10 @@ class HomepageViewModel : ViewModel() {
         repository.getSelectedExpense(expenseID,_expenseSelected)
     }
 
+    fun selectExpenseToDelete(expense: Expense){
+        _expenseToDelete.postValue(expense)
+    }
+
     fun addExpense(expenseName:String, expenseAmount: String , expenseDate: String, expensePlace:String, expenseNote: String, expenseCheck: Boolean){
         viewModelScope.launch(Dispatchers.Main) {
             val travelID = _travelSelected.value?.travelID.toString()
@@ -113,9 +120,9 @@ class HomepageViewModel : ViewModel() {
         }
     }
 
-    fun deleteExpense(expense: Expense){
+    fun deleteExpense(){
         viewModelScope.launch(Dispatchers.Main) {
-            val state = repository.deleteExpense(expense)
+            val state = repository.deleteExpense(expenseToDelete.value!!)
             _uiState.postValue(state)
         }
     }

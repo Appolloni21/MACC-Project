@@ -28,8 +28,11 @@ import com.bumptech.glide.Glide
 import com.example.macc.adapter.ExpenseAdapter
 import com.example.macc.databinding.ExpenseListPageBinding
 import com.example.macc.model.Expense
+import com.example.macc.utility.UIDialogFragment
 import com.example.macc.utility.UIState
 import com.example.macc.viewmodel.HomepageViewModel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 
 private const val TAG = "Expense List Fragment"
@@ -53,6 +56,7 @@ class ExpenseList : Fragment() {
         recyclerView = binding.recyclerViewExpense
         adapter = ExpenseAdapter(::deleteExpense, ::editExpense)
         recyclerView.adapter = adapter
+        val toolbar: Toolbar = binding.toolbarExpListPage.toolbar
 
         sharedViewModel.travelSelected.observe(viewLifecycleOwner){
             if(it != null){
@@ -63,6 +67,10 @@ class ExpenseList : Fragment() {
 
                 //Per passare il numero di utenti nel viaggio all'adapter
                 adapter.setTravelMembers(it.members?.size!!)
+
+                if(Firebase.auth.currentUser?.uid != it.owner){
+                    toolbar.menu.removeItem(R.id.action_edit)
+                }
             }
         }
 
@@ -90,6 +98,7 @@ class ExpenseList : Fragment() {
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         val toolbar: Toolbar = binding.toolbarExpListPage.toolbar
         toolbar.setupWithNavController(navController, appBarConfiguration)
+
 
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
@@ -134,7 +143,9 @@ class ExpenseList : Fragment() {
     }
 
     private fun deleteExpense(expense: Expense) {
-        sharedViewModel.deleteExpense(expense)
+        val newFragment = UIDialogFragment(expense.name!!)
+        newFragment.show(requireActivity().supportFragmentManager, "UIDialog - deleteExpense")
+        sharedViewModel.selectExpenseToDelete(expense)
     }
 
     private fun editExpense(expenseID: String){
@@ -169,6 +180,13 @@ class ExpenseList : Fragment() {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 // Add menu items here
                 menuInflater.inflate(R.menu.expense_list_toolbar, menu)
+
+                /*if(Firebase.auth.currentUser?.uid == null){
+
+                }
+                menu.removeItem(R.id.action_edit)*/
+
+
                 // Get the SearchView and set the searchable configuration
                 val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager
                 (menu.findItem(R.id.app_bar_search_expense).actionView as SearchView).apply {

@@ -110,7 +110,7 @@ class Homepage : Fragment(){
 
     private fun deleteTravel(travel: Travel) {
         val newFragment = UIDialogFragment(travel.name!!)
-        newFragment.show(requireActivity().supportFragmentManager, "UIDialog")
+        newFragment.show(requireActivity().supportFragmentManager, "UIDialog - deleteTravel")
         //sharedViewModel.deleteTravel(travel)
         sharedViewModel.selectTravelToDelete(travel)
     }

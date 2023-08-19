@@ -19,8 +19,6 @@ import com.example.macc.utility.UIDialogFragment
 import com.example.macc.viewmodel.AuthViewModel
 import com.example.macc.viewmodel.HomepageViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 private const val TAG = "Main Activity"
 
@@ -57,9 +55,6 @@ class MainActivity : AppCompatActivity(), UIDialogFragment.NoticeDialogListener 
             0
         )
 
-        Log.d(TAG,"${Firebase.auth.currentUser}")
-
-
         //NOTIFICATION
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
@@ -79,10 +74,18 @@ class MainActivity : AppCompatActivity(), UIDialogFragment.NoticeDialogListener 
     override fun onDialogPositiveClick(dialog: DialogFragment) {
         // User touched the dialog's positive button
         //Toast.makeText(applicationContext, "dialog", Toast.LENGTH_SHORT).show()
-        sharedViewModelHomepage.deleteTravel()
+        when(dialog.tag){
+            "UIDialog - deleteTravel" ->{
+                sharedViewModelHomepage.deleteTravel()
+            }
+            "UIDialog - deleteExpense"->{
+                sharedViewModelHomepage.deleteExpense()
+            }
+        }
     }
 
     override fun onDialogNegativeClick(dialog: DialogFragment) {
         // User touched the dialog's negative button
+        Log.d(TAG,"${dialog.tag}")
     }
 }

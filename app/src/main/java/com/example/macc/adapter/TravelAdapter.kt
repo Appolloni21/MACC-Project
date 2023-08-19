@@ -6,10 +6,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.macc.databinding.ItemTravelBinding
 import com.example.macc.model.Travel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 private const val TAG = "Travel Adapter"
 
@@ -52,6 +55,10 @@ class TravelAdapter(private val onDeleteCallback: (Travel) -> Unit,
 
         holder.deleteIcon.setOnClickListener{
             onDeleteCallback(item)
+        }
+
+        if(Firebase.auth.currentUser?.uid != item.owner){
+            holder.deleteIcon.isVisible = false
         }
     }
 
