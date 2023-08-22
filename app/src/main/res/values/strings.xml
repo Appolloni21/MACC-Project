@@ -121,5 +121,9 @@
     <string name="web_client_id2">434440575685-h8ri5ifnc2qjr1be6h77bitsq8chq630.apps.googleusercontent.com</string>
     <string name="android_client_id">434440575685–8tjgc86omnita0a184cu2hu561vi0lcm.apps.googleusercontent.com</string>
     <string name="userpos">UserPos</string>
+    <string name="day_text">Day:</string>
+    <string name="select_dates">Select dates</string>
+    <string name="type">Type</string>
+    <string name="tot_dots">Tot:</string>
 
 </resources>

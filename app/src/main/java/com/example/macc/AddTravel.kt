@@ -1,8 +1,5 @@
 package com.example.macc
 
-
-
-import android.app.DatePickerDialog
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
@@ -10,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,6 +19,9 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.macc.databinding.AddTravelPageBinding
 import com.example.macc.utility.UIState
 import com.example.macc.viewmodel.HomepageViewModel
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointForward
+import com.google.android.material.datepicker.MaterialDatePicker
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -75,22 +74,28 @@ class AddTravel : Fragment() {
 
         val startDate = binding.startDate
         val endDate = binding.endDate
-        val myCalendar = Calendar.getInstance()
-
+        val selectDatesBtn = binding.selectDatesBtn
 
         //Date picker per data di inizio e fine viaggio
-        startDate.setOnClickListener {
-            val dpdStart = DatePickerDialog(requireContext(), picker(startDate,myCalendar),
-                myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH))
-            dpdStart.datePicker.minDate = myCalendar.timeInMillis
-            dpdStart.show()
+        val constraintsBuilder =
+            CalendarConstraints.Builder()
+                .setValidator(DateValidatorPointForward.now())
+
+        val dateRangePicker =
+            MaterialDatePicker.Builder.dateRangePicker()
+                .setTitleText("Select dates")
+                .setCalendarConstraints(constraintsBuilder.build())
+                .build()
+
+        dateRangePicker.addOnPositiveButtonClickListener {
+            val start = updateFormat1(dateRangePicker.selection!!.first)
+            val end = updateFormat1(dateRangePicker.selection!!.second)
+            startDate.setText(start)
+            endDate.setText(end)
         }
 
-        endDate.setOnClickListener{
-            val dpdEnd = DatePickerDialog(requireContext(), picker(endDate,myCalendar),
-                myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH))
-            //dpdEnd.datePicker.minDate = updateFormatMillis(startDate.text.toString())
-            dpdEnd.show()
+        selectDatesBtn.setOnClickListener {
+            dateRangePicker.show(requireActivity().supportFragmentManager, TAG)
         }
 
 
@@ -149,22 +154,17 @@ class AddTravel : Fragment() {
         _binding = null
     }
 
-
-    private fun picker(editText: EditText, myCalendar: Calendar):  DatePickerDialog.OnDateSetListener{
-        val picker = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-            myCalendar.set(Calendar.YEAR, year)
-            myCalendar.set(Calendar.MONTH, month)
-            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            editText.setText(updateFormat(myCalendar))
-        }
-        return picker
-    }
-
-    private fun updateFormat(myCalendar: Calendar): String {
+    /*private fun updateFormat(myCalendar: Calendar): String {
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.ITALY)
         return sdf.format(myCalendar.time)
-    }
+    }*/
 
+    private fun updateFormat1(milliSeconds: Long): String{
+        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.ITALY)
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = milliSeconds
+        return sdf.format(calendar.time)
+    }
     private fun makeToast(msg:String){
         Toast.makeText(
             context,

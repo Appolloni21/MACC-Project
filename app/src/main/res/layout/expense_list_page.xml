@@ -62,27 +62,18 @@
     </com.google.android.material.card.MaterialCardView>
 
     <TextView
-        android:id="@+id/day_number"
+        android:id="@+id/day_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/day_1"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="28dp"
+        android:text="@string/day_text"
         android:textColor="@color/white"
         android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/day_spinner"
         app:layout_constraintHorizontal_bias="0.219"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
-
-    <ImageView
-        android:id="@+id/dropdown_arrow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/dropdown_arrow"
-        app:layout_constraintStart_toEndOf="@+id/day_number"
-        app:layout_constraintTop_toBottomOf="@+id/materialCardView"
-        app:srcCompat="@drawable/ic_baseline_arrow_drop_down_24" />
 
     <FrameLayout
         android:id="@+id/frameLayout_expense"
@@ -94,7 +85,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/day_number"
+        app:layout_constraintTop_toBottomOf="@+id/extended_fab"
         tools:context=".MainActivity">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -131,6 +122,18 @@
         app:icon="@drawable/ic_baseline_group_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.969"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
+
+    <Spinner
+        android:id="@+id/day_spinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="26dp"
+        android:layout_marginEnd="180dp"
+        android:popupBackground="@color/black_light_material"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
 

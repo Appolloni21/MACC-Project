@@ -10,10 +10,13 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.net.ParseException
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -33,11 +36,15 @@ import com.example.macc.utility.UIState
 import com.example.macc.viewmodel.HomepageViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 
 private const val TAG = "Expense List Fragment"
 
-class ExpenseList : Fragment() {
+class ExpenseList : Fragment(), AdapterView.OnItemSelectedListener {
 
     private var _binding: ExpenseListPageBinding? = null
     private val binding get() = _binding!!
@@ -71,6 +78,22 @@ class ExpenseList : Fragment() {
                 if(Firebase.auth.currentUser?.uid != it.owner){
                     toolbar.menu.removeItem(R.id.action_edit)
                 }
+
+                val travelDays = getDatesBetween(it.startDate.toString(),it.endDate.toString())
+
+                //Spinner for selecting days
+                val daySpinner = binding.daySpinner
+                // Create an ArrayAdapter using the string array and a default spinner layout
+                ArrayAdapter(requireContext(),
+                    android.R.layout.simple_spinner_item, travelDays)
+                    .also { adapter ->
+                        // Specify the layout to use when the list of choices appears
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                        // Apply the adapter to the spinner
+                        daySpinner.adapter = adapter
+                    }
+                daySpinner.onItemSelectedListener = this
+
             }
         }
 
@@ -163,6 +186,32 @@ class ExpenseList : Fragment() {
         }
     }
 
+    private fun getDatesBetween(startDate: String, endDate: String): List<String>{
+        val dates = ArrayList<String>()
+        val input = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        var date1: Date? = null
+        var date2: Date? = null
+        try
+        {
+            date1 = input.parse(startDate)
+            date2 = input.parse(endDate)
+        }
+        catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        val cal1 = Calendar.getInstance()
+        cal1.time = date1
+        val cal2 = Calendar.getInstance()
+        cal2.time = date2
+        while (!cal1.after(cal2))
+        {
+            val output = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            dates.add(output.format(cal1.time))
+            cal1.add(Calendar.DATE, 1)
+        }
+        return dates
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -224,4 +273,22 @@ class ExpenseList : Fragment() {
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
+
+    override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
+        // An item was selected. You can retrieve the selected item using
+        // parent.getItemAtPosition(pos)
+        val date = parent.getItemAtPosition(pos).toString()
+        sharedViewModel.expenses.observe(viewLifecycleOwner){ expenses ->
+            if(expenses != null){
+                val expensesFiltered = expenses.filter { expense -> expense.date.equals(date) }
+                adapter.setExpensesList(expensesFiltered)
+            }
+        }
+
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>) {
+        // Another interface callback
+    }
+
 }

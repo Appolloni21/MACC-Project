@@ -117,17 +117,17 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="256dp"
+        android:autofillHints=""
         android:background="@color/white"
+        android:focusable="false"
         android:hint="@string/start_date"
         android:inputType="date"
         android:minHeight="48dp"
-        android:focusable="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/destination"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/select_dates_btn" />
 
     <EditText
         android:id="@+id/endDate"
@@ -135,18 +135,18 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="86dp"
+        android:autofillHints=""
         android:background="@color/white"
+        android:focusable="false"
         android:hint="@string/end_date"
         android:inputType="date"
         android:minHeight="48dp"
         android:textColorHint="#757575"
-        android:focusable="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/startDate"
-        app:layout_constraintTop_toBottomOf="@+id/destination"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/select_dates_btn" />
 
 
     <Button
@@ -163,7 +163,18 @@
         app:layout_constraintTop_toBottomOf="@+id/startDate"
         tools:ignore="DuplicateSpeakableTextCheck" />
 
-
+    <Button
+        android:id="@+id/select_dates_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="220dp"
+        android:text="@string/select_dates"
+        app:icon="@drawable/baseline_calendar_month_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/destination" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

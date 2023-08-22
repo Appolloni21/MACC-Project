@@ -20,6 +20,7 @@ import com.example.macc.utility.UIState
 import com.example.macc.viewmodel.HomepageViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 private const val TAG = "Edit Expense Fragment"
@@ -65,11 +66,20 @@ class EditExpense : Fragment() {
         val expenseDateShow = binding.editExpenseDate
         val myCalendar = Calendar.getInstance()
 
+        sharedViewModel.travelSelected.observe(viewLifecycleOwner) {
+            if(it != null){
+                //Date picker
+                val dpd = DatePickerDialog(requireContext(), picker(expenseDateShow,myCalendar), myCalendar.get(Calendar.YEAR), myCalendar.get(
+                    Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH))
+                val startDate = dateToMillis(it.startDate.toString())
+                val endDate = dateToMillis(it.endDate.toString())
+                dpd.datePicker.minDate = startDate
+                dpd.datePicker.maxDate = endDate
 
-        //Date picker
-        expenseDateShow.setOnClickListener {
-            DatePickerDialog(requireContext(), picker(expenseDateShow,myCalendar), myCalendar.get(Calendar.YEAR), myCalendar.get(
-                Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show()
+                expenseDateShow.setOnClickListener {
+                    dpd.show()
+                }
+            }
         }
 
         val saveButton = binding.editExpenseSaveBtn
@@ -141,5 +151,11 @@ class EditExpense : Fragment() {
     private fun updateFormat(myCalendar: Calendar): String {
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.ITALY)
         return sdf.format(myCalendar.time)
+    }
+
+    private fun dateToMillis(myDate: String): Long {
+        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.ITALY)
+        val data: Date? = sdf.parse(myDate)
+        return data!!.time
     }
 }
