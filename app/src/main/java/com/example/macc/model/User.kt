@@ -8,6 +8,7 @@ data class User(
     var email:String?=null,
     var avatar:String?=null,
     var trips: Map<String,Boolean> ?= null,
-    var expenses: Map<String,Boolean>?= null
+    var expenses: Map<String,Boolean>?= null,
+    var userID: String?=null
 ) {
 }

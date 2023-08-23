@@ -75,14 +75,31 @@ class ExpenseList : Fragment(), AdapterView.OnItemSelectedListener {
                 //Per passare il numero di utenti nel viaggio all'adapter
                 adapter.setTravelMembers(it.members?.size!!)
 
-                if(Firebase.auth.currentUser?.uid != it.owner){
-                    toolbar.menu.removeItem(R.id.action_edit)
+                toolbar.setOnMenuItemClickListener {menu ->
+                    when (menu.itemId) {
+                        R.id.action_edit -> {
+                            if(Firebase.auth.currentUser?.uid != it.owner){
+                                Toast.makeText(context, "You can't perform edit, you are not the owner of this travel", Toast.LENGTH_LONG).show()
+                            }else{
+                                val action = ExpenseListDirections.actionExpenseListToEditTravel()
+                                view.findNavController().navigate(action)
+                            }
+                        }
+                        R.id.action_exit ->{
+                            if(Firebase.auth.currentUser?.uid.equals(it.owner)){
+                                Toast.makeText(context, "You can't quit this travel, you are the owner!", Toast.LENGTH_LONG).show()
+                            }else{
+                                val newFragment = UIDialogFragment("Are you sure to quit the Travel '${it.name}'?")
+                                newFragment.show(requireActivity().supportFragmentManager, "UIDialog - quitTravel")
+                            }
+                        }
+                    }
+                    true
                 }
-
-                val travelDays = getDatesBetween(it.startDate.toString(),it.endDate.toString())
 
                 //Spinner for selecting days
                 val daySpinner = binding.daySpinner
+                val travelDays = getDatesBetween(it.startDate.toString(),it.endDate.toString())
                 // Create an ArrayAdapter using the string array and a default spinner layout
                 ArrayAdapter(requireContext(),
                     android.R.layout.simple_spinner_item, travelDays)
@@ -122,17 +139,6 @@ class ExpenseList : Fragment(), AdapterView.OnItemSelectedListener {
         val toolbar: Toolbar = binding.toolbarExpListPage.toolbar
         toolbar.setupWithNavController(navController, appBarConfiguration)
 
-
-        toolbar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.action_edit -> {
-                    val action = ExpenseListDirections.actionExpenseListToEditTravel()
-                    view.findNavController().navigate(action)
-                }
-            }
-            true
-        }
-
         val usersListButton = binding.extendedFab
         usersListButton.setOnClickListener{
             val action = ExpenseListDirections.actionExpenseListToUsersList()
@@ -156,6 +162,15 @@ class ExpenseList : Fragment(), AdapterView.OnItemSelectedListener {
                     Toast.makeText(context,"Error, the expense has not been deleted", Toast.LENGTH_SHORT).show()
                     sharedViewModel.resetUiState()
                 }
+                UIState.SUCC_101 -> {
+                    Toast.makeText(context,"You successfully quit the travel", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
+                    navController.navigateUp()
+                }
+                UIState.FAIL_105 -> {
+                    Toast.makeText(context,"Error in quitting the travel", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
+                }
             }
         }
 
@@ -166,7 +181,7 @@ class ExpenseList : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     private fun deleteExpense(expense: Expense) {
-        val newFragment = UIDialogFragment(expense.name!!)
+        val newFragment = UIDialogFragment("Are you sure to delete the expense '${expense.name}'?")
         newFragment.show(requireActivity().supportFragmentManager, "UIDialog - deleteExpense")
         sharedViewModel.selectExpenseToDelete(expense)
     }
@@ -229,12 +244,6 @@ class ExpenseList : Fragment(), AdapterView.OnItemSelectedListener {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 // Add menu items here
                 menuInflater.inflate(R.menu.expense_list_toolbar, menu)
-
-                /*if(Firebase.auth.currentUser?.uid == null){
-
-                }
-                menu.removeItem(R.id.action_edit)*/
-
 
                 // Get the SearchView and set the searchable configuration
                 val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager

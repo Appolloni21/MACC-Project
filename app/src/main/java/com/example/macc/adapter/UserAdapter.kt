@@ -9,24 +9,29 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.macc.Compass.MyView
 import com.example.macc.databinding.ItemUserBinding
 import com.example.macc.model.User
 import com.example.macc.utility.OnActivityStateChanged
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 private const val TAG = "User Adapter"
 
-class UserAdapter(private val onActionCallback: (Int) -> Unit, private val context: Context) : RecyclerView.Adapter<UserAdapter.UserViewHolder>(){
+class UserAdapter(private val onActionCallback: (Int) -> Unit, private val onRemoveCallback: (User) -> Unit, private val context: Context) : RecyclerView.Adapter<UserAdapter.UserViewHolder>(){
 
     private val usersList : ArrayList<User> = arrayListOf()
+    private var travelOwner: String = ""
     lateinit var customView : MyView
 
     class UserViewHolder(val binding: ItemUserBinding) : RecyclerView.ViewHolder(binding.root){
         val userNameSurname : TextView = binding.userNameSurname
         val userAvatar: ImageView = binding.userAvatar
         val customView = binding.drawingViewInAdapter
+        val removeUserIcon : ImageView = binding.removeUserIcon
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -47,6 +52,23 @@ class UserAdapter(private val onActionCallback: (Int) -> Unit, private val conte
 
         holder.userAvatar.setOnClickListener{
             onActionCallback(position)
+        }
+
+
+        //Remove user icon visibile solo se sei l'owner del travel, non visibile quando l'utente nella lista è uguale all'utente corrente
+        if(Firebase.auth.currentUser?.uid != travelOwner){
+            holder.removeUserIcon.isVisible = false
+            Log.d(TAG,"if: ${item.name}")
+        } else if(Firebase.auth.currentUser?.uid.equals(travelOwner) && Firebase.auth.currentUser?.uid.equals(item.userID)){
+            holder.removeUserIcon.isVisible = false
+            Log.d(TAG,"elsif: ${item.name}")
+        } else{
+            holder.removeUserIcon.isVisible = true
+            Log.d(TAG,"else: ${item.name}")
+        }
+
+        holder.removeUserIcon.setOnClickListener {
+            onRemoveCallback(item)
         }
 
         customView = holder.customView
@@ -80,6 +102,12 @@ class UserAdapter(private val onActionCallback: (Int) -> Unit, private val conte
     fun setUsersList(users : List<User>){
         this.usersList.clear()
         this.usersList.addAll(users)
+        notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setTravelOwner(travelOwner: String){
+        this.travelOwner = travelOwner
         notifyDataSetChanged()
     }
 }

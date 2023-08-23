@@ -59,12 +59,13 @@ class ExpenseAdapter(private val onDeleteCallback: (Expense) -> Unit,
 
         //item.owner.equals("Group")
         if(item.owner.toString() == "Group"){
-            Log.d(TAG, "${travelMembers}")
+            Log.d(TAG, "$travelMembers")
             val eachAmount = item.amount?.toFloat()?.div(travelMembers)
             holder.expenseOwner.text = "Group"
             holder.expenseOwner.setBackgroundColor(Color.parseColor("#fbc02d"))
             holder.expenseAmountEach.isVisible = true
-            holder.expenseAmountEach.text = "Each: $" + eachAmount.toString()
+            val num3digits = String.format("%.2f", eachAmount)
+            holder.expenseAmountEach.text = "Each: $$num3digits"
             holder.expenseAmount.text = "Tot: $" + item.amount.toString()
         } else {
             holder.expenseOwner.text = "Personal"

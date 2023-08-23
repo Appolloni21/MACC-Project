@@ -78,8 +78,14 @@ class MainActivity : AppCompatActivity(), UIDialogFragment.NoticeDialogListener 
             "UIDialog - deleteTravel" ->{
                 sharedViewModelHomepage.deleteTravel()
             }
-            "UIDialog - deleteExpense"->{
+            "UIDialog - deleteExpense" ->{
                 sharedViewModelHomepage.deleteExpense()
+            }
+            "UIDialog - quitTravel" -> {
+                sharedViewModelHomepage.quitFromTravel()
+            }
+            "UIDialog - removeUserFromTravel" -> {
+                sharedViewModelHomepage.removeUserFromTravel()
             }
         }
     }

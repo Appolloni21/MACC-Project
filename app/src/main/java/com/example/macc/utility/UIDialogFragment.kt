@@ -46,7 +46,7 @@ class UIDialogFragment(title: String) : DialogFragment() {
         return activity?.let {
             // Use the Builder class for convenient dialog construction
             val builder = AlertDialog.Builder(it)
-            builder.setMessage("Are you sure to delete $titleStr?")
+            builder.setMessage(titleStr)
                 .setPositiveButton("Yes",
                     DialogInterface.OnClickListener { dialog, id ->
                         // START THE GAME!

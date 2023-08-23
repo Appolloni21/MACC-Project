@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -17,7 +18,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.macc.LocationService.LocationService
 import com.example.macc.adapter.UserAdapter
 import com.example.macc.databinding.UsersListBinding
+import com.example.macc.model.User
 import com.example.macc.utility.OnActivityStateChanged
+import com.example.macc.utility.UIDialogFragment
+import com.example.macc.utility.UIState
 import com.example.macc.viewmodel.HomepageViewModel
 
 private const val TAG = "Users List Fragment"
@@ -41,13 +45,19 @@ class UsersList : Fragment() {
         val view: View = binding.root
 
         recyclerView = binding.recyclerViewUser
-        adapter = UserAdapter(::actionToUserProfile, requireContext())
+        adapter = UserAdapter(::actionToUserProfile,::removeUserFromTravel ,requireContext())
         recyclerView.adapter = adapter
 
         sharedViewModel.users.observe(viewLifecycleOwner){
             if(it.isNotEmpty()){
                 adapter.setUsersList(it)
                 onActivityStateChanged  = adapter.registerActivityState()
+            }
+        }
+
+        sharedViewModel.travelSelected.observe(viewLifecycleOwner){
+            if(it != null){
+                adapter.setTravelOwner(it.owner.toString())
             }
         }
 
@@ -100,6 +110,19 @@ class UsersList : Fragment() {
             view.findNavController().navigate(action)
         }
 
+        sharedViewModel.uiState.observe(viewLifecycleOwner){
+            when(it){
+                UIState.SUCCESS -> {
+                    Toast.makeText(context,"The user has been removed", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
+                }
+                UIState.FAILURE -> {
+                    Toast.makeText(context,"Error, user not removed", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
+                }
+            }
+        }
+
     }
 
     override fun onPause() {
@@ -121,5 +144,11 @@ class UsersList : Fragment() {
     private fun actionToUserProfile(position: Int){
         val action = UsersListDirections.actionUsersListToUserProfile(position)
         view?.findNavController()?.navigate(action)
+    }
+
+    private fun removeUserFromTravel(user: User){
+        val newFragment = UIDialogFragment("Are you sure to remove '${user.name}' from this travel?")
+        newFragment.show(requireActivity().supportFragmentManager, "UIDialog - removeUserFromTravel")
+        sharedViewModel.selectUserToRemoveFromTravel(user)
     }
 }

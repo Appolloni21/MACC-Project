@@ -41,6 +41,9 @@ class HomepageViewModel : ViewModel() {
     private val _users: MutableLiveData<ArrayList<User>> = MutableLiveData()
     val users: LiveData<ArrayList<User>> = _users
 
+    private val _userToRemove: MutableLiveData<User> = MutableLiveData()
+    val userToRemove: LiveData<User> = _userToRemove
+
     private val _uiState: MutableLiveData<String?> = MutableLiveData()
     val uiState: LiveData<String?> = _uiState
 
@@ -84,6 +87,13 @@ class HomepageViewModel : ViewModel() {
         _travelToDelete.postValue(travel)
     }
 
+    fun quitFromTravel(){
+        viewModelScope.launch(Dispatchers.Main){
+            val state = repository.quitFromTravel(travelSelected.value!!)
+            _uiState.postValue(state)
+        }
+    }
+
     private fun getExpenses(travelID:String){
         repository.getExpenses(travelID, _expenses)
     }
@@ -96,6 +106,17 @@ class HomepageViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.Main) {
             val travelID = _travelSelected.value?.travelID.toString()
             val state = repository.addUser(userEmail, travelID)
+            _uiState.postValue(state)
+        }
+    }
+
+    fun selectUserToRemoveFromTravel(user: User){
+        _userToRemove.postValue(user)
+    }
+
+    fun removeUserFromTravel(){
+        viewModelScope.launch(Dispatchers.Main){
+            val state = repository.removeUserFromTravel(userToRemove.value!!,travelSelected.value!!)
             _uiState.postValue(state)
         }
     }

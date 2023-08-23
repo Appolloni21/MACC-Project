@@ -13,4 +13,9 @@
         android:id="@+id/action_edit"
         android:title="@string/edit_travel"
         app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_exit"
+        android:title="@string/quit_travel"
+        app:showAsAction="never"/>
 </menu>

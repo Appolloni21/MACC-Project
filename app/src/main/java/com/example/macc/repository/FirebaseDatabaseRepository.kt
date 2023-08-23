@@ -190,6 +190,51 @@ class FirebaseDatabaseRepository {
         })
     }
 
+    suspend fun quitFromTravel(travel: Travel): String =
+        withContext(Dispatchers.IO){
+            try {
+                databaseReference = Firebase.database.reference
+                val childUpdates = hashMapOf<String, Any?>()
+                val travelID = travel.travelID.toString()
+
+                //Leviamo dal travel il riferimento all'utente
+                childUpdates["travels/$travelID/members/$userUID"] = null
+
+                //Leviamo dall'utente il riferimento al travel
+                childUpdates["users/$userUID/trips/$travelID"] = null
+
+                //Cancelliamo le spese dell'utente associate al viaggio
+                databaseReference = Firebase.database.getReference("expenses")
+                val snapshot = databaseReference.orderByChild("travelID").equalTo(travelID).get().await()
+
+                if(snapshot.exists()){
+                    for(expenseSnapshot in snapshot.children){
+                        val expense = expenseSnapshot.getValue(Expense::class.java)!!
+                        if(expense.owner.equals(userUID)){
+                            val expenseID = expense.expenseID.toString()
+                            //Cancelliamo le spese dell'utente associate al viaggio, dall'elenco principale delle spese
+                            childUpdates["expenses/$expenseID"] = null
+                            //Cancelliamo il riferimento della spesa dallo user
+                            childUpdates["users/$userUID/expenses/$expenseID"] = null
+                            //Cancelliamo dal viaggio il riferimento della spesa
+                            childUpdates["travels/$travelID/expenses/$expenseID"] = null
+                        }
+                    }
+                }
+
+                //Eseguiamo le query
+                databaseReference = Firebase.database.reference
+                databaseReference.updateChildren(childUpdates).await()
+
+                Log.d(TAG, "exitFromTravel: success")
+                UIState.SUCC_101
+
+            } catch (e: Exception) {
+                Log.d(TAG, "exitFromTravel: exception: $e")
+                UIState.FAIL_105
+            }
+        }
+
 
     fun getExpenses(travelID: String, expenseArrayList: MutableLiveData<ArrayList<Expense>>){
         databaseReference = Firebase.database.getReference("expenses")
@@ -227,6 +272,7 @@ class FirebaseDatabaseRepository {
                     if(snapshot.exists()){
                         for(userSnapshot in snapshot.children){
                             val user = userSnapshot.getValue(User::class.java)!!
+                            user.userID = userSnapshot.key
                             userList.add(user)
                         }
                     }
@@ -256,6 +302,7 @@ class FirebaseDatabaseRepository {
 
                 for (userSnapshot in snapshot.children) {
                     val user = userSnapshot.getValue<User>()
+
                     //Prima controlliamo che l' user non sia già stato aggiunto
                     if (!(user?.trips.isNullOrEmpty()) && user?.trips?.containsKey(travelID)!!) {
                         Log.d(TAG, "addUser: the user is already in this travel")
@@ -280,6 +327,52 @@ class FirebaseDatabaseRepository {
 
             } catch (e: Exception) {
                 Log.d(TAG, "addUser: exception: $e")
+                UIState.FAILURE
+            }
+        }
+
+    suspend fun removeUserFromTravel(user: User, travel: Travel): String =
+        withContext(Dispatchers.IO){
+            try {
+                databaseReference = Firebase.database.reference
+                val childUpdates = hashMapOf<String, Any?>()
+                val travelID = travel.travelID.toString()
+                val userID = user.userID
+
+                //Leviamo dal travel il riferimento all'utente
+                childUpdates["travels/$travelID/members/$userID"] = null
+
+                //Leviamo dall'utente il riferimento al travel
+                childUpdates["users/$userID/trips/$travelID"] = null
+
+                //Cancelliamo le spese dell'utente associate al viaggio
+                databaseReference = Firebase.database.getReference("expenses")
+                val snapshot = databaseReference.orderByChild("travelID").equalTo(travelID).get().await()
+
+                if(snapshot.exists()){
+                    for(expenseSnapshot in snapshot.children){
+                        val expense = expenseSnapshot.getValue(Expense::class.java)!!
+                        if(expense.owner.equals(userID)){
+                            val expenseID = expense.expenseID.toString()
+                            //Cancelliamo le spese dell'utente associate al viaggio, dall'elenco principale delle spese
+                            childUpdates["expenses/$expenseID"] = null
+                            //Cancelliamo il riferimento della spesa dallo user
+                            childUpdates["users/$userID/expenses/$expenseID"] = null
+                            //Cancelliamo dal viaggio il riferimento della spesa
+                            childUpdates["travels/$travelID/expenses/$expenseID"] = null
+                        }
+                    }
+                }
+
+                //Eseguiamo le query
+                databaseReference = Firebase.database.reference
+                databaseReference.updateChildren(childUpdates).await()
+
+                Log.d(TAG, "removeUserFromTravel: success")
+                UIState.SUCCESS
+
+            } catch (e: Exception) {
+                Log.d(TAG, "removeUserFromTravel: exception: $e")
                 UIState.FAILURE
             }
         }

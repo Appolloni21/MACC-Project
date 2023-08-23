@@ -196,24 +196,6 @@ class LoginActivity : AppCompatActivity(){
         }
     }
 
-    /*private fun test(){
-        sharedViewModel.checkGoogleUser("alessandro.appolloni21@gmail.com")
-
-        sharedViewModel.uiState.observe(this){
-            when(it){
-                UIState.WARN_101 -> {
-                    Log.d(TAG, "Google user already exist, we just need to log in it")
-                }
-                UIState.WARN_102 -> {
-                    Log.d(TAG, "Google user doesn't exist in the DB, we have to create it")
-                }
-                UIState.WARN_103 ->{
-                    Log.d(TAG,"User already exist")
-                }
-            }
-        }
-    }*/
-
     private fun makeToast(msg:String){
         Toast.makeText(
             this@LoginActivity,
