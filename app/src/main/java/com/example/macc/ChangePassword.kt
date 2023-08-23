@@ -88,6 +88,10 @@ class ChangePassword : Fragment() {
                     Toast.makeText(context, "The current password is wrong, please re-enter it", Toast.LENGTH_SHORT).show()
                     sharedViewModel.resetUiState()
                 }
+                UIState.WARN_101 ->{
+                    Toast.makeText(context, "You can not change password because you are signed in with Google", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
+                }
             }
         }
     }

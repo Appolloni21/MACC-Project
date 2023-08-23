@@ -65,7 +65,6 @@ class MainActivity : AppCompatActivity(), UIDialogFragment.NoticeDialogListener 
             val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
-
     }
 
     // The dialog fragment receives a reference to this Activity through the

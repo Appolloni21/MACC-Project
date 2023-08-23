@@ -222,6 +222,21 @@ class FirebaseAuthRepository {
                 val user = Firebase.auth.currentUser
                 val userEmail = user?.email.toString()
 
+                // Initialize Firebase Auth
+                auth = Firebase.auth
+
+                val signInMethods = auth.fetchSignInMethodsForEmail(userEmail).await()
+
+                val findGoogleMethod = signInMethods.signInMethods?.find {
+                    it.equals("google.com")
+                }
+
+                if(signInMethods.signInMethods!!.isNotEmpty() && findGoogleMethod?.isNotEmpty() == true){
+                    Log.d(TAG,"checkGoogleUser: success")
+                    return@withContext UIState.WARN_101
+                }
+
+
                 val reAuthentication = logInUser(userEmail, currentPassword)
                 if(reAuthentication == UIState.FAILURE){
                     Log.d(TAG,"re-autenticazione fallita")
