@@ -28,8 +28,8 @@ class InsertExpense : Fragment() {
     private var _binding: InsertExpenseBinding? = null
     private val binding get() = _binding!!
     private val sharedViewModel: HomepageViewModel by activityViewModels()
+    private val viewModel: PriceViewModel by activityViewModels()
 
-     private val viewModel: PriceViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -79,8 +79,17 @@ class InsertExpense : Fragment() {
                 TextUtils.isEmpty(expenseName) -> {
                     Toast.makeText(context, "Please enter expense name", Toast.LENGTH_SHORT).show()
                 }
+                TextUtils.isEmpty(expenseAmount) -> {
+                    Toast.makeText(context, "Please enter expense amount", Toast.LENGTH_SHORT).show()
+                }
                 TextUtils.isEmpty(expensePlace) -> {
                     Toast.makeText(context, "Please enter expense place", Toast.LENGTH_SHORT).show()
+                }
+                TextUtils.isEmpty(expenseDate) -> {
+                    Toast.makeText(context, "Please enter expense date", Toast.LENGTH_SHORT).show()
+                }
+                TextUtils.isEmpty(expenseNotes) -> {
+                    Toast.makeText(context, "Please enter expense notes", Toast.LENGTH_SHORT).show()
                 }
                 else -> {
                     sharedViewModel.addExpense(expenseName,expenseAmount, expenseDate, expensePlace, expenseNotes, expenseCheck)
@@ -94,6 +103,7 @@ class InsertExpense : Fragment() {
                     //La spesa è stata aggiunta correttamente, facciamo ritornare l'utente alla homepage
                     Toast.makeText(context, "Expense added", Toast.LENGTH_SHORT).show()
                     sharedViewModel.resetUiState()
+                    viewModel.selectedItem("")
                     navController.navigateUp()
                 }
                 UIState.FAILURE -> {
@@ -110,7 +120,14 @@ class InsertExpense : Fragment() {
         }
 
         val priceField = binding.expenseAmount
-        val loadThePhotoBtn = binding.loadAmountBtn
+        viewModel.selected.observe(viewLifecycleOwner) { item ->
+            if(item.isNotEmpty()){
+                priceField.editText?.setText(item)
+            }
+        }
+
+
+        /*val loadThePhotoBtn = binding.loadAmountBtn
         loadThePhotoBtn.setOnClickListener {
 
             viewModel.selected.observe(viewLifecycleOwner) { item ->
@@ -118,7 +135,7 @@ class InsertExpense : Fragment() {
                     priceField.editText?.setText(item)
                 }
             }
-        }
+        }*/
 
 
     }

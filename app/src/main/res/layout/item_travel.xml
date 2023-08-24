@@ -29,7 +29,7 @@
             app:srcCompat="@color/teal_200"
             tools:ignore="ImageContrastCheck" />
 
-        <TextView
+        <!--<TextView
             android:id="@+id/tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/travelCover"
-            tools:ignore="TextContrastCheck" />
+            tools:ignore="TextContrastCheck" />-->
 
         <TextView
             android:id="@+id/travel_name"

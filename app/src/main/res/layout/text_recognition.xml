@@ -70,6 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/recognized_amount_1"
+            android:labelFor="@id/recognizedTextEt"
             app:layout_constraintEnd_toEndOf="@+id/imageIv"
             app:layout_constraintStart_toStartOf="@+id/imageIv"
             app:layout_constraintTop_toBottomOf="@+id/imageIv" />
@@ -79,6 +80,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="12sp"
+            android:inputType="numberDecimal"
+            android:autofillHints=""
             app:layout_constraintEnd_toEndOf="@+id/recognizedTextLabel"
             app:layout_constraintStart_toStartOf="@+id/recognizedTextLabel"
             app:layout_constraintTop_toBottomOf="@+id/recognizedTextLabel" />
@@ -88,7 +91,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="60dp"
             android:text="@string/take_the_amount"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/recognizedTextEt"

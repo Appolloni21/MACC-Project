@@ -105,8 +105,8 @@ class TextRecognition : Fragment() {
                 showToast("Recognize the test from image first...")
             }
             else{
-                viewModel.selectedItem(textImport)
-                showToast("The price has been saved, now you can load it")
+                viewModel.selectedItem(recognizedTextEt.text.toString().trim { it <= ' ' })
+                showToast("The price has been saved")
                 navController.navigateUp()
             }
         }
@@ -120,7 +120,7 @@ class TextRecognition : Fragment() {
                 pickImageCamera()
             }
             else{
-                showToast("sono qui")
+                //showToast("sono qui")
                 requestCameraPermissions()
             }
         }

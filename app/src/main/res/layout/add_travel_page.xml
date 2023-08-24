@@ -74,7 +74,9 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:hint="@string/travel_name"
+        android:textColorHint="#757575"
         app:hintTextColor="@color/black_primary_material"
+        app:boxBackgroundColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -83,8 +85,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:textColorHint="#757575"
+            android:textColor="@color/black"
             tools:ignore="TextContrastCheck" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -95,7 +96,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:hint="@string/destination"
+        android:textColorHint="#757575"
         app:hintTextColor="@color/black_primary_material"
+        app:boxBackgroundColor="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/travelName"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/travelName"
@@ -104,8 +107,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-
+            android:textColor="@color/black"
             android:textColorHint="#757575"
             tools:ignore="TextContrastCheck" />
 
@@ -125,6 +127,8 @@
         android:hint="@string/start_date"
         android:inputType="date"
         android:minHeight="48dp"
+        android:textColorHint="#757575"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/select_dates_btn" />
@@ -144,6 +148,7 @@
         android:inputType="date"
         android:minHeight="48dp"
         android:textColorHint="#757575"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/startDate"
         app:layout_constraintTop_toBottomOf="@+id/select_dates_btn" />
