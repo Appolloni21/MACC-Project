@@ -50,7 +50,8 @@
                 android:paddingBottom="5dp"
                 android:text="@string/travel_name"
                 android:textColor="#000000"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:textStyle="bold"/>
 
         </FrameLayout>
 

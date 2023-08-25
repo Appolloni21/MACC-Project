@@ -66,11 +66,11 @@ class ExpenseAdapter(private val onDeleteCallback: (Expense) -> Unit,
             holder.expenseAmountEach.isVisible = true
             val num3digits = String.format("%.2f", eachAmount)
             holder.expenseAmountEach.text = "Each: $$num3digits"
-            holder.expenseAmount.text = "Tot: $" + item.amount.toString()
+            holder.expenseAmount.text = "$" + item.amount.toString()
         } else {
             holder.expenseOwner.text = "Personal"
             holder.expenseOwner.setBackgroundColor(Color.parseColor("#FFF44336"))
-            holder.expenseAmount.text = "Tot: $" + item.amount.toString()
+            holder.expenseAmount.text = "$" + item.amount.toString()
             holder.expenseAmountEach.isVisible = false
         }
 
