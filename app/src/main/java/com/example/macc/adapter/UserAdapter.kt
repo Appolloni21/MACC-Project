@@ -32,11 +32,17 @@ class UserAdapter(private val onActionCallback: (Int) -> Unit, private val onRem
         val userAvatar: ImageView = binding.userAvatar
         val customView = binding.drawingViewInAdapter
         val removeUserIcon : ImageView = binding.removeUserIcon
+        fun bind(){
+            // TODO: Add bind data
+            customView.invalidate()
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val binding = ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        Log.d(TAG, "user adapter on createviewholder")
         return UserViewHolder(binding)
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -70,19 +76,26 @@ class UserAdapter(private val onActionCallback: (Int) -> Unit, private val onRem
         holder.removeUserIcon.setOnClickListener {
             onRemoveCallback(item)
         }
+        holder.bind()
 
         customView = holder.customView
+        Log.d("CUSV", customView.toString())
+        val sm = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        sm.registerListener(
+            customView,
+            sm.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
+            SensorManager.SENSOR_DELAY_NORMAL)
     }
 
     fun registerActivityState()  = object : OnActivityStateChanged {
         override fun onResumed() {
             Log.d(TAG, "onResumed: ")
             //Register the rotation vector sensor to the listener
-            val sm = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+            /*val sm = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
             sm.registerListener(
                 customView,
                 sm.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
-                SensorManager.SENSOR_DELAY_NORMAL)
+                SensorManager.SENSOR_DELAY_NORMAL)*/
         }
 
         override fun onPaused() {

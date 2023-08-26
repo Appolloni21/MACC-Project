@@ -129,6 +129,6 @@
         tools:layout="@layout/edit_expense_page"/>
     <fragment
         android:id="@+id/userLocations"
-        android:name="com.example.macc.UserLocations"
+        android:name="com.example.macc.UserLocationssss"
         android:label="UserLocations" />
 </navigation>

@@ -128,7 +128,7 @@ class UsersList : Fragment() {
     override fun onPause() {
         if(onActivityStateChanged != null){
             Log.d(TAG,"onPause")
-            //onActivityStateChanged?.onPaused()
+            onActivityStateChanged?.onPaused()
         }
         super.onPause()
     }
@@ -136,7 +136,7 @@ class UsersList : Fragment() {
     override fun onResume() {
         if(onActivityStateChanged != null){
             Log.d(TAG,"onResume")
-        //onActivityStateChanged?.onResumed()
+        onActivityStateChanged?.onResumed()
         }
         super.onResume()
     }

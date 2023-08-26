@@ -96,13 +96,26 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
                 print("Position received from server")
             }
         }
+        this.setWillNotDraw(false)
+        invalidate()
 
     }
 
 
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        // No child views to position in this example
+    }
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val width = MeasureSpec.getSize(widthMeasureSpec)
+        val height = MeasureSpec.getSize(heightMeasureSpec)
+        setMeasuredDimension(300, 300)
+        Log.i("ONMCAL","onm")
+
+
+    }
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        Log.i(TAG,"drawing"+System.currentTimeMillis())
+        Log.i("CONTROLONDRAWCALLED","drawing"+System.currentTimeMillis())
         /*with(canvas) {
             drawColor(Color.YELLOW)
             withRotation (-rotationangle,width/2f,height/2f) {

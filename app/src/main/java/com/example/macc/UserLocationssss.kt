@@ -18,7 +18,7 @@ import com.example.macc.Compass.MyView
 import com.example.macc.databinding.UserLocationsBinding
 
 
-class UserLocations : Fragment() {
+class UserLocationssss : Fragment() {
 
 
     lateinit var customView : MyView
