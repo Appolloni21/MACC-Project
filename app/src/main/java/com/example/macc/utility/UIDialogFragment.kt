@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.example.macc.R
 
 private const val TAG = "Dialog Fragment"
 
@@ -45,7 +46,7 @@ class UIDialogFragment(title: String) : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
             // Use the Builder class for convenient dialog construction
-            val builder = AlertDialog.Builder(it)
+            val builder = AlertDialog.Builder(it, R.style.AlertDialogCustom)
             builder.setMessage(titleStr)
                 .setPositiveButton("Yes",
                     DialogInterface.OnClickListener { dialog, id ->
