@@ -50,7 +50,7 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
     var mLastRotationVector = FloatArray(3) //The last value of the rotation vector
     var mRotationMatrix = FloatArray(9)
     var yaw = 0f
-    var compass : Bitmap
+    lateinit var compass : Bitmap
     //var webApi : PostOrientation
     var myLocation : Location
     var targetLocation : Location
@@ -85,9 +85,7 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
         val sensorManager = context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         Log.i(TAG,""+resources.displayMetrics.density)
         //Read .svg compass
-        compass = ResourcesCompat.getDrawable(resources, R.drawable.baseline_arrow_upward_24,
-            null)?.
-        toBitmap(size.toInt(),size.toInt())!!
+
         //get the arrow instead of compass
         //webApi = WebApi().retrofit.create(PostOrientation::class.java)
 
@@ -157,27 +155,19 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
     }
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        val originalImageSize = size // assuming size is the size of the bitmap
+        val scaleFactor = 0.60f // Adjust this scaling factor as needed
+        val imageSize = originalImageSize * scaleFactor
+        compass = ResourcesCompat.getDrawable(resources, R.drawable.baseline_arrow_upward_24,
+            null)?.
+        toBitmap(imageSize.toInt(),imageSize.toInt())!!
         Log.i("CONTROLONDRAWCALLED","drawing"+System.currentTimeMillis())
-        /*with(canvas) {
-            drawColor(Color.YELLOW)
-            withRotation (-rotationangle,width/2f,height/2f) {
-                drawBitmap(compass, (width - size) / 2f, (height - size) / 2f, null)
-            }
-        }*/
-
         with(canvas) {
             drawColor(Color.YELLOW)
-            val originalImageSize = size // assuming size is the size of the bitmap
-            val scaleFactor = 0.15f // Adjust this scaling factor as needed
-            val imageSize = originalImageSize * scaleFactor
-            Log.i("IMGSIZE", imageSize.toString())
 
-
-                    val centerX = 0 + (imageSize / 2)
-                    val centerY = 0 + (imageSize / 2)
-                    withRotation(-rotationangle, 0f, 0f) {
+                    withRotation(-rotationangle, imageSize/2, imageSize/2) {
                         //drawBitmap(compass, x.toFloat(), y.toFloat(), null)
-                        drawBitmap(compass, centerX, centerY, null)
+                        drawBitmap(compass, 0f, 0f, null)
 
             }
         }
