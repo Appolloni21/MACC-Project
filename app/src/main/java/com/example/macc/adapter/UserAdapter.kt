@@ -32,8 +32,9 @@ class UserAdapter(private val onActionCallback: (Int) -> Unit, private val onRem
         val userAvatar: ImageView = binding.userAvatar
         val customView = binding.drawingViewInAdapter
         val removeUserIcon : ImageView = binding.removeUserIcon
-        fun bind(){
+        fun bind(userid : String){
             // TODO: Add bind data
+            customView.setData(userid)
             customView.invalidate()
         }
     }
@@ -50,6 +51,7 @@ class UserAdapter(private val onActionCallback: (Int) -> Unit, private val onRem
         Log.d(TAG, "user adapter")
         val item = usersList[position]
         holder.userNameSurname.text = item.name
+        val userid = item.userID.toString()
 
         //Loads the image from the url with Glide
         Glide.with(holder.binding.root)
@@ -76,7 +78,7 @@ class UserAdapter(private val onActionCallback: (Int) -> Unit, private val onRem
         holder.removeUserIcon.setOnClickListener {
             onRemoveCallback(item)
         }
-        holder.bind()
+        holder.bind(userid)
 
         customView = holder.customView
         Log.d("CUSV", customView.toString())

@@ -51,7 +51,7 @@
         <com.example.macc.Compass.MyView
             android:id="@+id/drawingViewInAdapter"
             android:layout_width="90dp"
-            android:layout_height="wrap_content"
+            android:layout_height="90dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="45dp"
             app:layout_constraintEnd_toEndOf="parent"

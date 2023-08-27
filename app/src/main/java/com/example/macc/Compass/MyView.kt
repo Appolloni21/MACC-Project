@@ -19,18 +19,20 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.withRotation
 import com.example.macc.R
-//import com.google.gson.Gson
+import com.google.firebase.auth.FirebaseAuth
+import com.google.gson.Gson
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
-//import okhttp3.OkHttpClient
-//import okhttp3.Request
-//import okhttp3.MediaType.Companion.toMediaType
-//import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONObject
 import kotlin.math.ceil
 import kotlin.math.cos
 import kotlin.math.sin
@@ -43,7 +45,7 @@ const val TAG = "MYDEBUG"
 const val TAG2 = "POST"
 class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), SensorEventListener2 {
 
-    var size = 2f  //Absolute size of the compass in inches
+    var size = 1f  //Absolute size of the compass in inches
     val a = 0.5f //Low-pass filter parameter, higher is smoother
 
     var mLastRotationVector = FloatArray(3) //The last value of the rotation vector
@@ -56,6 +58,7 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
     var rotationangle = 0f
     var respData = ResponseData(0.0,"",0.0,0.0,0.0)
     val delayMillis = 10000L
+    lateinit var uid : String
     //val bitmap: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.baseline_arrow_upward_24)
 
 
@@ -86,29 +89,61 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
         //get the arrow instead of compass
         //webApi = WebApi().retrofit.create(PostOrientation::class.java)
 
-        GlobalScope.launch(Dispatchers.Default) {
-            while (true) {
-                getPositionFromServer("prova_token", "test_gmail_com")
-                //UPDATE THE TARGET LOCATION EVERY 10 SECONDS
-                targetLocation.latitude = respData.latitude // your coordinates here
-                targetLocation.longitude = respData.longitude
-                delay(delayMillis)
-                print("Position received from server")
-            }
-        }
+
         this.setWillNotDraw(false)
         invalidate()
 
     }
 
+    fun setData (user_id: String){
+        uid = user_id
+        Log.d("SETDATACALLED", uid)
+        // ONCE WE GOT THE USERID we start looking for position from server
+        getPositionFromServerCoo()
 
+
+    }
+
+    fun getPositionFromServerCoo () {
+        //GET TOKEN FROM USER SESSION
+        val mUser = FirebaseAuth.getInstance().currentUser
+        Log.d("USERLOG", mUser.toString())
+        val user_email = mUser?.email.toString()
+        val user_id=mUser?.uid.toString()
+        mUser!!.getIdToken(true)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val user_token= task.result.token.toString()
+                    if (user_token != null) {
+                        Log.d("TOKENPRINT", user_token)
+                        //PERFORMING NETWORK REQUEST
+                        GlobalScope.launch(Dispatchers.Default) {
+                            while (true) {
+                                Log.i("USERID: ", uid)
+                                getPositionFromServer(user_token, user_id, user_email)
+                                //UPDATE THE TARGET LOCATION EVERY 10 SECONDS
+                                targetLocation.latitude = respData.latitude // your coordinates here
+                                targetLocation.longitude = respData.longitude
+                                delay(delayMillis)
+                                print("Position received from server")
+                            }
+                        }
+
+                    }
+                } else {
+                    // Handle error -> task.getException();
+                }
+            }
+
+
+    }
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         // No child views to position in this example
     }
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = MeasureSpec.getSize(widthMeasureSpec)
         val height = MeasureSpec.getSize(heightMeasureSpec)
-        setMeasuredDimension(300, 300)
+        setMeasuredDimension(350, 350)
         Log.i("ONMCAL","onm")
 
 
@@ -126,28 +161,17 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
         with(canvas) {
             drawColor(Color.YELLOW)
             val originalImageSize = size // assuming size is the size of the bitmap
-            val numberOfBitmaps = 1
-            val scaleFactor = 0.5f // Adjust this scaling factor as needed
+            val scaleFactor = 0.15f // Adjust this scaling factor as needed
             val imageSize = originalImageSize * scaleFactor
-            val bitmapsPerRow = 2 // Number of bitmaps per row
-            val numberOfRows = ceil(numberOfBitmaps.toFloat() / bitmapsPerRow).toInt()
-            val horizontalSpacing = width / (bitmapsPerRow + 1)
+            Log.i("IMGSIZE", imageSize.toString())
 
-            for (row in 0 until numberOfRows) {
-                for (col in 0 until bitmapsPerRow) {
-                    val totalIndex = row * bitmapsPerRow + col
-                    if (totalIndex >= numberOfBitmaps) {
-                        break
-                    }
 
-                    val x = horizontalSpacing * (col + 1) - imageSize / 2
-                    val y = row * imageSize
-                    val centerX = x + (imageSize / 2)
-                    val centerY = y + (imageSize / 2)
-                    withRotation(-rotationangle, centerX.toFloat(), centerY.toFloat()) {
-                        drawBitmap(compass, x.toFloat(), y.toFloat(), null)
-                    }
-                }
+                    val centerX = 0 + (imageSize / 2)
+                    val centerY = 0 + (imageSize / 2)
+                    withRotation(-rotationangle, 0f, 0f) {
+                        //drawBitmap(compass, x.toFloat(), y.toFloat(), null)
+                        drawBitmap(compass, centerX, centerY, null)
+
             }
         }
 
@@ -206,18 +230,17 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
         //      TODO("Not yet implemented")
     }
 
-    private fun getPositionFromServer(token: String, user_email: String) {
-        /*GlobalScope.launch {
+    private fun getPositionFromServer(token: String, user_id: String, user_email: String) {
+        GlobalScope.launch {
             val url = "https://androidproject.pythonanywhere.com/get_position"
-            val json = """
-                {
-                    "token": "$token",
-                    "user_email": "$user_email"
-                }
-            """.trimIndent()
+            val json = JSONObject()
+            json.put("user_id", "$user_id")
+            json.put("token", "$token")
+            json.put("user_email", "$user_email")
+
 
             val mediaType = "application/json; charset=utf-8".toMediaType()
-            val requestBody = json.toRequestBody(mediaType)
+            val requestBody = json.toString().toRequestBody(mediaType)
 
             val client = OkHttpClient()
 
@@ -246,7 +269,7 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
 
 
             //println("Response Body: $responseBody")
-        }*/
+        }
     }
 
 
