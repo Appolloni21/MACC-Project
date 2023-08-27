@@ -1,8 +1,9 @@
 package com.example.macc.Compass
 //import android.os.Handler
+//import android.graphics.BitmapFactory
+//import android.view.Display
 import android.content.Context
 import android.graphics.Bitmap
-//import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.hardware.GeomagneticField
@@ -13,29 +14,27 @@ import android.hardware.SensorManager
 import android.location.Location
 import android.util.AttributeSet
 import android.util.Log
-//import android.view.Display
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.withRotation
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.macc.R
+import com.example.macc.viewmodel.HomepageViewModel
+import com.example.macc.viewmodel.LocationViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
-import okhttp3.RequestBody.Companion.toRequestBody
-import kotlin.math.PI
-import kotlin.math.atan2
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
-import kotlin.math.ceil
-import kotlin.math.cos
-import kotlin.math.sin
+import kotlin.math.PI
+import kotlin.math.atan2
+
 
 data class ResponseData(val altitude: Double, val email: String, val latitude: Double, val longitude: Double, val value: Double) {}
 
@@ -56,9 +55,12 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
     var myLocation : Location
     var targetLocation : Location
     var rotationangle = 0f
-    var respData = ResponseData(0.0,"",0.0,0.0,0.0)
+    var ot_respData = ResponseData(0.0,"",0.0,0.0,0.0)
+    var cur_respData = ResponseData(0.0,"",0.0,0.0,0.0)
     val delayMillis = 10000L
+    val mUser = FirebaseAuth.getInstance().currentUser
     lateinit var uid : String
+    lateinit var ot_user_email : String
     //val bitmap: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.baseline_arrow_upward_24)
 
 
@@ -95,8 +97,9 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
 
     }
 
-    fun setData (user_id: String){
+    fun setData (user_id: String, email: String){
         uid = user_id
+        ot_user_email = email
         Log.d("SETDATACALLED", uid)
         // ONCE WE GOT THE USERID we start looking for position from server
         getPositionFromServerCoo()
@@ -106,10 +109,9 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
 
     fun getPositionFromServerCoo () {
         //GET TOKEN FROM USER SESSION
-        val mUser = FirebaseAuth.getInstance().currentUser
         Log.d("USERLOG", mUser.toString())
-        val user_email = mUser?.email.toString()
-        val user_id=mUser?.uid.toString()
+        val curUserEmail = mUser?.email.toString()
+        val curUserId=mUser?.uid.toString()
         mUser!!.getIdToken(true)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -120,10 +122,17 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
                         GlobalScope.launch(Dispatchers.Default) {
                             while (true) {
                                 Log.i("USERID: ", uid)
-                                getPositionFromServer(user_token, user_id, user_email)
+                                //GET AND UPDATE POSITION OF THE OTHER USER
+                                getPositionFromServer(user_token, uid, ot_user_email)
                                 //UPDATE THE TARGET LOCATION EVERY 10 SECONDS
-                                targetLocation.latitude = respData.latitude // your coordinates here
-                                targetLocation.longitude = respData.longitude
+                                targetLocation.latitude = ot_respData.latitude // your coordinates here
+                                targetLocation.longitude = ot_respData.longitude
+                                //GET AND UPDATE OWN POSITION
+                                getPositionFromServer(user_token, curUserId, curUserEmail)
+                                //UPDATE THE TARGET LOCATION EVERY 10 SECONDS
+                                myLocation.latitude = cur_respData.latitude // your coordinates here
+                                myLocation.longitude = cur_respData.longitude
+
                                 delay(delayMillis)
                                 print("Position received from server")
                             }
@@ -134,8 +143,6 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
                     // Handle error -> task.getException();
                 }
             }
-
-
     }
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         // No child views to position in this example
@@ -262,8 +269,13 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
 
             try {
                 //write on a global variable, because Coroutine does not allow to return value
-                respData = gson.fromJson(responseBody, ResponseData::class.java)
-                println("Response email: ${respData.email}")
+                if(mUser?.email.toString()==user_email){
+                    cur_respData = gson.fromJson(responseBody, ResponseData::class.java)
+                }
+                else
+                    ot_respData = gson.fromJson(responseBody, ResponseData::class.java)
+
+                //println("Response email: ${respData.email}")
             } catch (e: Exception) {
                 e.printStackTrace()}
 
