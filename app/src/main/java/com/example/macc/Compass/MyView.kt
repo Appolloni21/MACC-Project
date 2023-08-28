@@ -57,7 +57,7 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
     var rotationangle = 0f
     var ot_respData = ResponseData(0.0,"",0.0,0.0,0.0)
     var cur_respData = ResponseData(0.0,"",0.0,0.0,0.0)
-    val delayMillis = 10000L
+    val delayMillis = 1000L
     val mUser = FirebaseAuth.getInstance().currentUser
     lateinit var uid : String
     lateinit var ot_user_email : String
@@ -91,7 +91,7 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
 
 
         this.setWillNotDraw(false)
-        invalidate()
+        //invalidate()
 
     }
 
@@ -122,12 +122,12 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
                                 Log.i("USERID: ", uid)
                                 //GET AND UPDATE POSITION OF THE OTHER USER
                                 getPositionFromServer(user_token, uid, ot_user_email)
-                                //UPDATE THE TARGET LOCATION EVERY 10 SECONDS
+                                //UPDATE THE TARGET LOCATION EVERY "DELAYMILLIS"
                                 targetLocation.latitude = ot_respData.latitude // your coordinates here
                                 targetLocation.longitude = ot_respData.longitude
                                 //GET AND UPDATE OWN POSITION
                                 getPositionFromServer(user_token, curUserId, curUserEmail)
-                                //UPDATE THE TARGET LOCATION EVERY 10 SECONDS
+                                //UPDATE THE TARGET LOCATION EVERY "DELAYMILLIS"
                                 myLocation.latitude = cur_respData.latitude // your coordinates here
                                 myLocation.longitude = cur_respData.longitude
 
@@ -245,19 +245,19 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
                 .url(url)
                 .post(requestBody)
                 .build()
-
+            try {
             val response = withContext(Dispatchers.IO) {
                 client.newCall(request).execute()
             }
 
             val responseBody = response.body?.string() // response
             if (responseBody != null) {
-                Log.d("NET", responseBody)
+                Log.d("FETCHEDPOSITION", responseBody)
             }
 
             val gson = Gson()
 
-            try {
+
                 //write on a global variable, because Coroutine does not allow to return value
                 if(mUser?.email.toString()==user_email){
                     cur_respData = gson.fromJson(responseBody, ResponseData::class.java)
@@ -267,6 +267,8 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
 
                 //println("Response email: ${respData.email}")
             } catch (e: Exception) {
+                Log.d("ERRORHERE", "errorhere")
+
                 e.printStackTrace()}
 
 

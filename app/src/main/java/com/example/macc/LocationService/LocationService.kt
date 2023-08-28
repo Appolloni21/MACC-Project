@@ -83,7 +83,9 @@ class LocationService: Service() {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         locationClient
-            .getLocationUpdates(10000L)
+            // UPDATE THE LOCATION EVERY 1 seconds
+            // AND UPDATE THE POSITION ON THE SERVER THE REQUEST
+            .getLocationUpdates(1000L)
             .catch { e -> e.printStackTrace() }
             .onEach { location ->
                 // here is what happens when a new location is produced
@@ -97,7 +99,6 @@ class LocationService: Service() {
                     // Handle the exception here
                     println("Unable to contact network: ${e.message}")
                 }
-
                 val updatedNotification = notification.setContentText(
                     "Location: ($lat, $long, $alt)"
                 )
@@ -138,7 +139,7 @@ class LocationService: Service() {
                 .url(url)
                 .post(requestBody)
                 .build()
-
+                try{
             val response = withContext(Dispatchers.IO) {
                 client.newCall(request).execute()
             }
@@ -149,7 +150,10 @@ class LocationService: Service() {
             }
 
             println("Response Code: ${response.code}")
-            println("Response Body: $responseBody")
+            println("Response Body: $responseBody")}
+                catch (e: Exception) {
+
+                    e.printStackTrace()}
         }
     }
 
