@@ -1,5 +1,8 @@
 package com.example.macc
 
+import android.app.AlertDialog
+import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -23,6 +26,10 @@ import com.example.macc.utility.OnActivityStateChanged
 import com.example.macc.utility.UIDialogFragment
 import com.example.macc.utility.UIState
 import com.example.macc.viewmodel.HomepageViewModel
+import android.provider.Settings
+import android.location.LocationManager
+
+
 
 private const val TAG = "Users List Fragment"
 
@@ -64,6 +71,7 @@ class UsersList : Fragment() {
         // Use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         recyclerView.setHasFixedSize(true)
+        context?.let { checkAndEnableLocation(it) }
 
         return view
     }
@@ -144,6 +152,35 @@ class UsersList : Fragment() {
     private fun actionToUserProfile(position: Int){
         val action = UsersListDirections.actionUsersListToUserProfile(position)
         view?.findNavController()?.navigate(action)
+    }
+
+    fun requestEnableLocationServices(context: Context) {
+        val dialogBuilder = AlertDialog.Builder(context)
+        dialogBuilder.setMessage("Location services are disabled. Do you want to enable them?")
+            .setPositiveButton("Yes") { _: DialogInterface, _: Int ->
+                openLocationSettings(context)
+            }
+            .setNegativeButton("No") { dialog: DialogInterface, _: Int ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun openLocationSettings(context: Context) {
+        val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+        context.startActivity(intent)
+    }
+
+    fun isLocationEnabled(context: Context): Boolean {
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+    }
+
+    fun checkAndEnableLocation(context: Context) {
+        if (!isLocationEnabled(context)) {
+            requestEnableLocationServices(context)
+        }
     }
 
     private fun removeUserFromTravel(user: User){
