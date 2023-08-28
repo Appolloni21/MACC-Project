@@ -34,6 +34,9 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import kotlin.math.PI
 import kotlin.math.atan2
+import android.content.Intent
+import android.location.LocationManager
+import android.provider.Settings
 
 
 data class ResponseData(val altitude: Double, val email: String, val latitude: Double, val longitude: Double, val value: Double) {}
@@ -105,6 +108,13 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
 
     }
 
+
+    fun isLocationEnabled(context: Context): Boolean {
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+    }
+
     fun getPositionFromServerCoo () {
         //GET TOKEN FROM USER SESSION
         Log.d("USERLOG", mUser.toString())
@@ -162,6 +172,7 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
             null)?.
         toBitmap(imageSize.toInt(),imageSize.toInt())!!
         Log.i("CONTROLONDRAWCALLED","drawing"+System.currentTimeMillis())
+        if (isLocationEnabled(context)){
         with(canvas) {
             drawColor(Color.YELLOW)
 
@@ -170,7 +181,11 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
                         drawBitmap(compass, 0f, 0f, null)
 
             }
-        }
+        }}
+        else
+            with(canvas) {
+                drawColor(Color.RED)
+            }
 
 
 
