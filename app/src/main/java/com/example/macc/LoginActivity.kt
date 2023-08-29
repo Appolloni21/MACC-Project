@@ -17,6 +17,7 @@ import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.SignInButton
+import com.google.android.gms.common.SignInButton.SIZE_WIDE
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.firebase.auth.GoogleAuthProvider
@@ -97,6 +98,7 @@ class LoginActivity : AppCompatActivity(){
         }
 
         val signInButtonGoogle: SignInButton = binding.signInButtonGoogle
+        signInButtonGoogle.setSize(SIZE_WIDE)
         signInButtonGoogle.setOnClickListener {
             //sharedViewModel.logInUserWithGoogle()
             Log.d(TAG,"logo google tap")

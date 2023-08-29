@@ -52,7 +52,7 @@ class Settings : Fragment() {
 
         //Toolbar with nav component
         val navController = findNavController()
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.homepage, R.id.settings, R.id.userMyProfile))
         val toolbar: Toolbar = view.findViewById(R.id.toolbar)
 
         toolbar.setupWithNavController(navController, appBarConfiguration)

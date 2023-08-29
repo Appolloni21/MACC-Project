@@ -13,6 +13,7 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.example.macc.databinding.ActivityMainBinding
 import com.example.macc.utility.UIDialogFragment
@@ -42,6 +43,14 @@ class MainActivity : AppCompatActivity(), UIDialogFragment.NoticeDialogListener 
         //Bottom bar setup
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNavigationView.setupWithNavController(navController)
+
+        // always show selected Bottom Navigation item as selected (return true)
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            // In order to get the expected behavior, you have to call default Navigation method manually
+            NavigationUI.onNavDestinationSelected(item, navController)
+
+            return@setOnItemSelectedListener true
+        }
 
         //val userID = intent.getStringExtra("userID")
         sharedViewModelAuth.getUserMyProfile()

@@ -27,9 +27,6 @@
         <action
             android:id="@+id/action_userMyProfile_to_editUserMyProfile"
             app:destination="@id/editUserMyProfile" />
-        <action
-            android:id="@+id/action_userMyProfile_to_settings"
-            app:destination="@id/settings" />
     </fragment>
     <fragment
         android:id="@+id/expenseList"

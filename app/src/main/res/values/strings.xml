@@ -126,5 +126,6 @@
     <string name="type">Type</string>
     <string name="tot_dots">Tot:</string>
     <string name="quit_travel">Quit Travel</string>
+    <string name="or">Or</string>
 
 </resources>

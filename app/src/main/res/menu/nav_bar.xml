@@ -5,9 +5,9 @@
         android:title="@string/home"
         android:icon="@drawable/baseline_home_24"/>
     <item
-        android:id="@+id/notifications"
-        android:title="@string/notifications"
-        android:icon="@drawable/baseline_notifications_24"/>
+        android:id="@+id/settings"
+        android:title="@string/settings"
+        android:icon="@drawable/baseline_settings_24"/>
 
     <item
         android:id="@+id/userMyProfile"
