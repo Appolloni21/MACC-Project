@@ -1,5 +1,6 @@
 package com.example.macc.LocationService
 
+import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
@@ -119,7 +120,8 @@ class LocationService: Service() {
         serviceScope.cancel()
     }
 
-    fun performNetworkRequest (user_id: String, token: String, user_email: String, latitude : Float , longitude : Float, altitude : Float) {
+    @SuppressLint("SuspiciousIndentation")
+    fun performNetworkRequest (user_id: String, token: String, user_email: String, latitude : Float, longitude : Float, altitude : Float) {
         GlobalScope.launch {
             val url = "https://androidproject.pythonanywhere.com/update_position"
             val json = JSONObject()

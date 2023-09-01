@@ -78,9 +78,9 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
         targetLocation = Location("target-location") // provider name is unnecessary
 
         myLocation = Location("my-location") // provider name is unnecessary
-        myLocation.latitude = 40.51490 // your coordinates here
-        myLocation.longitude = 15.49879
-        myLocation.altitude = 495.1
+        myLocation.latitude = 0.0 // your coordinates here
+        myLocation.longitude = 0.0
+        myLocation.altitude = 0.0
 
         //val distanceInMeters = myLocation.distanceTo(targetLocation)
 
@@ -93,7 +93,7 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
         //webApi = WebApi().retrofit.create(PostOrientation::class.java)
 
 
-        this.setWillNotDraw(false)
+        this.setWillNotDraw(true)
         //invalidate()
 
     }
@@ -103,6 +103,8 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
         ot_user_email = email
         Log.d("SETDATACALLED", uid)
         // ONCE WE GOT THE USERID we start looking for position from server
+        if (ot_user_email != mUser?.email.toString())
+            this.setWillNotDraw(false)
         getPositionFromServerCoo()
 
 
@@ -132,14 +134,19 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
                                 Log.i("USERID: ", uid)
                                 //GET AND UPDATE POSITION OF THE OTHER USER
                                 getPositionFromServer(user_token, uid, ot_user_email)
+                                //HARD CODED THE USER I WANT TO CHECK POSITION
+                                //Log.i("ASKING FOR OTHER USER POS: ", "coco")
+                                //getPositionFromServer(user_token, "a0a0a0a0a0", "coco@email.com")
                                 //UPDATE THE TARGET LOCATION EVERY "DELAYMILLIS"
                                 targetLocation.latitude = ot_respData.latitude // your coordinates here
                                 targetLocation.longitude = ot_respData.longitude
                                 //GET AND UPDATE OWN POSITION
+                                //Log.i("ASKING FOR CURRENT USER POS: ", "coco")
                                 getPositionFromServer(user_token, curUserId, curUserEmail)
                                 //UPDATE THE TARGET LOCATION EVERY "DELAYMILLIS"
                                 myLocation.latitude = cur_respData.latitude // your coordinates here
                                 myLocation.longitude = cur_respData.longitude
+                                myLocation.altitude = cur_respData.altitude
 
                                 delay(delayMillis)
                                 print("Position received from server")
@@ -175,7 +182,7 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
         if (isLocationEnabled(context)){
         with(canvas) {
             drawColor(Color.YELLOW)
-
+                    //add minus to location angle
                     withRotation(-rotationangle, imageSize/2, imageSize/2) {
                         //drawBitmap(compass, x.toFloat(), y.toFloat(), null)
                         drawBitmap(compass, 0f, 0f, null)
@@ -205,29 +212,25 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
         //Calculate the yaw angle, see slides of the lesson——
         yaw = a*yaw+(1-a)* atan2(mRotationMatrix[1],mRotationMatrix[4]) *180f/ PI.toFloat()
         //Log.i(TAG2, "YAW angle" + yaw)
-        var bearing = myLocation.bearingTo(targetLocation)
-        //Log.i(TAG2, "bearing to" + bearing)
-        rotationangle= yaw
+        Log.d("LOCATIONSDATA: ", "mylocation: "+ myLocation.latitude+ " --- "+ myLocation.longitude + " targetlocation " + targetLocation.latitude + " --- " + targetLocation.longitude )
+        if(myLocation.latitude>0) {
+            var bearing = myLocation.bearingTo(targetLocation)
+            //Log.i(TAG2, "bearing to" + bearing)
+            rotationangle = yaw
 
-        val geoField = GeomagneticField(
-            myLocation.latitude.toFloat(),
-            myLocation.longitude.toFloat(),
-            myLocation.altitude.toFloat(),
-            System.currentTimeMillis()
-        )
+            val geoField = GeomagneticField(
+                myLocation.latitude.toFloat(),
+                myLocation.longitude.toFloat(),
+                myLocation.altitude.toFloat(),
+                System.currentTimeMillis()
+            )
 
-        rotationangle += geoField.declination;
-        rotationangle = (bearing - rotationangle) * -1;
-        //Math.round(-heading / 360 + 180)
+            rotationangle += geoField.declination;
+            rotationangle = (bearing - rotationangle) * -1;
+            //Math.round(-heading / 360 + 180)
 
-        invalidate()
-
-        GlobalScope.launch(IO) {
-            //Make a post
-            //val a = async {  webApi.doPost(""+System.currentTimeMillis(),yaw) }
-            //Log.i(TAG2,"REPLY FROM SERVER: "+a.await().body())
+            invalidate()
         }
-
 
 
 
@@ -261,30 +264,30 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
                 .post(requestBody)
                 .build()
             try {
-            val response = withContext(Dispatchers.IO) {
-                client.newCall(request).execute()
-            }
-
-            val responseBody = response.body?.string() // response
-            if (responseBody != null) {
-                Log.d("FETCHEDPOSITION", responseBody)
-            }
-
-            val gson = Gson()
-
-
-                //write on a global variable, because Coroutine does not allow to return value
-                if(mUser?.email.toString()==user_email){
-                    cur_respData = gson.fromJson(responseBody, ResponseData::class.java)
+                val response = withContext(Dispatchers.IO) {
+                    client.newCall(request).execute()
                 }
-                else
-                    ot_respData = gson.fromJson(responseBody, ResponseData::class.java)
 
-                //println("Response email: ${respData.email}")
+                val responseBody = response.body?.string() // response
+                if (responseBody != null) {
+                    Log.d("FETCHEDPOSITION", responseBody)
+                }
+
+                val gson = Gson()
+
+
+                    //write on a global variable, because Coroutine does not allow to return value
+                    if(mUser?.email.toString()==user_email){
+                        cur_respData = gson.fromJson(responseBody, ResponseData::class.java)
+                    }
+                    else
+                        ot_respData = gson.fromJson(responseBody, ResponseData::class.java)
+
+                    //println("Response email: ${respData.email}")
             } catch (e: Exception) {
-                Log.d("ERRORHERE", "errorhere")
+                //Log.d("ERRORHERE", "errorhere")
 
-                e.printStackTrace()}
+                //e.printStackTrace()}
 
 
             //println("Response Body: $responseBody")
@@ -292,4 +295,4 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
     }
 
 
-}
+}}
