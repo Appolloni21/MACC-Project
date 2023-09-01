@@ -15,7 +15,7 @@
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar_my_profile"
+        layout="@layout/toolbar_settings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -125,13 +125,15 @@
         android:background="@color/white"
         android:focusable="false"
         android:hint="@string/start_date"
+        android:paddingStart="10dp"
         android:inputType="date"
         android:minHeight="48dp"
         android:textColorHint="#757575"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/select_dates_btn" />
+        app:layout_constraintTop_toBottomOf="@+id/select_dates_btn"
+        tools:ignore="RtlSymmetry" />
 
     <EditText
         android:id="@+id/endDate"
@@ -145,13 +147,15 @@
         android:background="@color/white"
         android:focusable="false"
         android:hint="@string/end_date"
+        android:paddingStart="10dp"
         android:inputType="date"
         android:minHeight="48dp"
         android:textColorHint="#757575"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/startDate"
-        app:layout_constraintTop_toBottomOf="@+id/select_dates_btn" />
+        app:layout_constraintTop_toBottomOf="@+id/select_dates_btn"
+        tools:ignore="RtlSymmetry" />
 
 
     <Button

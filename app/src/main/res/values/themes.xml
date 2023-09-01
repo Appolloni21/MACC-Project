@@ -14,6 +14,8 @@
         <!-- Customize your theme here. -->
         <!-- Material Date Picker Customization -->
         <item name="android:datePickerDialogTheme">@style/CalendarDatePickerDialog</item>
+        <!-- Material Range Date Picker Customization -->
+        <item name="materialCalendarFullscreenTheme">@style/CustomThemeOverlay_MaterialCalendar_Fullscreen</item>
     </style>
     <!-- Toolbar theme -->
     <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -46,5 +48,21 @@
         <item name="android:textColorSecondary">@color/white</item>
         <!--selected day-->
         <!--<item name="android:colorControlActivated">@color/purple_200</item>-->
+    </style>
+
+    <!--PER CAMBIARE DA FULL SCREEN A FINESTRA-->
+    <style name="CustomThemeOverlay_MaterialCalendar_Fullscreen"
+        parent="@style/ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen">
+        <item name="materialCalendarStyle">@style/Custom_MaterialCalendar.Fullscreen</item>
+        <item name="textInputStyle">@style/Custom_Widget.App.TextInputLayout</item>
+    </style>
+    <style name="Custom_MaterialCalendar.Fullscreen"
+        parent="@style/Widget.MaterialComponents.MaterialCalendar.Fullscreen">
+        <!--<item name="android:windowFullscreen">false</item>-->
+        <item name="rangeFillColor">@color/black_light_material</item>
+    </style>
+
+    <style name="Custom_Widget.App.TextInputLayout" parent="">
+        <item name="hintTextColor">@color/white</item>
     </style>
 </resources>

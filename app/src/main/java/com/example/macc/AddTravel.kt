@@ -85,6 +85,7 @@ class AddTravel : Fragment() {
             MaterialDatePicker.Builder.dateRangePicker()
                 .setTitleText("Select dates")
                 .setCalendarConstraints(constraintsBuilder.build())
+                //.setTheme(R.style.MaterialCalendarTheme_RangeFill)
                 .build()
 
         dateRangePicker.addOnPositiveButtonClickListener {
