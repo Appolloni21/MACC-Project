@@ -51,6 +51,7 @@ class InsertExpense : Fragment() {
         val myCalendar = Calendar.getInstance()
 
         sharedViewModel.travelSelected.observe(viewLifecycleOwner) {
+            sharedViewModel.checkCurrentUserInTravel()
             if(it != null){
                 //Date picker
                 val dpd = DatePickerDialog(requireContext(), picker(expenseDateShow,myCalendar), myCalendar.get(Calendar.YEAR), myCalendar.get(
@@ -109,6 +110,11 @@ class InsertExpense : Fragment() {
                 UIState.FAILURE -> {
                     Toast.makeText(context, "Error in adding expense", Toast.LENGTH_SHORT).show()
                     sharedViewModel.resetUiState()
+                }
+                UIState.WARN_104 -> {
+                    Toast.makeText(context,"You are not anymore in the travel", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
+                    navController.navigate(R.id.homepage)
                 }
             }
         }

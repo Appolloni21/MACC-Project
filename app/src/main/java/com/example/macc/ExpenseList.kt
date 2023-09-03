@@ -171,6 +171,11 @@ class ExpenseList : Fragment(), AdapterView.OnItemSelectedListener {
                     Toast.makeText(context,"Error in quitting the travel", Toast.LENGTH_SHORT).show()
                     sharedViewModel.resetUiState()
                 }
+                UIState.WARN_104 -> {
+                    Toast.makeText(context,"You are not anymore in the travel", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
+                    navController.navigateUp()
+                }
             }
         }
 

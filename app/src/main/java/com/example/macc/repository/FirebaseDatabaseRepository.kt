@@ -170,15 +170,25 @@ class FirebaseDatabaseRepository {
             }
         }
 
-    fun getSelectedTravels(travelID: String, travelSelected: MutableLiveData<Travel>){
+    fun getSelectedTravels(travelID: String, travelSelected: MutableLiveData<Travel>, uiState: MutableLiveData<String?>){
         databaseReference = Firebase.database.getReference("travels/$travelID")
         databaseReference.addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 try{
                     if(snapshot.exists()){
                         val travel = snapshot.getValue(Travel::class.java)!!
-                        //postValue funziona correttamente insieme ai vari listener
-                        travelSelected.postValue(travel)
+                        when(travel.members?.containsKey(userUID)){
+                            true ->{
+                                //postValue funziona correttamente insieme ai vari listener
+                                travelSelected.postValue(travel)
+                            }
+                            false ->{
+                                uiState.postValue(UIState.WARN_104)
+                            }
+                            null ->{
+
+                            }
+                        }
                     }
                 }catch(e: Exception){
                     Log.d(TAG,"getSelectedTravels Exception: $e")
@@ -284,6 +294,27 @@ class FirebaseDatabaseRepository {
             }
             override fun onCancelled(databaseError: DatabaseError) {
                 Log.w(TAG, "getUsers:onCancelled", databaseError.toException())
+            }
+        })
+    }
+
+    fun getSelectedUser(userID: String, userSelected: MutableLiveData<User>){
+        databaseReference = Firebase.database.getReference("users/$userID")
+        databaseReference.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                try{
+                    if(snapshot.exists()){
+                        val user = snapshot.getValue(User::class.java)!!
+                        user.userID = snapshot.key
+                        //postValue funziona correttamente insieme ai vari listener
+                        userSelected.postValue(user)
+                    }
+                }catch(e: Exception){
+                    Log.d(TAG,"getSelectedExpense Exception: $e")
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.w(TAG, "getSelectedExpense: onCancelled", databaseError.toException())
             }
         })
     }

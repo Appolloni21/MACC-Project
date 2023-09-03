@@ -30,7 +30,6 @@ import android.provider.Settings
 import android.location.LocationManager
 
 
-
 private const val TAG = "Users List Fragment"
 
 class UsersList : Fragment() {
@@ -63,6 +62,7 @@ class UsersList : Fragment() {
         }
 
         sharedViewModel.travelSelected.observe(viewLifecycleOwner){
+            sharedViewModel.checkCurrentUserInTravel()
             if(it != null){
                 adapter.setTravelOwner(it.owner.toString())
             }
@@ -128,6 +128,11 @@ class UsersList : Fragment() {
                     Toast.makeText(context,"Error, user not removed", Toast.LENGTH_SHORT).show()
                     sharedViewModel.resetUiState()
                 }
+                UIState.WARN_104 -> {
+                    Toast.makeText(context,"You are not anymore in this travel", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
+                    navController.navigate(R.id.homepage)
+                }
             }
         }
 
@@ -149,8 +154,10 @@ class UsersList : Fragment() {
         super.onResume()
     }
 
-    private fun actionToUserProfile(position: Int){
-        val action = UsersListDirections.actionUsersListToUserProfile(position)
+    private fun actionToUserProfile(userID: String){
+        //Action from homepage to expense list page
+        sharedViewModel.selectUser(userID)
+        val action = UsersListDirections.actionUsersListToUserProfile()
         view?.findNavController()?.navigate(action)
     }
 

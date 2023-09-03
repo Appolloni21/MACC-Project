@@ -50,6 +50,12 @@ class EditExpense : Fragment() {
                Log.d(TAG,"$expenseSelected")
            }
         }
+        sharedViewModel.travelSelected.observe(viewLifecycleOwner){
+            sharedViewModel.checkCurrentUserInTravel()
+            sharedViewModel.expenseSelected.observe(viewLifecycleOwner) {expenseSelected ->
+                sharedViewModel.checkExpenseInTravel(expenseSelected.expenseID.toString())
+            }
+        }
 
         return view
     }
@@ -128,6 +134,16 @@ class EditExpense : Fragment() {
                 UIState.FAILURE -> {
                     Toast.makeText(context, "Error in updating the expense", Toast.LENGTH_SHORT).show()
                     sharedViewModel.resetUiState()
+                }
+                UIState.WARN_104 -> {
+                    Toast.makeText(context,"You are not anymore in the travel", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
+                    navController.navigate(R.id.homepage)
+                }
+                UIState.WARN_105 -> {
+                    Toast.makeText(context,"The expense not anymore in the travel", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
+                    navController.navigateUp()
                 }
             }
         }

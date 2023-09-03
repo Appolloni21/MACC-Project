@@ -79,12 +79,7 @@
         android:id="@+id/userProfile"
         android:name="com.example.macc.UserProfile"
         android:label="UserProfile"
-        tools:layout="@layout/user_profile_page">
-        <argument
-            android:name="userPosition"
-            app:argType="integer"
-            android:defaultValue="0" />
-    </fragment>
+        tools:layout="@layout/user_profile_page"/>
     <fragment
         android:id="@+id/addUser"
         android:name="com.example.macc.AddUser"
