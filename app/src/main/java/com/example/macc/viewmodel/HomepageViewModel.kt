@@ -142,7 +142,7 @@ class HomepageViewModel : ViewModel() {
     }
 
     fun selectExpense(expenseID:String){
-        repository.getSelectedExpense(expenseID,_expenseSelected)
+        repository.getSelectedExpense(expenseID, _expenseSelected, _uiState)
     }
 
     fun selectExpenseToDelete(expense: Expense){
@@ -169,12 +169,6 @@ class HomepageViewModel : ViewModel() {
             val expenseID = _expenseSelected.value?.expenseID.toString()
             val state = repository.editExpense(expenseID, expenseName, expenseAmount, expenseDate, expensePlace, expenseNotes)
             _uiState.postValue(state)
-        }
-    }
-
-    fun checkExpenseInTravel(expenseID: String){
-        if(_travelSelected.value?.expenses?.containsKey(expenseID) == false){
-            _uiState.postValue(UIState.WARN_105)
         }
     }
 }

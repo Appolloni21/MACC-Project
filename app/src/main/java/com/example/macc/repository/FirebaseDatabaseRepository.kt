@@ -190,6 +190,9 @@ class FirebaseDatabaseRepository {
                             }
                         }
                     }
+                    else{
+                        uiState.postValue(UIState.WARN_104)
+                    }
                 }catch(e: Exception){
                     Log.d(TAG,"getSelectedTravels Exception: $e")
                 }
@@ -512,7 +515,7 @@ class FirebaseDatabaseRepository {
             }
         }
 
-    fun getSelectedExpense(expenseID: String, expenseSelected: MutableLiveData<Expense>){
+    fun getSelectedExpense(expenseID: String, expenseSelected: MutableLiveData<Expense>, uiState: MutableLiveData<String?>){
         databaseReference = Firebase.database.getReference("expenses/$expenseID")
         databaseReference.addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -521,6 +524,9 @@ class FirebaseDatabaseRepository {
                         val expense = snapshot.getValue(Expense::class.java)!!
                         //postValue funziona correttamente insieme ai vari listener
                         expenseSelected.postValue(expense)
+                    }
+                    else{
+                        uiState.postValue(UIState.WARN_105)
                     }
                 }catch(e: Exception){
                     Log.d(TAG,"getSelectedExpense Exception: $e")

@@ -50,12 +50,6 @@ class EditExpense : Fragment() {
                Log.d(TAG,"$expenseSelected")
            }
         }
-        sharedViewModel.travelSelected.observe(viewLifecycleOwner){
-            sharedViewModel.checkCurrentUserInTravel()
-            sharedViewModel.expenseSelected.observe(viewLifecycleOwner) {expenseSelected ->
-                sharedViewModel.checkExpenseInTravel(expenseSelected.expenseID.toString())
-            }
-        }
 
         return view
     }

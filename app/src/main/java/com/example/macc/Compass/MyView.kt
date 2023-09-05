@@ -158,7 +158,7 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = MeasureSpec.getSize(widthMeasureSpec)
         val height = MeasureSpec.getSize(heightMeasureSpec)
-        setMeasuredDimension(350, 350)
+        setMeasuredDimension(150, 150)
         Log.i("ONMCAL","onm")
 
 
@@ -166,7 +166,7 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val originalImageSize = size // assuming size is the size of the bitmap
-        val scaleFactor = 0.60f // Adjust this scaling factor as needed
+        val scaleFactor = 0.30f // Adjust this scaling factor as needed
         val imageSize = originalImageSize * scaleFactor
         compass = ResourcesCompat.getDrawable(resources, R.drawable.baseline_arrow_upward_24,
             null)?.
