@@ -15,6 +15,7 @@ import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -26,6 +27,9 @@ class FirebaseDatabaseRepository {
     private lateinit var databaseReference: DatabaseReference
     private lateinit var storageReference: StorageReference
     private val userUID = Firebase.auth.currentUser?.uid.toString()
+
+    private val dispatcherIO: CoroutineDispatcher = Dispatchers.IO
+
 
     @Volatile private var istance: FirebaseDatabaseRepository ?= null
 
@@ -63,7 +67,7 @@ class FirebaseDatabaseRepository {
     }
 
     suspend fun addTravel(travelName:String, destination:String, startDate:String, endDate:String, imgCover: Uri): String =
-        withContext(Dispatchers.IO){
+        withContext(dispatcherIO){
             try {
                 databaseReference = Firebase.database.getReference("travels")
 
@@ -100,7 +104,7 @@ class FirebaseDatabaseRepository {
     }
 
     suspend fun deleteTravel(travel: Travel): String =
-        withContext(Dispatchers.IO){
+        withContext(dispatcherIO){
             try {
                 //Log.d(TAG,"deleteTravel: $travelID")
                 val travelID = travel.travelID
@@ -138,7 +142,7 @@ class FirebaseDatabaseRepository {
         }
 
     suspend fun editTravel(travelID: String, travelName: String, destination: String, imgCover: Uri): String =
-        withContext(Dispatchers.IO){
+        withContext(dispatcherIO){
             try {
                 databaseReference = Firebase.database.reference
 
@@ -204,7 +208,7 @@ class FirebaseDatabaseRepository {
     }
 
     suspend fun quitFromTravel(travel: Travel): String =
-        withContext(Dispatchers.IO){
+        withContext(dispatcherIO){
             try {
                 databaseReference = Firebase.database.reference
                 val childUpdates = hashMapOf<String, Any?>()
@@ -324,7 +328,7 @@ class FirebaseDatabaseRepository {
 
 
     suspend fun addUser(userEmail: String, travelID: String): String =
-        withContext(Dispatchers.IO) {
+        withContext(dispatcherIO) {
             databaseReference = Firebase.database.getReference("users")
             try {
                 val snapshot = databaseReference.orderByChild("email").equalTo(userEmail).get().await()
@@ -366,7 +370,7 @@ class FirebaseDatabaseRepository {
         }
 
     suspend fun removeUserFromTravel(user: User, travel: Travel): String =
-        withContext(Dispatchers.IO){
+        withContext(dispatcherIO){
             try {
                 databaseReference = Firebase.database.reference
                 val childUpdates = hashMapOf<String, Any?>()
@@ -413,7 +417,7 @@ class FirebaseDatabaseRepository {
 
 
     suspend fun addExpense(travelID:String, expenseName:String, expenseAmount: String , expenseDate: String, expensePlace:String, expenseNote: String, expenseCheck: Boolean): String=
-        withContext(Dispatchers.IO){
+        withContext(dispatcherIO){
             try {
                 databaseReference = Firebase.database.getReference("expenses")
                 val expenseID = databaseReference.push().key.toString()
@@ -454,7 +458,7 @@ class FirebaseDatabaseRepository {
         }
 
     suspend fun deleteExpense(expense: Expense): String =
-        withContext(Dispatchers.IO){
+        withContext(dispatcherIO){
             try {
                 val expenseID = expense.expenseID
                 val travelID = expense.travelID
@@ -488,7 +492,7 @@ class FirebaseDatabaseRepository {
         }
 
     suspend fun editExpense(expenseID: String, expenseName:String, expenseAmount: String , expenseDate: String, expensePlace:String, expenseNotes: String): String =
-        withContext(Dispatchers.IO){
+        withContext(dispatcherIO){
             try {
                 databaseReference = Firebase.database.reference
 

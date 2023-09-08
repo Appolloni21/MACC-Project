@@ -14,6 +14,7 @@ import com.example.macc.repository.FirebaseDatabaseRepository
 import com.example.macc.utility.UIState
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -23,6 +24,7 @@ class HomepageViewModel : ViewModel() {
 
     private val repository: FirebaseDatabaseRepository
     private val currentUserID = Firebase.auth.currentUser?.uid.toString()
+    private val dispatcherMain: CoroutineDispatcher = Dispatchers.Main
 
     private val _travelArrayList: MutableLiveData<ArrayList<Travel>> = MutableLiveData()
     val travelArrayList: LiveData<ArrayList<Travel>> = _travelArrayList
@@ -63,21 +65,21 @@ class HomepageViewModel : ViewModel() {
     }
 
     fun addTravel(travelName:String, destination:String, startDate:String, endDate:String, imgCover: Uri){
-        viewModelScope.launch(Dispatchers.Main){
+        viewModelScope.launch(dispatcherMain){
             val state = repository.addTravel(travelName, destination, startDate, endDate, imgCover)
             _uiState.postValue(state)
         }
     }
 
     fun deleteTravel(){
-        viewModelScope.launch(Dispatchers.Main){
+        viewModelScope.launch(dispatcherMain){
             val state = repository.deleteTravel(travelToDelete.value!!)
             _uiState.postValue(state)
         }
     }
 
     fun editTravel(travelName: String, destination: String, imgCover: Uri){
-        viewModelScope.launch(Dispatchers.Main){
+        viewModelScope.launch(dispatcherMain){
             val travelID = _travelSelected.value?.travelID.toString()
             val state = repository.editTravel(travelID,travelName,destination,imgCover)
             _uiState.postValue(state)
@@ -95,7 +97,7 @@ class HomepageViewModel : ViewModel() {
     }
 
     fun quitFromTravel(){
-        viewModelScope.launch(Dispatchers.Main){
+        viewModelScope.launch(dispatcherMain){
             val state = repository.quitFromTravel(travelSelected.value!!)
             _uiState.postValue(state)
         }
@@ -114,7 +116,7 @@ class HomepageViewModel : ViewModel() {
     }
 
     fun addUser(userEmail: String){
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(dispatcherMain) {
             val travelID = _travelSelected.value?.travelID.toString()
             val state = repository.addUser(userEmail, travelID)
             _uiState.postValue(state)
@@ -126,7 +128,7 @@ class HomepageViewModel : ViewModel() {
     }
 
     fun removeUserFromTravel(){
-        viewModelScope.launch(Dispatchers.Main){
+        viewModelScope.launch(dispatcherMain){
             val state = repository.removeUserFromTravel(userToRemove.value!!,travelSelected.value!!)
             _uiState.postValue(state)
         }
@@ -150,7 +152,7 @@ class HomepageViewModel : ViewModel() {
     }
 
     fun addExpense(expenseName:String, expenseAmount: String , expenseDate: String, expensePlace:String, expenseNote: String, expenseCheck: Boolean){
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(dispatcherMain) {
             val travelID = _travelSelected.value?.travelID.toString()
             val state = repository.addExpense(travelID, expenseName, expenseAmount, expenseDate, expensePlace, expenseNote, expenseCheck)
             _uiState.postValue(state)
@@ -158,14 +160,14 @@ class HomepageViewModel : ViewModel() {
     }
 
     fun deleteExpense(){
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(dispatcherMain) {
             val state = repository.deleteExpense(expenseToDelete.value!!)
             _uiState.postValue(state)
         }
     }
 
     fun editExpense(expenseName:String, expenseAmount: String , expenseDate: String, expensePlace:String, expenseNotes: String){
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(dispatcherMain) {
             val expenseID = _expenseSelected.value?.expenseID.toString()
             val state = repository.editExpense(expenseID, expenseName, expenseAmount, expenseDate, expensePlace, expenseNotes)
             _uiState.postValue(state)
