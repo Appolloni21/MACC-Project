@@ -59,7 +59,7 @@
         app:layout_constraintStart_toEndOf="@+id/startBtn"
         app:layout_constraintTop_toBottomOf="@+id/frameLayout_user" />
 
-    <Button
+    <!--<Button
         android:id="@+id/userpos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,5 +68,5 @@
         android:text="@string/userpos"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/stopBtn"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout_user" />
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout_user" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>

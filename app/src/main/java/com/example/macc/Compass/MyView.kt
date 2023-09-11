@@ -73,7 +73,7 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
 
     init {
         // GET TARGET LOCATION FROM THE SERVER
-        Log.i("VIEWWW", "provalog")
+        //Log.i("VIEWWW", "provalog")
 
         targetLocation = Location("target-location") // provider name is unnecessary
 
@@ -86,7 +86,7 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
 
         size*=160*resources.displayMetrics.density
         val sensorManager = context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        Log.i(TAG,""+resources.displayMetrics.density)
+        //Log.i(TAG,""+resources.displayMetrics.density)
         //Read .svg compass
 
         //get the arrow instead of compass
@@ -101,7 +101,7 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
     fun setData (user_id: String, email: String){
         uid = user_id
         ot_user_email = email
-        Log.d("SETDATACALLED", uid)
+        //Log.d("SETDATACALLED", uid)
         // ONCE WE GOT THE USERID we start looking for position from server
         if (ot_user_email != mUser?.email.toString())
             this.setWillNotDraw(false)
@@ -119,7 +119,7 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
 
     fun getPositionFromServerCoo () {
         //GET TOKEN FROM USER SESSION
-        Log.d("USERLOG", mUser.toString())
+        //Log.d("USERLOG", mUser.toString())
         val curUserEmail = mUser?.email.toString()
         val curUserId=mUser?.uid.toString()
         mUser!!.getIdToken(true)
@@ -127,11 +127,11 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
                 if (task.isSuccessful) {
                     val user_token= task.result.token.toString()
                     if (user_token != null) {
-                        Log.d("TOKENPRINT", user_token)
+                        //Log.d("TOKENPRINT", user_token)
                         //PERFORMING NETWORK REQUEST
-                        GlobalScope.launch(Dispatchers.Default) {
+                        GlobalScope.launch(IO) {
                             while (true) {
-                                Log.i("USERID: ", uid)
+                                //Log.i("USERID: ", uid)
                                 //GET AND UPDATE POSITION OF THE OTHER USER
                                 getPositionFromServer(user_token, uid, ot_user_email)
                                 //HARD CODED THE USER I WANT TO CHECK POSITION
@@ -168,7 +168,7 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
         val width = MeasureSpec.getSize(widthMeasureSpec)
         val height = MeasureSpec.getSize(heightMeasureSpec)
         setMeasuredDimension(150, 150)
-        Log.i("ONMCAL","onm")
+        //Log.i("ONMCAL","onm")
 
 
     }
@@ -180,7 +180,7 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
         compass = ResourcesCompat.getDrawable(resources, R.drawable.baseline_arrow_upward_24,
             null)?.
         toBitmap(imageSize.toInt(),imageSize.toInt())!!
-        Log.i("CONTROLONDRAWCALLED","drawing"+System.currentTimeMillis())
+        //Log.i("CONTROLONDRAWCALLED","drawing"+System.currentTimeMillis())
         if (isLocationEnabled(context)){
         with(canvas) {
             drawColor(Color.YELLOW)
@@ -206,8 +206,8 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
 
         mLastRotationVector = p0?.values?.clone()!! //Get last rotation vector
 
-        Log.i(TAG,""+mLastRotationVector[0]+""+mLastRotationVector[1]+" "+mLastRotationVector[2])
-        Log.i("ONSENSORCHANGED","new onsensorchanged")
+        //Log.i(TAG,""+mLastRotationVector[0]+""+mLastRotationVector[1]+" "+mLastRotationVector[2])
+        //Log.i("ONSENSORCHANGED","new onsensorchanged")
 
         //Compute the rotation matrix from the rotation vector
         SensorManager.getRotationMatrixFromVector(mRotationMatrix,mLastRotationVector)
@@ -232,16 +232,16 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
 
         if(myLocation.latitude>0) {
             var bearing = myLocation.bearingTo(targetLocation)
-            Log.i("BEARINGTO", "beang to" + bearing)
+            //Log.i("BEARINGTO", "beang to" + bearing)
             //heading = (bearing - heading) * -1;
             //tmp = (bearing -(bearing + tmp)) *-1
             tmp = (bearing-tmp)*-1
 
-        Log.i("YAW", "Yaw angle w: " + yaw)
+        //Log.i("YAW", "Yaw angle w: " + yaw)
 
-        Log.d("LOCATIONSDATA: ", "mylocation: "+ myLocation.latitude+ " --- "+ myLocation.longitude + " targetlocation " + targetLocation.latitude + " --- " + targetLocation.longitude )
+        //Log.d("LOCATIONSDATA: ", "mylocation: "+ myLocation.latitude+ " --- "+ myLocation.longitude + " targetlocation " + targetLocation.latitude + " --- " + targetLocation.longitude )
             rotationangle=tmp
-            Log.i("PRINTEDANGLE", "" + rotationangle)
+            //Log.i("PRINTEDANGLE", "" + rotationangle)
 
             invalidate()
         }
@@ -265,7 +265,7 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
     }
 
     private fun getPositionFromServer(token: String, user_id: String, user_email: String) {
-        GlobalScope.launch {
+        GlobalScope.launch(IO) {
             val url = "https://androidproject.pythonanywhere.com/get_position"
             val json = JSONObject()
             json.put("user_id", "$user_id")
@@ -289,7 +289,7 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
 
                 val responseBody = response.body?.string() // response
                 if (responseBody != null) {
-                    Log.d("FETCHEDPOSITION", responseBody)
+                    //Log.d("FETCHEDPOSITION", responseBody)
                 }
 
                 val gson = Gson()

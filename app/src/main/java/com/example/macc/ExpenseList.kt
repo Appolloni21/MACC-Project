@@ -114,12 +114,12 @@ class ExpenseList : Fragment(), AdapterView.OnItemSelectedListener {
             }
         }
 
-        sharedViewModel.expenses.observe(viewLifecycleOwner){ expenses ->
+        /*sharedViewModel.expenses.observe(viewLifecycleOwner){ expenses ->
             if(expenses != null){
                 //passare all'adapter la lista
                 adapter.setExpensesList(expenses)
             }
-        }
+        }*/
 
         // Use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView

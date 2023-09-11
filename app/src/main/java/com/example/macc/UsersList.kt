@@ -117,11 +117,11 @@ class UsersList : Fragment() {
             }
         }
 
-        val userPositions = binding.userpos
+        /*val userPositions = binding.userpos
         userPositions.setOnClickListener {
             val action = UsersListDirections.actionUsersListToUserLocations()
             view.findNavController().navigate(action)
-        }
+        }*/
 
         sharedViewModel.uiState.observe(viewLifecycleOwner){
             when(it){
