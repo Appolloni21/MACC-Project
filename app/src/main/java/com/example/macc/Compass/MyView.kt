@@ -144,10 +144,12 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
                                 //Log.i("ASKING FOR CURRENT USER POS: ", "coco")
                                 getPositionFromServer(user_token, curUserId, curUserEmail)
                                 //UPDATE THE TARGET LOCATION EVERY "DELAYMILLIS"
-                                myLocation.latitude = cur_respData.latitude // your coordinates here
-                                myLocation.longitude = cur_respData.longitude
-                                myLocation.altitude = cur_respData.altitude
-
+                                if(cur_respData.latitude>0) {
+                                    myLocation.latitude =
+                                        cur_respData.latitude // your coordinates here
+                                    myLocation.longitude = cur_respData.longitude
+                                    myLocation.altitude = cur_respData.altitude
+                                }
                                 delay(delayMillis)
                                 print("Position received from server")
                             }
@@ -205,29 +207,41 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
         mLastRotationVector = p0?.values?.clone()!! //Get last rotation vector
 
         Log.i(TAG,""+mLastRotationVector[0]+""+mLastRotationVector[1]+" "+mLastRotationVector[2])
+        Log.i("ONSENSORCHANGED","new onsensorchanged")
 
         //Compute the rotation matrix from the rotation vector
         SensorManager.getRotationMatrixFromVector(mRotationMatrix,mLastRotationVector)
 
         //Calculate the yaw angle, see slides of the lesson——
         yaw = a*yaw+(1-a)* atan2(mRotationMatrix[1],mRotationMatrix[4]) *180f/ PI.toFloat()
+        //YAW IS THE DIRECTION TOWARDS THE MAGNETIC NORTH -> THE YAW ANGLE IS COMPUTED CORRECTLY TESTED YAW: -180, +180
         //Log.i(TAG2, "YAW angle" + yaw)
-        Log.d("LOCATIONSDATA: ", "mylocation: "+ myLocation.latitude+ " --- "+ myLocation.longitude + " targetlocation " + targetLocation.latitude + " --- " + targetLocation.longitude )
+        //Declaring GeomagneticField with my position to get Declination
+        var tmp = yaw
+
+        val geoField = GeomagneticField(
+            myLocation.latitude.toFloat(),
+            myLocation.longitude.toFloat(),
+            myLocation.altitude.toFloat(),
+            System.currentTimeMillis()
+        )
+        //MAKE ANGLE POINT TO TRUE NORTH, value still -180, +180
+        tmp = tmp + geoField.declination
+
+
+
         if(myLocation.latitude>0) {
             var bearing = myLocation.bearingTo(targetLocation)
-            //Log.i(TAG2, "bearing to" + bearing)
-            rotationangle = yaw
+            Log.i("BEARINGTO", "beang to" + bearing)
+            //heading = (bearing - heading) * -1;
+            //tmp = (bearing -(bearing + tmp)) *-1
+            tmp = (bearing-tmp)*-1
 
-            val geoField = GeomagneticField(
-                myLocation.latitude.toFloat(),
-                myLocation.longitude.toFloat(),
-                myLocation.altitude.toFloat(),
-                System.currentTimeMillis()
-            )
+        Log.i("YAW", "Yaw angle w: " + yaw)
 
-            rotationangle += geoField.declination;
-            rotationangle = (bearing - rotationangle) * -1;
-            //Math.round(-heading / 360 + 180)
+        Log.d("LOCATIONSDATA: ", "mylocation: "+ myLocation.latitude+ " --- "+ myLocation.longitude + " targetlocation " + targetLocation.latitude + " --- " + targetLocation.longitude )
+            rotationangle=tmp
+            Log.i("PRINTEDANGLE", "" + rotationangle)
 
             invalidate()
         }
@@ -235,7 +249,12 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
 
 
     }
-
+    fun normalizeDegree (value: Float):Float {
+        if(value >= 0.0f && value <= 180.0f){
+            return value;
+        }else{
+            return 180 + (180 + value);
+    }}
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
 //        TODO("Not yet implemented")
@@ -278,10 +297,14 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
 
                     //write on a global variable, because Coroutine does not allow to return value
                     if(mUser?.email.toString()==user_email){
-                        cur_respData = gson.fromJson(responseBody, ResponseData::class.java)
+                        val tmp = gson.fromJson(responseBody, ResponseData::class.java)
+                        if(tmp.latitude>0)
+                            cur_respData = gson.fromJson(responseBody, ResponseData::class.java)
                     }
-                    else
-                        ot_respData = gson.fromJson(responseBody, ResponseData::class.java)
+                    else{
+                        val tmp = gson.fromJson(responseBody, ResponseData::class.java)
+                        if(tmp.latitude>0)
+                            ot_respData = gson.fromJson(responseBody, ResponseData::class.java)}
 
                     //println("Response email: ${respData.email}")
             } catch (e: Exception) {

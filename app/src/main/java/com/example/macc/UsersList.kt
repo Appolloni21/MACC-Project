@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -72,6 +73,10 @@ class UsersList : Fragment() {
         // in content do not change the layout size of the RecyclerView
         recyclerView.setHasFixedSize(true)
         context?.let { checkAndEnableLocation(it) }
+
+        // Set the screen orientation for this fragment to portrait
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
 
         return view
     }
@@ -187,5 +192,11 @@ class UsersList : Fragment() {
         val newFragment = UIDialogFragment("Are you sure to remove '${user.name}' from this travel?")
         newFragment.show(requireActivity().supportFragmentManager, "UIDialog - removeUserFromTravel")
         sharedViewModel.selectUserToRemoveFromTravel(user)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // Reset the screen orientation when the fragment is destroyed
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
     }
 }
