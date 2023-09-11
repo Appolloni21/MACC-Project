@@ -41,6 +41,7 @@ class EditTravel : Fragment() {
         val view: View = binding.root
 
         sharedViewModel.travelSelected.observe(viewLifecycleOwner){
+            sharedViewModel.checkCurrentUserInTravel()
             if(it != null){
                 binding.editTravelName.setText(it.name)
                 binding.editDestination.setText(it.destination)
@@ -110,6 +111,11 @@ class EditTravel : Fragment() {
                 UIState.FAILURE -> {
                     Toast.makeText(context, "Error in updating the travel", Toast.LENGTH_SHORT).show()
                     sharedViewModel.resetUiState()
+                }
+                UIState.WARN_104 -> {
+                    Toast.makeText(context,"You are not anymore in the travel", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
+                    navController.navigateUp()
                 }
             }
         }

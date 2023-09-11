@@ -21,7 +21,7 @@ import com.google.firebase.ktx.Firebase
 
 private const val TAG = "User Adapter"
 
-class UserAdapter(private val onActionCallback: (Int) -> Unit, private val onRemoveCallback: (User) -> Unit, private val context: Context) : RecyclerView.Adapter<UserAdapter.UserViewHolder>(){
+class UserAdapter(private val onActionCallback: (String) -> Unit, private val onRemoveCallback: (User) -> Unit, private val context: Context) : RecyclerView.Adapter<UserAdapter.UserViewHolder>(){
 
     private val usersList : ArrayList<User> = arrayListOf()
     private var travelOwner: String = ""
@@ -51,7 +51,7 @@ class UserAdapter(private val onActionCallback: (Int) -> Unit, private val onRem
         Log.d(TAG, "user adapter")
         val item = usersList[position]
         holder.userNameSurname.text = item.name
-        val userid = item.userID.toString()
+        val userID = item.userID.toString()
         val useremail = item.email.toString()
 
         //Loads the image from the url with Glide
@@ -60,7 +60,7 @@ class UserAdapter(private val onActionCallback: (Int) -> Unit, private val onRem
             .into(holder.userAvatar)
 
         holder.userAvatar.setOnClickListener{
-            onActionCallback(position)
+            onActionCallback(userID)
         }
 
 
@@ -79,7 +79,7 @@ class UserAdapter(private val onActionCallback: (Int) -> Unit, private val onRem
         holder.removeUserIcon.setOnClickListener {
             onRemoveCallback(item)
         }
-        holder.bind(userid, useremail)
+        holder.bind(userID, useremail)
 
         customView = holder.customView
         Log.d("CUSV", customView.toString())

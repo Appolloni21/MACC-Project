@@ -33,6 +33,10 @@ class AddUser : Fragment() {
         _binding = AddUserBinding.inflate(inflater, container, false)
         val view: View = binding.root
 
+        sharedViewModel.travelSelected.observe(viewLifecycleOwner){
+            sharedViewModel.checkCurrentUserInTravel()
+        }
+
         return view
     }
 
@@ -69,6 +73,11 @@ class AddUser : Fragment() {
                 UIState.FAIL_102 -> {
                     Toast.makeText(context,"Error, user not found",Toast.LENGTH_SHORT).show()
                     sharedViewModel.resetUiState()
+                }
+                UIState.WARN_104 -> {
+                    Toast.makeText(context,"You are not anymore in the travel", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
+                    navController.navigate(R.id.homepage)
                 }
             }
         }

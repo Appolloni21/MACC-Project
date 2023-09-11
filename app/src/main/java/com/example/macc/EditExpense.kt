@@ -129,6 +129,16 @@ class EditExpense : Fragment() {
                     Toast.makeText(context, "Error in updating the expense", Toast.LENGTH_SHORT).show()
                     sharedViewModel.resetUiState()
                 }
+                UIState.WARN_104 -> {
+                    Toast.makeText(context,"You are not anymore in the travel", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
+                    navController.navigate(R.id.homepage)
+                }
+                UIState.WARN_105 -> {
+                    Toast.makeText(context,"The expense not anymore in the travel", Toast.LENGTH_SHORT).show()
+                    sharedViewModel.resetUiState()
+                    navController.navigateUp()
+                }
             }
         }
     }

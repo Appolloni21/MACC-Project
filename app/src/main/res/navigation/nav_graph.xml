@@ -49,7 +49,7 @@
     <fragment
         android:id="@+id/insertExpense"
         android:name="com.example.macc.InsertExpense"
-        android:label="InsertExpense"
+        android:label="Insert Expense"
         tools:layout="@layout/insert_expense">
         <action
             android:id="@+id/action_insertExpense_to_textRecognition"
@@ -58,7 +58,7 @@
     <fragment
         android:id="@+id/usersList"
         android:name="com.example.macc.UsersList"
-        android:label="UsersList"
+        android:label="Users List"
         tools:layout="@layout/users_list">
         <action
             android:id="@+id/action_usersList_to_userProfile"
@@ -73,18 +73,13 @@
     <fragment
         android:id="@+id/addTravel"
         android:name="com.example.macc.AddTravel"
-        android:label="AddTravel"
+        android:label="Add Travel"
         tools:layout="@layout/add_travel_page"/>
     <fragment
         android:id="@+id/userProfile"
         android:name="com.example.macc.UserProfile"
-        android:label="UserProfile"
-        tools:layout="@layout/user_profile_page">
-        <argument
-            android:name="userPosition"
-            app:argType="integer"
-            android:defaultValue="0" />
-    </fragment>
+        android:label="User Profile"
+        tools:layout="@layout/user_profile_page"/>
     <fragment
         android:id="@+id/addUser"
         android:name="com.example.macc.AddUser"
@@ -93,7 +88,7 @@
     <fragment
         android:id="@+id/editUserMyProfile"
         android:name="com.example.macc.EditUserMyProfile"
-        android:label="EditUserMyProfile"
+        android:label="Edit Profile"
         tools:layout="@layout/edit_user_my_profile_page"/>
     <fragment
         android:id="@+id/settings"
@@ -107,22 +102,22 @@
     <fragment
         android:id="@+id/changePassword"
         android:name="com.example.macc.ChangePassword"
-        android:label="ChangePassword"
+        android:label="Change Password"
         tools:layout="@layout/change_password_page"/>
     <fragment
         android:id="@+id/editTravel"
         android:name="com.example.macc.EditTravel"
-        android:label="EditTravel"
+        android:label="Edit Travel"
         tools:layout="@layout/edit_travel_page"/>
     <fragment
         android:id="@+id/textRecognition"
         android:name="com.example.macc.TextRecognition"
-        android:label="TextRecognition"
+        android:label="Text Recognition"
         tools:layout="@layout/text_recognition"/>
     <fragment
         android:id="@+id/editExpense"
         android:name="com.example.macc.EditExpense"
-        android:label="EditExpense"
+        android:label="Edit Expense"
         tools:layout="@layout/edit_expense_page"/>
     <fragment
         android:id="@+id/userLocations"

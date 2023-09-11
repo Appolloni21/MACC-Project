@@ -78,9 +78,9 @@
 
     <FrameLayout
         android:id="@+id/frameLayout_expense"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="320dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="55dp"
         android:background="@color/black_light_material"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -104,7 +104,7 @@
         android:layout_gravity="end|bottom"
         android:layout_marginStart="324dp"
         android:layout_marginTop="300dp"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="70dp"
         android:contentDescription="@string/add_expense"
         android:src="@drawable/ic_baseline_add_24"
         app:layout_constraintBottom_toBottomOf="parent"
