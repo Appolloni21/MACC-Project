@@ -7,7 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.macc.model.User
 import com.example.macc.repository.FirebaseAuthRepository
-import com.google.android.gms.auth.api.identity.SignInCredential
+//import com.google.android.gms.auth.api.identity.SignInCredential
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.AuthCredential
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,7 +35,7 @@ class AuthViewModel: ViewModel() {
         }
     }
 
-    fun signUpUserWithGoogle(credential: SignInCredential){
+    fun signUpUserWithGoogle(credential: GoogleSignInAccount){
         viewModelScope.launch(Dispatchers.Main) {
             val state = repository.signUpUserWithGoogle(credential)
             _uiState.postValue(state)

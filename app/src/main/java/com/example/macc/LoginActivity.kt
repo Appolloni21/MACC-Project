@@ -1,7 +1,6 @@
 package com.example.macc
 
 import android.content.Intent
-import android.content.IntentSender
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -13,14 +12,17 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.macc.databinding.LoginPageBinding
 import com.example.macc.utility.UIState
 import com.example.macc.viewmodel.AuthViewModel
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import com.google.android.gms.auth.api.identity.Identity
-import com.google.android.gms.auth.api.identity.SignInClient
+//import com.google.android.gms.auth.api.identity.BeginSignInRequest
+//import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.SignInButton.SIZE_WIDE
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.CommonStatusCodes
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.GoogleAuthProvider
+
 
 private const val TAG = "Login Activity"
 class LoginActivity : AppCompatActivity(){
@@ -28,11 +30,12 @@ class LoginActivity : AppCompatActivity(){
     private val sharedViewModel: AuthViewModel by viewModels()
 
     //Login with Google
-    private lateinit var oneTapClient: SignInClient
-    private lateinit var signInRequest: BeginSignInRequest
-    private val REQ_ONE_TAP = 2  // Can be any integer unique to the Activity
-    private var showOneTapUI = true
+    //private lateinit var oneTapClient: SignInClient
+    //private lateinit var signInRequest: BeginSignInRequest
+    //private val REQ_ONE_TAP = 2  // Can be any integer unique to the Activity
+    //private var showOneTapUI = true
 
+    private val RC_SIGN_IN = 100
 
 
 
@@ -97,10 +100,23 @@ class LoginActivity : AppCompatActivity(){
             startActivity(intent)
         }
 
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        // Build a GoogleSignInClient with the options specified by gso.
+        val mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
         val signInButtonGoogle: SignInButton = binding.signInButtonGoogle
         signInButtonGoogle.setSize(SIZE_WIDE)
         signInButtonGoogle.setOnClickListener {
-            //sharedViewModel.logInUserWithGoogle()
+            val signInIntent = mGoogleSignInClient.signInIntent
+            startActivityForResult(signInIntent, RC_SIGN_IN)
+
+            /*//sharedViewModel.logInUserWithGoogle()
             Log.d(TAG,"logo google tap")
             //test()
             oneTapClient = Identity.getSignInClient(this)
@@ -131,14 +147,57 @@ class LoginActivity : AppCompatActivity(){
                     Log.d(TAG, "One Tap UI Failure: " + e.localizedMessage)
                 }
 
-
+*/
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        when (requestCode) {
+        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+
+        if (requestCode == RC_SIGN_IN) {
+            // The Task returned from this call is always completed, no need to attach
+            // a listener.
+            val completedTask: Task<GoogleSignInAccount> =
+                GoogleSignIn.getSignedInAccountFromIntent(data)
+
+            try {
+                val account = completedTask.getResult(ApiException::class.java)
+                val idToken = account.idToken
+
+                // Signed in successfully, show authenticated UI.
+                //Check se l'utente ha già usato in precedenza l'account google per accedere
+                sharedViewModel.checkGoogleUser(account.email.toString())
+
+                sharedViewModel.uiState.observe(this){
+                    when(it){
+                        UIState.WARN_101 -> {
+                            Log.d(TAG, "Google user already exist, we just need to log in it")
+                            val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
+                            sharedViewModel.logInUserWithGoogle(firebaseCredential)
+                        }
+                        UIState.WARN_102 -> {
+                            Log.d(TAG, "Google user doesn't exist in the DB, we have to create it")
+                            sharedViewModel.signUpUserWithGoogle(account)
+
+                        }
+                        UIState.WARN_103 ->{
+                            Log.d(TAG,"User already exist")
+                            Toast.makeText(this@LoginActivity, "Error in logging in using Google, email already used with normal password", Toast.LENGTH_SHORT).show()
+                            sharedViewModel.resetUiState()
+                        }
+                    }
+                }
+
+            } catch (e: ApiException) {
+                // The ApiException status code indicates the detailed failure reason.
+                // Please refer to the GoogleSignInStatusCodes class reference for more information.
+                Log.w(TAG, "signInResult:failed code=" + e.statusCode)
+            }
+        }
+
+        /*when (requestCode) {
             REQ_ONE_TAP -> {
                 try {
                     val credential = oneTapClient.getSignInCredentialFromIntent(data)
@@ -195,7 +254,7 @@ class LoginActivity : AppCompatActivity(){
                     }
                 }
             }
-        }
+        }*/
     }
 
     private fun makeToast(msg:String){

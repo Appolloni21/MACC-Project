@@ -46,14 +46,13 @@ dependencies {
     // Import the Firebase BoM
     implementation platform('com.google.firebase:firebase-bom:32.2.2')
     // When using the BoM, don't specify versions in Firebase dependencies
-    implementation 'com.google.firebase:firebase-analytics-ktx:21.2.2'
+    implementation 'com.google.firebase:firebase-analytics-ktx:21.3.0'
     implementation 'com.google.firebase:firebase-auth-ktx:22.1.1'
-    implementation 'com.google.firebase:firebase-database-ktx:20.2.0'
+    implementation 'com.google.firebase:firebase-database-ktx:20.2.2'
     implementation 'com.google.firebase:firebase-storage-ktx'
 
     // FirebaseUI Storage only
     implementation 'com.firebaseui:firebase-ui-storage:7.2.0'
-    implementation 'androidx.core:core-ktx:1.10.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -61,23 +60,23 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
-    implementation "androidx.preference:preference:1.2.0"
+    implementation "androidx.preference:preference:1.2.1"
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'com.google.code.gson:gson:2.8.8'
+    implementation 'com.google.code.gson:gson:2.9.0'
 
 
     //firebase text recognition
     implementation 'com.google.android.gms:play-services-mlkit-text-recognition:19.0.0'
 
     // Location Services
-    implementation 'com.google.android.gms:play-services-location:20.0.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
 
     //Autenticazione con google
-    implementation 'com.google.android.gms:play-services-auth:20.6.0'
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
 
 
 

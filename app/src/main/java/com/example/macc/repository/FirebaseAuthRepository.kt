@@ -6,7 +6,8 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.macc.model.User
 import com.example.macc.utility.UIState
-import com.google.android.gms.auth.api.identity.SignInCredential
+//import com.google.android.gms.auth.api.identity.SignInCredential
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -66,15 +67,15 @@ class FirebaseAuthRepository {
             }
         }
 
-    suspend fun signUpUserWithGoogle(credential: SignInCredential): String =
+    suspend fun signUpUserWithGoogle(credential: GoogleSignInAccount): String =
         withContext(Dispatchers.IO){
             try {
-                val idToken = credential.googleIdToken
+                val idToken = credential.idToken
                 val name = credential.givenName
                 val surname = credential.familyName
                 val nickname = credential.displayName
-                val email = credential.id
-                val avatar = credential.profilePictureUri!!.toString()
+                val email = credential.email
+                val avatar = credential.photoUrl.toString()
                 val description = ""
                 val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
 
