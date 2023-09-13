@@ -60,7 +60,7 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
     var rotationangle = 0f
     var ot_respData = ResponseData(0.0,"",0.0,0.0,0.0)
     var cur_respData = ResponseData(0.0,"",0.0,0.0,0.0)
-    val delayMillis = 1000L
+    val delayMillis = 3000L
     val mUser = FirebaseAuth.getInstance().currentUser
     lateinit var uid : String
     lateinit var ot_user_email : String

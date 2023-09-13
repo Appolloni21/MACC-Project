@@ -84,9 +84,9 @@ class LocationService: Service() {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         locationClient
-            // UPDATE THE LOCATION EVERY 1 seconds
+            // UPDATE THE LOCATION EVERY 3 seconds
             // AND UPDATE THE POSITION ON THE SERVER THE REQUEST
-            .getLocationUpdates(1000L)
+            .getLocationUpdates(3000L)
             .catch { e -> e.printStackTrace() }
             .onEach { location ->
                 // here is what happens when a new location is produced
