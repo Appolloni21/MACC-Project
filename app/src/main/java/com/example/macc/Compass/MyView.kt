@@ -65,6 +65,7 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
     lateinit var uid : String
     lateinit var ot_user_email : String
     //val bitmap: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.baseline_arrow_upward_24)
+    var red = 1
 
 
 
@@ -184,16 +185,16 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
         //If it has not received the location of the user, or the user has never uploaded,
         // or current location never updated/not downloaded yet
         //its location it shows a red square
-        if (isLocationEnabled(context) && targetLocation.latitude >= 1 && myLocation.latitude>=1){
-        with(canvas) {
-            drawColor(Color.YELLOW)
-                    //add minus to location angle
-                    withRotation(-rotationangle, imageSize/2, imageSize/2) {
-                        //drawBitmap(compass, x.toFloat(), y.toFloat(), null)
-                        drawBitmap(compass, 0f, 0f, null)
+        if (isLocationEnabled(context) && targetLocation.latitude >= 1 && myLocation.latitude>=1 && red<1){
+            with(canvas) {
+                drawColor(Color.YELLOW)
+                //add minus to location angle
+                withRotation(-rotationangle, imageSize/2, imageSize/2) {
+                    //drawBitmap(compass, x.toFloat(), y.toFloat(), null)
+                    drawBitmap(compass, 0f, 0f, null)
 
-            }
-        }}
+                }
+            }}
         else
             with(canvas) {
                 drawColor(Color.RED)
@@ -240,9 +241,9 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
             //tmp = (bearing -(bearing + tmp)) *-1
             tmp = (bearing-tmp)*-1
 
-        //Log.i("YAW", "Yaw angle w: " + yaw)
+            //Log.i("YAW", "Yaw angle w: " + yaw)
 
-        //Log.d("LOCATIONSDATA: ", "mylocation: "+ myLocation.latitude+ " --- "+ myLocation.longitude + " targetlocation " + targetLocation.latitude + " --- " + targetLocation.longitude )
+            //Log.d("LOCATIONSDATA: ", "mylocation: "+ myLocation.latitude+ " --- "+ myLocation.longitude + " targetlocation " + targetLocation.latitude + " --- " + targetLocation.longitude )
             rotationangle=tmp
             //Log.i("PRINTEDANGLE", "" + rotationangle)
 
@@ -257,7 +258,7 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
             return value;
         }else{
             return 180 + (180 + value);
-    }}
+        }}
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
 //        TODO("Not yet implemented")
@@ -298,27 +299,27 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
                 val gson = Gson()
 
 
-                    //write on a global variable, because Coroutine does not allow to return value
-                    if(mUser?.email.toString()==user_email){
-                        val tmp = gson.fromJson(responseBody, ResponseData::class.java)
-                        if(tmp.latitude>0)
-                            cur_respData = gson.fromJson(responseBody, ResponseData::class.java)
-                    }
-                    else{
-                        val tmp = gson.fromJson(responseBody, ResponseData::class.java)
-                        if(tmp.latitude>0)
-                            ot_respData = gson.fromJson(responseBody, ResponseData::class.java)}
+                //write on a global variable, because Coroutine does not allow to return value
+                if(mUser?.email.toString()==user_email){
+                    val tmp = gson.fromJson(responseBody, ResponseData::class.java)
+                    if(tmp.latitude>0)
+                        cur_respData = gson.fromJson(responseBody, ResponseData::class.java)
+                }
+                else{
+                    val tmp = gson.fromJson(responseBody, ResponseData::class.java)
+                    if(tmp.latitude>0)
+                        ot_respData = gson.fromJson(responseBody, ResponseData::class.java)}
 
-                    //println("Response email: ${respData.email}")
+                //println("Response email: ${respData.email}")
             } catch (e: Exception) {
                 //Log.d("ERRORHERE", "errorhere")
 
                 //e.printStackTrace()}
 
 
-            //println("Response Body: $responseBody")
+                //println("Response Body: $responseBody")
+            }
         }
-    }
 
 
-}}
+    }}

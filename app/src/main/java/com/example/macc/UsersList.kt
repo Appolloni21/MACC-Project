@@ -105,6 +105,7 @@ class UsersList : Fragment() {
         val stopBtn = binding.stopBtn
         val enalblelocationtxtview = binding.enablelocationtxt
         startBtn.setOnClickListener{
+            modifyViewHolder(0)
 
             enalblelocationtxtview.visibility = View.GONE
             Log.d(TAG, "In start")
@@ -114,6 +115,7 @@ class UsersList : Fragment() {
             }
         }
         stopBtn.setOnClickListener{
+            modifyViewHolder(1)
             enalblelocationtxtview.visibility = View.VISIBLE
 
             Intent(context, LocationService::class.java).apply {
@@ -147,6 +149,17 @@ class UsersList : Fragment() {
         }
 
     }
+    fun modifyViewHolder(arg: Int) {
+        var itemcount = recyclerView.adapter?.itemCount
+        Log.d("ITEMCOUNT",itemcount.toString())
+        for (i in 0 until itemcount!!) {
+            val viewHolder = recyclerView.findViewHolderForAdapterPosition(i) as? UserAdapter.UserViewHolder
+            if (viewHolder != null) {
+                viewHolder.customView.red=arg
+            }
+        }
+
+    }
 
     override fun onPause() {
         if(onActivityStateChanged != null){
@@ -159,7 +172,7 @@ class UsersList : Fragment() {
     override fun onResume() {
         if(onActivityStateChanged != null){
             Log.d(TAG,"onResume")
-        onActivityStateChanged?.onResumed()
+            onActivityStateChanged?.onResumed()
         }
         super.onResume()
     }

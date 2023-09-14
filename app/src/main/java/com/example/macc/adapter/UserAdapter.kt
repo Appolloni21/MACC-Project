@@ -90,6 +90,7 @@ class UserAdapter(private val onActionCallback: (String) -> Unit, private val on
             SensorManager.SENSOR_DELAY_NORMAL)
     }
 
+
     fun registerActivityState()  = object : OnActivityStateChanged {
         override fun onResumed() {
             Log.d(TAG, "onResumed: ")

@@ -63,7 +63,7 @@
         android:id="@+id/enablelocationtxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="If you are not sharing your location, the direction refers to your last known location, enable location for a more accurate computation and to let other users know where you are"
+        android:text="Enable location sharing to access other user's location"
         android:textColor="@color/red_personal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
