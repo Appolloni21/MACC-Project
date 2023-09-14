@@ -55,6 +55,7 @@ class UsersList : Fragment() {
         adapter = UserAdapter(::actionToUserProfile,::removeUserFromTravel ,requireContext())
         recyclerView.adapter = adapter
 
+
         sharedViewModel.users.observe(viewLifecycleOwner){
             if(it.isNotEmpty()){
                 adapter.setUsersList(it)
@@ -102,7 +103,10 @@ class UsersList : Fragment() {
 
         val startBtn = binding.startBtn
         val stopBtn = binding.stopBtn
+        val enalblelocationtxtview = binding.enablelocationtxt
         startBtn.setOnClickListener{
+
+            enalblelocationtxtview.visibility = View.GONE
             Log.d(TAG, "In start")
             Intent(context, LocationService::class.java).apply {
                 action = LocationService.ACTION_START
@@ -110,6 +114,7 @@ class UsersList : Fragment() {
             }
         }
         stopBtn.setOnClickListener{
+            enalblelocationtxtview.visibility = View.VISIBLE
 
             Intent(context, LocationService::class.java).apply {
                 action = LocationService.ACTION_STOP

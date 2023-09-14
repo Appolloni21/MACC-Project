@@ -181,7 +181,10 @@ class MyView(context: Context? , attrs: AttributeSet) : View(context, attrs), Se
             null)?.
         toBitmap(imageSize.toInt(),imageSize.toInt())!!
         //Log.i("CONTROLONDRAWCALLED","drawing"+System.currentTimeMillis())
-        if (isLocationEnabled(context)){
+        //If it has not received the location of the user, or the user has never uploaded,
+        // or current location never updated/not downloaded yet
+        //its location it shows a red square
+        if (isLocationEnabled(context) && targetLocation.latitude >= 1 && myLocation.latitude>=1){
         with(canvas) {
             drawColor(Color.YELLOW)
                     //add minus to location angle

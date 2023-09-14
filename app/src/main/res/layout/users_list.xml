@@ -59,6 +59,17 @@
         app:layout_constraintStart_toEndOf="@+id/startBtn"
         app:layout_constraintTop_toBottomOf="@+id/frameLayout_user" />
 
+    <TextView
+        android:id="@+id/enablelocationtxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="If you are not sharing your location, the direction refers to your last known location, enable location for a more accurate computation and to let other users know where you are"
+        android:textColor="@color/red_personal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stopBtn" />
+
     <!--<Button
         android:id="@+id/userpos"
         android:layout_width="wrap_content"
